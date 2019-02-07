@@ -1,8 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Timer;
-
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.util.Util;
 

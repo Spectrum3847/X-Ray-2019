@@ -8,9 +8,6 @@
 package frc.robot;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.team2363.logger.HelixEvents;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -21,6 +18,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Hatch;
 import frc.robot.subsystems.Pneumatics;
 import frc.lib.util.Debugger;
+import frc.lib.util.SpectrumLogger;
 import frc.lib.util.SpectrumPreferences;
 
 
@@ -32,6 +30,8 @@ import frc.lib.util.SpectrumPreferences;
  * project.
  */
 public class Robot extends TimedRobot {
+
+  
   // Add Debug flags
   // You can have a flag for each subsystem, etc
   public static final String _controls = "CONTROL";
@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
   public static final String _cargo = "CARGO";
   public static final String _hatch = "HATCH";
 	
+	public static SpectrumLogger logger;
 	public static SpectrumPreferences prefs;
 	
 	public static PigeonIMU pigeon;
@@ -85,13 +86,13 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-    	initDebugger();
+		initDebugger(); //Init Debugger
+		SpectrumLogger.getInstance().intialize();  //setup files for logging
 		printInfo("Start robotInit()");
-		//Start HelixEvents logging everytime the robot starts up
-		HelixEvents.getInstance().startLogging();
     	setupSubsystems(); //This has to be before the OI is created on the next line
 		HW.oi = new OI();
-        Dashboard.intializeDashboard();
+		Dashboard.intializeDashboard();
+		SpectrumLogger.getInstance().finalize();  //Finalize the logging items
 	}
 
 	//Add any code that needs to run in all states
@@ -120,10 +121,6 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
     	setState(RobotState.AUTONOMOUS);
 		printInfo("Start autonomousInit()");
-		//Start Helix Events logger again, this forces it to start at the beginging of the match and get FMS data
-		if (DriverStation.getInstance().isFMSAttached()){
-			HelixEvents.getInstance().startLogging();
-		}
 		Autonomous.init();
         printInfo("End autonomousInit()");
     }
@@ -179,8 +176,9 @@ public class Robot extends TimedRobot {
 	}
 	/**
 	 * This function is called periodically during test mode.
+	 * Use this to have commands that we can test with like camera tests, etc.
 	 */
-	@Override
+	
 	public void testPeriodic() {
 	}
 	

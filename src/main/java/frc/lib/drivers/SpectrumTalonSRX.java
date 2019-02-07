@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -212,11 +211,6 @@ public class SpectrumTalonSRX extends WPI_TalonSRX {
 		Robot.printDebug("S13: " + this.getStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 0));
 		Robot.printDebug("S14: " + this.getStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1,  0));
 		Robot.printDebug("S15: " + this.getStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus, 0));
-	}
-
-	public void configSelectedFeedbackSensor(RemoteFeedbackDevice remotesensor0, int i) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	/* Default SRX Frame Rates

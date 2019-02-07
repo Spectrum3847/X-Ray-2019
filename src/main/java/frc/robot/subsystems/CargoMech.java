@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -138,7 +131,11 @@ public class CargoMech extends Subsystem {
     
     public static void printWarning(String msg) {
     	Debugger.println(msg, Robot._cargo, Debugger.warning4);
-    }
+	}
+	
+	public static void print(String msg){
+		System.out.println(msg);
+	}
 	
 	/*Modify this method to return false if there is a problem with the subsystem
 	  Based on 254-2017 Code

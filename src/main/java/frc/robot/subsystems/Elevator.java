@@ -1,17 +1,9 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.lib.drivers.LeaderTalonSRX;
-import frc.lib.drivers.SpectrumTalonSRX;
 import frc.lib.drivers.SpectrumVictorSPX;
 import frc.robot.HW;
 
@@ -27,16 +19,16 @@ public class Elevator extends Subsystem {
 
   SpectrumVictorSPX spx = new SpectrumVictorSPX(HW.ELEVATOR_SPX);
   LeaderTalonSRX srx = new LeaderTalonSRX(HW.ELEVATOR_SRX, spx);
-  private boolean zeroWhenDownLimit = true;
+  // private boolean zeroWhenDownLimit = true;
 
-  private int targetPosition = 0;
-  private int accel = 0;
-	private int cruiseVel = 0;
+  // // private int targetPosition = 0;
+  // // private int accel = 0;
+	// // private int cruiseVel = 0;
 
   public Elevator() {
     super("Elevator");
-		boolean extensionInvert = true;
-    boolean extensionPhase = true;
+		//boolean extensionInvert = true;
+    //boolean extensionPhase = true;
     srx.setNeutralMode(NeutralMode.Brake);
   }
 

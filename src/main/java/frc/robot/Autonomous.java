@@ -1,9 +1,8 @@
 package frc.robot;
 
-import com.team2363.logger.HelixEvents;
-
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.lib.util.Debugger;
+import frc.lib.util.SpectrumLogger;
 
 public class Autonomous {
 
@@ -11,7 +10,7 @@ public class Autonomous {
         Scheduler.getInstance().removeAll();
         Scheduler.getInstance().enable();
 		Debugger.println("Auto Init");
-		HelixEvents.getInstance().addEvent("System", "Auto Init Complete");
+		SpectrumLogger.getInstance().addEvent("System", "Auto Init Complete");
 	}
 
 	// Periodic method called roughly once every 20ms
@@ -21,7 +20,7 @@ public class Autonomous {
 
 	public static void cancel() {
 		Scheduler.getInstance().removeAll();
-		HelixEvents.getInstance().addEvent("System", "Auto Complete");
+		SpectrumLogger.getInstance().addEvent("System", "Auto Complete");
 		Robot.pneumatics.compressor.start();
 	}
 
