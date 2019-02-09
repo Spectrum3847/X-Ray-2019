@@ -6,7 +6,9 @@ import com.revrobotics.CANPIDController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.lib.drivers.SpectrumSparkMax;
+import frc.lib.util.SpectrumLogger;
 import frc.robot.HW;
+import frc.robot.Robot;
 
 /**
  * An example subsystem.  You can replace me with your own Subsystem.
@@ -66,5 +68,11 @@ public class Drivetrain extends Subsystem {
 
   public void dashboard(){
     //Add values that need to be updated on the dashboard.
+  }
+  public void logEvent(String event){
+		SpectrumLogger.getInstance().addEvent(Robot._drive, event);
+	}
+	public boolean checkSystem() {
+    return true;
   }
 }

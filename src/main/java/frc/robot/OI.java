@@ -8,6 +8,8 @@
 package frc.robot;
 
 import frc.lib.controllers.SpectrumXboxController;
+import frc.robot.commands.cargo.*;
+import frc.robot.commands.hatch.*;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -26,6 +28,10 @@ public class OI {
 
 
     //Operator Buttons
+    operatorController.rightBumper.whileHeld(new HatchEject());
+    operatorController.leftBumper.whileHeld(new HatchReady());
+    operatorController.aButton.toggleWhenPressed(new IntakeCargo());
+    operatorController.yButton.whileHeld(new FireCargo());
 
   }
 

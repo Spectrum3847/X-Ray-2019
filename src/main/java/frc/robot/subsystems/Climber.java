@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.lib.drivers.LeaderTalonSRX;
 import frc.lib.drivers.SpectrumVictorSPX;
 import frc.lib.util.Debugger;
+import frc.lib.util.SpectrumLogger;
 import frc.lib.util.Util;
 import frc.robot.HW;
 import frc.robot.Robot;
@@ -148,4 +149,7 @@ public class Climber extends Subsystem {
 
     return !failure;
   }
+  public void logEvent(String event){
+		SpectrumLogger.getInstance().addEvent(Robot._climber, event);
+	}
 }

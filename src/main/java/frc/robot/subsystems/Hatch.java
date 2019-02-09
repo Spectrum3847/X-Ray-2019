@@ -3,7 +3,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.SpectrumSolenoid;
+import frc.lib.util.SpectrumLogger;
 import frc.robot.HW;
+import frc.robot.Robot;
 
 public class Hatch extends Subsystem {
 
@@ -25,7 +27,7 @@ public class Hatch extends Subsystem {
         ejecting = true;
 	}
 	
-	public void hooksRetract() {
+	public void hatchRetract() {
         hatchEjectSol.set(false);
         ejecting = false;
     }
@@ -46,6 +48,10 @@ public class Hatch extends Subsystem {
         SmartDashboard.putBoolean("Hatch/Holding", holding);
         SmartDashboard.putBoolean("Hatch/Ejecting", ejecting);
     }
+
+    public void logEvent(String event){
+		SpectrumLogger.getInstance().addEvent(Robot._hatch, event);
+	}
     
 	/*Modify this method to return false if there is a problem with the subsystem
 	  Based on 254-2017 Code

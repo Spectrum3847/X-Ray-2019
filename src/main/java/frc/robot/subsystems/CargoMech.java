@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.SpectrumSolenoid;
 import frc.lib.drivers.SpectrumTalonSRX;
 import frc.lib.util.Debugger;
+import frc.lib.util.SpectrumLogger;
 import frc.robot.HW;
 import frc.robot.OI;
 import frc.robot.Robot;
@@ -43,7 +44,7 @@ public class CargoMech extends Subsystem {
 	public void periodic() {
 		 //Rumble operator controller when intake is on
 		    if (cargoTopSRX.getMotorOutputPercent() != 0) {
-		    	CargoMech.printDebug("Rumbling Operator because Intake On");
+		    	printDebug("Rumbling Operator because Intake On");
 		    	OI.operatorController.setRumble(.6, .6);
 		    } else {
 		    	OI.operatorController.setRumble(0, 0);
@@ -121,20 +122,24 @@ public class CargoMech extends Subsystem {
 		SmartDashboard.putBoolean("Cargo/Sensor SW", getIntakeSW());
 	}
 	
-    public static void printDebug(String msg){
+    public void printDebug(String msg){
     	Debugger.println(msg, Robot._cargo, Debugger.debug2);
     }
     
-    public static void printInfo(String msg){
+    public void printInfo(String msg){
     	Debugger.println(msg, Robot._cargo, Debugger.info3);
     }
     
-    public static void printWarning(String msg) {
+    public void printWarning(String msg) {
     	Debugger.println(msg, Robot._cargo, Debugger.warning4);
 	}
 	
-	public static void print(String msg){
+	public void print(String msg){
 		System.out.println(msg);
+	}
+
+	public void logEvent(String event){
+		SpectrumLogger.getInstance().addEvent(Robot._cargo, event);
 	}
 	
 	/*Modify this method to return false if there is a problem with the subsystem
