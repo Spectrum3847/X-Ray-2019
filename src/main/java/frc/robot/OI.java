@@ -7,9 +7,14 @@
 
 package frc.robot;
 
+import frc.lib.controllers.SpectrumAxisButton;
 import frc.lib.controllers.SpectrumXboxController;
+import frc.lib.controllers.SpectrumAxisButton.ThresholdType;
 import frc.robot.commands.cargo.*;
+import frc.robot.commands.elevator.ElevatorZero;
+import frc.robot.commands.elevator.SimpleElevatorGoToPos;
 import frc.robot.commands.hatch.*;
+import frc.robot.subsystems.Elevator;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -19,10 +24,13 @@ public class OI {
 
 	public static SpectrumXboxController driverController;
   public static SpectrumXboxController operatorController;
+  public static SpectrumAxisButton leftTriggerFire;
+  public static SpectrumAxisButton rightTriggerIntake;
+  public static SpectrumAxisButton rightTriggerCanelIntake;
 
   public OI() {
 		driverController = new SpectrumXboxController(0, .02, .02);
-    operatorController = new SpectrumXboxController(1, .10, .10);
+    operatorController = new SpectrumXboxController(1, .15, .15);
 
     //Driver Buttons
 
@@ -30,8 +38,20 @@ public class OI {
     //Operator Buttons
     operatorController.rightBumper.whileHeld(new HatchEject());
     operatorController.leftBumper.whileHeld(new HatchReady());
-    operatorController.aButton.toggleWhenPressed(new IntakeCargo());
-    operatorController.yButton.whileHeld(new FireCargo());
+    operatorController.selectButton.whileHeld(new ElevatorZero());
+    operatorController.aButton.whileHeld(new SimpleElevatorGoToPos(Elevator.posCargoL1));
+    operatorController.bButton.whenPressed(new SimpleElevatorGoToPos(Elevator.posHatchL2));
+    operatorController.xButton.whenPressed(new SimpleElevatorGoToPos(Elevator.posCargoL2));
+    operatorController.yButton.whenPressed(new SimpleElevatorGoToPos(Elevator.posCargoL3));
+    
+    IntakeCargo in = new IntakeCargo();
+    rightTriggerIntake = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.RIGHT_TRIGGER, .5, ThresholdType.GREATER_THAN);
+    rightTriggerIntake.whileHeld(in);
+    rightTriggerCanelIntake = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.RIGHT_TRIGGER, .49, ThresholdType.LESS_THAN);
+    rightTriggerIntake.cancelWhenPressed(in);
+
+    leftTriggerFire = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.LEFT_TRIGGER, .5, ThresholdType.GREATER_THAN);
+    leftTriggerFire.whileHeld(new FireCargo());
 
   }
 

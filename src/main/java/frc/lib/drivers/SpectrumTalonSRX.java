@@ -20,10 +20,7 @@ public class SpectrumTalonSRX extends WPI_TalonSRX {
 
 	public SpectrumTalonSRX(int deviceNumber) {
 		super(deviceNumber);
-		this.configNominalOutputForward(0.0);
-		this.configNominalOutputReverse(0.0);
-		this.configMotionProfileTrajectoryPeriod(0);
-
+		this.configFactoryDefault();
 	}
 	
 	public ErrorCode configPIDF(int slotIdx, double P, double I, double D, double F){

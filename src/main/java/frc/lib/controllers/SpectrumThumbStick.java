@@ -28,7 +28,7 @@ public class SpectrumThumbStick {
 	}
 	
 	public double getY() {
-		double value = this.controller.getRawAxis(yAxis.value);
+		double value = this.controller.getRawAxis(yAxis.value) * -1;
 		return handleDeadband(value, yDeadband);
 	}
 	

@@ -9,7 +9,7 @@ import frc.robot.Robot;
 public class IntakeUp extends Command {
   public IntakeUp() {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.cargoMech);
+    //requires(Robot.cargoMech);
   }
 
   // Called just before this Command runs the first time

@@ -10,7 +10,7 @@ public class RollerBottomOn extends Command {
   private double s;
   public RollerBottomOn(double speed) {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.cargoMech);
+    //requires(Robot.cargoMech);
     s=speed;
   }
 

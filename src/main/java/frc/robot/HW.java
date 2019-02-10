@@ -31,20 +31,20 @@ public class HW {
 	
     /**PDP Slots**/
 
-	public static final int LEFT_DRIVE_FRONT_PDP = 13;
-	public static final int LEFT_DRIVE_MIDDLE_PDP = 12;
-	public static final int LEFT_DRIVE_REAR_PDP = 11;
-	public static final int RIGHT_DRIVE_FRONT_PDP = 2;
-	public static final int RIGHT_DRIVE_MIDDLE_PDP = 3;
-	public static final int RIGHT_DRIVE_REAR_PDP = 4;
+	public static final int LEFT_DRIVE_FRONT_PDP = 10;
+	public static final int LEFT_DRIVE_MIDDLE_PDP = 11;
+	public static final int LEFT_DRIVE_REAR_PDP = 12;
+	public static final int RIGHT_DRIVE_FRONT_PDP = 20;
+	public static final int RIGHT_DRIVE_MIDDLE_PDP = 21;
+	public static final int RIGHT_DRIVE_REAR_PDP = 22;
 	
-	public static final int ELEVATOR_SRX_PDP= 15;
-	public static final int ELEVATOR_SPX_PDP = 14;
-	public static final int CLIMBER_SRX_PDP= 0;
-	public static final int CLIMBER_SPX_PDP = 1;
+	public static final int ELEVATOR_SRX_PDP= 30;
+	public static final int ELEVATOR_SPX_PDP = 31;
+	public static final int CLIMBER_SRX_PDP= 40;
+	public static final int CLIMBER_SPX_PDP = 41;
 	
-	public static final int CARGO_TOP_PDP = 6;
-	public static final int CARGO_BOTTOM_PDP = 5;
+	public static final int CARGO_TOP_PDP = 50;
+	public static final int CARGO_BOTTOM_PDP = 51;
 
 	/**MOTOR ASSIGNMENTS**/
     public static final int LEFT_DRIVE_FRONT = 10;

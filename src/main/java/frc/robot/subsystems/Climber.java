@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.LeaderTalonSRX;
 import frc.lib.drivers.SpectrumVictorSPX;
 import frc.lib.util.Debugger;
@@ -66,6 +67,9 @@ public class Climber extends Subsystem {
   }
 
   public void dashboard() {
+    SmartDashboard.putNumber("Climber/SRXoutput", srx.getMotorOutputPercent());
+    SmartDashboard.putNumber("Climber/SRXcurrent", srx.getOutputCurrent());
+    SmartDashboard.putNumber("Climber/SPXoutput", spx.getMotorOutputPercent());
   }
 
   public static void printDebug(String msg){
@@ -82,6 +86,11 @@ public class Climber extends Subsystem {
 
   public static void print(String msg){
 		System.out.println(msg);
+  }
+  
+  public void logEvent(String event){
+    printDebug(event);
+		SpectrumLogger.getInstance().addEvent(Robot._climber, event);
 	}
 
   //Modify to run a system check for the robot
@@ -149,7 +158,5 @@ public class Climber extends Subsystem {
 
     return !failure;
   }
-  public void logEvent(String event){
-		SpectrumLogger.getInstance().addEvent(Robot._climber, event);
-	}
+
 }

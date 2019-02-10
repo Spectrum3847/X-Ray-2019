@@ -3,6 +3,7 @@ package frc.robot.commands.cargo;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+import frc.robot.Robot;
 
 public class FireCargo extends CommandGroup {
   /**
@@ -25,11 +26,13 @@ public class FireCargo extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
+    requires(Robot.cargoMech);
     addParallel(new IntakeUp());
     addParallel(new TiltUp());
-    addParallel(new WaitCommand(.5));
+    addParallel(new RollerTopOn(0.5));
+    addSequential(new WaitCommand(.2));
     addParallel(new RollerBottomOn(-1.0));
-    addParallel(new WaitCommand(1.0));
+    addSequential(new WaitCommand(.5));
     addParallel(new RollerTopOn(-1.0));
   }
 }

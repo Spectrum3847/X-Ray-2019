@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.SpectrumSolenoid;
+import frc.lib.util.Debugger;
 import frc.lib.util.SpectrumLogger;
 import frc.robot.HW;
 import frc.robot.Robot;
@@ -49,7 +50,24 @@ public class Hatch extends Subsystem {
         SmartDashboard.putBoolean("Hatch/Ejecting", ejecting);
     }
 
+    public static void printDebug(String msg){
+        Debugger.println(msg, Robot._hatch, Debugger.debug2);
+      }
+      
+      public static void printInfo(String msg){
+        Debugger.println(msg, Robot._hatch, Debugger.info3);
+      }
+      
+      public static void printWarning(String msg) {
+        Debugger.println(msg, Robot._hatch, Debugger.warning4);
+      }
+    
+      public static void print(String msg){
+            System.out.println(msg);
+      }
+    
     public void logEvent(String event){
+        printDebug(event);
 		SpectrumLogger.getInstance().addEvent(Robot._hatch, event);
 	}
     

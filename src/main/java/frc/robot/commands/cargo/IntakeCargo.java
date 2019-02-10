@@ -24,7 +24,7 @@ public class IntakeCargo extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-
+    requires(Robot.cargoMech);
     addParallel(new IntakeDown());
     addParallel(new TiltDown());
     addParallel(new RollerBottomOn(1.0));
