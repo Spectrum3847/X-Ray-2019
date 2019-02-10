@@ -46,9 +46,7 @@ public class OI {
     
     IntakeCargo in = new IntakeCargo();
     rightTriggerIntake = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.RIGHT_TRIGGER, .5, ThresholdType.GREATER_THAN);
-    rightTriggerIntake.whileHeld(in);
-    rightTriggerCanelIntake = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.RIGHT_TRIGGER, .49, ThresholdType.LESS_THAN);
-    rightTriggerIntake.cancelWhenPressed(in);
+    rightTriggerIntake.toggleWhenPressed(in);
 
     leftTriggerFire = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.LEFT_TRIGGER, .5, ThresholdType.GREATER_THAN);
     leftTriggerFire.whileHeld(new FireCargo());
