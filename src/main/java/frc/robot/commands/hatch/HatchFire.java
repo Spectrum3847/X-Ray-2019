@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import frc.robot.commands.cargo.*;
 
-public class HatchReady extends CommandGroup {
+public class HatchFire extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public HatchReady() {
+  public HatchFire() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());

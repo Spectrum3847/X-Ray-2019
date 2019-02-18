@@ -63,7 +63,7 @@ public class HW {
     public static final int CARGO_BOTTOM = 51;
     
     /**DIGITAL SENSOR ALLOCATIONS**/
-    public static final int LINE_SENSOR = 0;
+    public static final int CARGO_SESNOR = 0;
     public static final int DIGITAL_IO_1 = 1; 
     public static final int DIGITAL_IO_2 = 2;
     public static final int DIGITAL_IO_3 = 3;

@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.lib.drivers.SpectrumDigitalInput;
 import frc.lib.drivers.SpectrumSolenoid;
 import frc.lib.drivers.SpectrumTalonSRX;
 import frc.lib.util.Debugger;
@@ -26,6 +27,8 @@ public class CargoMech extends Subsystem {
 	
 	public SpectrumSolenoid intakeSol = new SpectrumSolenoid(HW.CARGO_INTAKE_SOL);
 	public SpectrumSolenoid tiltSol = new SpectrumSolenoid(HW.CARGO_TILT_SOL);
+
+	public SpectrumDigitalInput CargoSW = new SpectrumDigitalInput(0);
 	
 	public static double thresholdStart;
 	private static boolean intakeComplete;
@@ -57,7 +60,7 @@ public class CargoMech extends Subsystem {
 	 }
 	
 	public boolean getIntakeSW(){
-		return !Robot.pneumatics.getIntakeSW();
+		return !CargoSW.get();
 	}
 	
 	public void setTop(double value) {

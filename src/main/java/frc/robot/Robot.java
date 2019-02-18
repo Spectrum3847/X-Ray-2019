@@ -17,6 +17,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Hatch;
 import frc.robot.subsystems.Pneumatics;
+import frc.lib.drivers.Photon;
 import frc.lib.util.Debugger;
 import frc.lib.util.SpectrumLogger;
 import frc.lib.util.SpectrumPreferences;
@@ -54,6 +55,7 @@ public class Robot extends TimedRobot {
 	public static Climber climber;
 	public static Elevator elevator;
 	public static Hatch hatch;
+	public static Photon photon;
 	
 	public static void setupSubsystems(){
 		prefs = SpectrumPreferences.getInstance();
@@ -63,6 +65,11 @@ public class Robot extends TimedRobot {
 		climber = new Climber();
 		elevator = new Elevator();
 		hatch = new Hatch();
+		photon = new Photon(192,255);
+		photon.SetNumberOfLEDs(1, 55);
+		photon.SetNumberOfLEDs(2, 55);
+		photon.setAnimation(1,Photon.Animation.CYLON_MIDDLE_DUAL);
+		photon.setAnimation(2,Photon.Animation.CYLON_MIDDLE_DUAL);
     }
 	
 	//Used to keep track of the robot current state easily

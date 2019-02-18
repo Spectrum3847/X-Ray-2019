@@ -36,8 +36,8 @@ public class OI {
 
 
     //Operator Buttons
-    operatorController.rightBumper.whileHeld(new HatchEject());
-    operatorController.leftBumper.whileHeld(new HatchReady());
+    operatorController.leftBumper.whileHeld(new HatchEject());
+    operatorController.rightBumper.whileHeld(new HatchFire());
     operatorController.selectButton.whileHeld(new ElevatorZero());
     operatorController.aButton.whileHeld(new SimpleElevatorGoToPos(Elevator.posCargoL1));
     operatorController.bButton.whenPressed(new SimpleElevatorGoToPos(Elevator.posHatchL2));

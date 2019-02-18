@@ -9,7 +9,7 @@ import frc.robot.Robot;
 public class HatchEject extends Command {
   public HatchEject() {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.hatch);
+    //requires(Robot.hatch);
   }
 
   // Called just before this Command runs the first time

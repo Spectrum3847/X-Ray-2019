@@ -10,11 +10,15 @@ public class SimpleElevatorGoToPos extends Command {
   int pos;
   double upSpeed;
   double downSpeed;
+  SetElevator c;
   
   public SimpleElevatorGoToPos(int position) {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.elevator);
     pos = position;
+    
+    //Command used at the end to set the elevator in place
+    c = new SetElevator(0.05);
   }
 
   // Called just before this Command runs the first time
@@ -39,7 +43,7 @@ public class SimpleElevatorGoToPos extends Command {
 
   // Called once after isFinished returns true
   protected void end() {
-    SetElevator c = new SetElevator(0.05);
+    //start a new command that gives a little bit of voltage to hold elevator in place
     c.start();
   }
 
