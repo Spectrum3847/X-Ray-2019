@@ -54,8 +54,10 @@ dependencies {
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     testCompile 'junit:junit:4.12'
 
+    // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+
     //Custom stuff
-    compile 'com.github.notmattlythgoe:HelixUtilities:master-SNAPSHOT'
     compile 'com.github.dominikWin:badlog:master-SNAPSHOT'
 }
 

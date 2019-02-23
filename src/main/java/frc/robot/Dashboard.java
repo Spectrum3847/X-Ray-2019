@@ -22,7 +22,8 @@ public class Dashboard {
     //Put values that you want to use as use inputs here and set their default state
     public static void intializeDashboard() {
     	if(ENABLE_DASHBOARD){
-    		SmartDashboard.putBoolean("Compressor ENABLE", true);
+            SmartDashboard.putBoolean("Compressor ENABLE", true);
+            SmartDashboard.putBoolean("Limelight-LED Toggle", false);
     	}
     }
 
@@ -34,6 +35,9 @@ public class Dashboard {
         Robot.climber.dashboard();
         Robot.hatch.dashboard();
         Robot.cargoMech.dashboard();
+        Robot.vision.dashboard();
+        SmartDashboard.putBoolean("OperatorButtonPushed", HW.oi.isOperatorButtonPushed());
+        SmartDashboard.putBoolean("DriverButtonPushed", HW.oi.isDriverButtonPushed());
     }
 
     //Things that don't need to be sent out each cycle

@@ -8,8 +8,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.SpectrumSparkMax;
+import frc.lib.util.Debugger;
 import frc.lib.util.SpectrumLogger;
 import frc.robot.HW;
+import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.commands.Drive;
 
@@ -50,6 +52,13 @@ public class Drivetrain extends Subsystem {
     rightMiddleMotor = new SpectrumSparkMax(HW.RIGHT_DRIVE_MIDDLE);
     rightRearMotor = new SpectrumSparkMax(HW.RIGHT_DRIVE_REAR);
 
+    leftFrontMotor.restoreFactoryDefaults();
+    leftMiddleMotor.restoreFactoryDefaults();
+    leftRearMotor.restoreFactoryDefaults();
+    rightMiddleMotor.restoreFactoryDefaults();
+    rightMiddleMotor.restoreFactoryDefaults();
+    rightRearMotor.restoreFactoryDefaults();
+
     leftFrontMotor.setInverted(true);
     leftMiddleMotor.setInverted(true);
     leftRearMotor.setInverted(true);
@@ -57,12 +66,7 @@ public class Drivetrain extends Subsystem {
     rightMiddleMotor.setInverted(true);
     rightRearMotor.setInverted(true);
 
-    leftFrontMotor.setIdleMode(IdleMode.kCoast);
-    leftMiddleMotor.setIdleMode(IdleMode.kCoast);
-    leftRearMotor.setIdleMode(IdleMode.kCoast);
-    rightFrontMotor.setIdleMode(IdleMode.kCoast);
-    rightMiddleMotor.setIdleMode(IdleMode.kCoast);
-    rightRearMotor.setIdleMode(IdleMode.kCoast);
+    defaultIdleMode();
 
     leftEncoder = new CANEncoder(leftFrontMotor);
     rightEncoder = new CANEncoder(rightFrontMotor);
@@ -70,7 +74,7 @@ public class Drivetrain extends Subsystem {
     rightPID = new CANPIDController(rightFrontMotor);
     diffDrive = new DifferentialDrive(leftFrontMotor, rightFrontMotor);
     diffDrive.setSubsystem(this.getName());
-    diffDrive.setDeadband(0.1);
+    diffDrive.setDeadband(0.04);
     diffDrive.setMaxOutput(1.0);
     diffDrive.setSafetyEnabled(true);
     leftEncoder.setPosition(0);
@@ -88,6 +92,27 @@ public class Drivetrain extends Subsystem {
     setDefaultCommand(new Drive());
   }
 
+  public void periodic(){
+  }
+
+  public void brakeMode(){
+    leftFrontMotor.setIdleMode(IdleMode.kBrake);
+    leftMiddleMotor.setIdleMode(IdleMode.kBrake);
+    leftRearMotor.setIdleMode(IdleMode.kBrake);
+    rightFrontMotor.setIdleMode(IdleMode.kBrake);
+    rightMiddleMotor.setIdleMode(IdleMode.kBrake);
+    rightRearMotor.setIdleMode(IdleMode.kBrake);
+  }
+
+  public void defaultIdleMode(){
+    leftFrontMotor.setIdleMode(IdleMode.kBrake);
+    leftMiddleMotor.setIdleMode(IdleMode.kCoast);
+    leftRearMotor.setIdleMode(IdleMode.kCoast);
+    rightFrontMotor.setIdleMode(IdleMode.kBrake);
+    rightMiddleMotor.setIdleMode(IdleMode.kCoast);
+    rightRearMotor.setIdleMode(IdleMode.kCoast);
+  }
+
   public void zeroSensors() {
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
@@ -103,7 +128,25 @@ public class Drivetrain extends Subsystem {
     SmartDashboard.putNumber("Drive/right-output", rightFrontMotor.getAppliedOutput());
     SmartDashboard.putNumber("Drive/right-pos", rightEncoder.getPosition());
     SmartDashboard.putNumber("Drive/right-velocity", rightEncoder.getVelocity());
+    SmartDashboard.putNumber("Drive/SteerStick", OI.driverController.leftStick.getX());
   }
+
+  public void printDebug(String msg){
+    Debugger.println(msg, Robot._drive, Debugger.debug2);
+  }
+  
+  public void printInfo(String msg){
+    Debugger.println(msg, Robot._drive, Debugger.info3);
+  }
+  
+  public void printWarning(String msg) {
+    Debugger.println(msg, Robot._drive, Debugger.warning4);
+  }
+
+  public void print(String msg){
+    System.out.println(msg);
+  }
+
   public void logEvent(String event){
 		SpectrumLogger.getInstance().addEvent(Robot._drive, event);
 	}

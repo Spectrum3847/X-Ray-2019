@@ -15,7 +15,7 @@ public class HatchEject extends Command {
   // Called just before this Command runs the first time
   protected void initialize() {
     Robot.hatch.hatchEject();
-    Robot.hatch.logEvent("HATCH EJECT");
+    Robot.hatch.logEvent("HATCH FIRE");
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -35,6 +35,6 @@ public class HatchEject extends Command {
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   protected void interrupted() {
-  end();
+    end();
   }
 }

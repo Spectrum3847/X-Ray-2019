@@ -1,4 +1,4 @@
-package oi.limelightvision.limelight.frc;
+package frc.lib.drivers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 /**
 *
 */
-public class ControlMode {
+public class LimeLightControlModes {
 
     public enum LedMode {
         kpipeLine(0),   //0	use the LED Mode set in the current pipeline

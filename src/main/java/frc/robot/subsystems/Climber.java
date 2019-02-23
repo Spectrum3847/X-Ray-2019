@@ -10,12 +10,15 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.LeaderTalonSRX;
+import frc.lib.drivers.SpectrumDigitalInput;
+import frc.lib.drivers.SpectrumSolenoid;
 import frc.lib.drivers.SpectrumVictorSPX;
 import frc.lib.util.Debugger;
 import frc.lib.util.SpectrumLogger;
 import frc.lib.util.Util;
 import frc.robot.HW;
 import frc.robot.Robot;
+import frc.robot.commands.Climb;
 
 /**
  * An example subsystem.  You can replace me with your own Subsystem.
@@ -24,10 +27,13 @@ public class Climber extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+  private final static boolean invert = true; //Invert the motor here FWD should be climbing, negative retract
 	public final static int downPositionLimit = 25000; //Needs to be determined manually
 
-  SpectrumVictorSPX spx = new SpectrumVictorSPX(HW.CLIMBER_SPX);
-  LeaderTalonSRX srx = new LeaderTalonSRX(HW.CLIMBER_SRX, spx);
+  final SpectrumVictorSPX spx;
+  final LeaderTalonSRX srx;
+  final SpectrumSolenoid kicker;
+  final SpectrumDigitalInput sensor;
 
   // private int targetPosition = 0;
   // private int accel = 0;
@@ -35,19 +41,24 @@ public class Climber extends Subsystem {
 
   public Climber() {
     super("Climber");
+    spx = new SpectrumVictorSPX(HW.CLIMBER_SPX);
+    srx = new LeaderTalonSRX(HW.CLIMBER_SRX, spx);
+    kicker = new SpectrumSolenoid(HW.CLIMBER_SOL);
+    sensor = new SpectrumDigitalInput(HW.CLIMBER_SENSOR);
 		// boolean climberInvert = true;
     // boolean climberPhase = true;
+    kicker.set(false);
     srx.setNeutralMode(NeutralMode.Brake);
+    srx.setInverted(invert);
     srx.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
   }
 
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
   }
 
   public boolean getLimit(){
-    return srx.getSensorCollection().isFwdLimitSwitchClosed();
+    return !sensor.get();
   }
 
   public double getCurrent(){
@@ -63,13 +74,23 @@ public class Climber extends Subsystem {
   }
 
   public void set(double speed){
-    srx.set(ControlMode.PercentOutput, speed);
+    if (getLimit() && speed >= 0){
+      srx.set(ControlMode.PercentOutput, 0);
+      printInfo("CLIMBER LIMIT HIT");
+    } else {
+      srx.set(ControlMode.PercentOutput, speed);
+    }
+  }
+
+  public void setKicker(boolean b){
+    kicker.set(b);
   }
 
   public void dashboard() {
     SmartDashboard.putNumber("Climber/SRXoutput", srx.getMotorOutputPercent());
     SmartDashboard.putNumber("Climber/SRXcurrent", srx.getOutputCurrent());
     SmartDashboard.putNumber("Climber/SPXoutput", spx.getMotorOutputPercent());
+    SmartDashboard.putBoolean("Climber/Sensor", getLimit());
   }
 
   public static void printDebug(String msg){
@@ -123,6 +144,9 @@ public class Climber extends Subsystem {
     print("CLIMBER ENCODER INIT POS: " + intialEncoderPos + " END POS: " + endEncoderPos);
 
     boolean failure = false;
+
+    //WRITE A TEST FOR THE CLIMBER SENSOR
+    print("!%!%#$!%@ - WRITE A TEST FOR THE CLIMBER SENSOR!!!!!!!!!");
 
     if (currentSRX < kCurrentThres) {
       failure = true;

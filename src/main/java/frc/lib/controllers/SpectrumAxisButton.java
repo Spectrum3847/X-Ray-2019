@@ -26,12 +26,17 @@ public class SpectrumAxisButton extends Button {
 	public SpectrumAxisButton(Joystick joystick, XboxAxis axis, double threshold, ThresholdType thresholdType) {
 		this(joystick, axis.value, threshold, thresholdType);
 	}
+
+	public double getAxis(int a){
+		return -1;
+		//Build this out so that if it's x or y or it flips it
+	}
 	
 
 	public boolean get() {
 		switch (this.thresholdType) {
 		case EXACT:
-			System.out.println("axis value: " + joy.getRawAxis(this.axis));
+			//System.out.println("axis value: " + joy.getRawAxis(this.axis));
 			return joy.getRawAxis(this.axis) == this.targetVal;
 		case LESS_THAN:
 			return joy.getRawAxis(this.axis) < this.targetVal;

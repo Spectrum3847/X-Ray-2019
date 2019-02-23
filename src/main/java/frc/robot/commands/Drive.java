@@ -20,7 +20,24 @@ public class Drive extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   protected void execute() {
-    Robot.drive.diffDrive.arcadeDrive(OI.driverController.triggers.getTwist(), OI.driverController.leftStick.getX(), true);
+    //Square the turn input while keeping the sign
+    double turn = OI.driverController.leftStick.getX() * Math.abs(OI.driverController.leftStick.getX());
+    turn = turn * 0.8;
+    double throttle = OI.driverController.triggers.getTwist();
+
+    if (OI.driverController.aButton.get() && Robot.vision.getLimelightHasValidTarget()){
+      double steerAdjust = Robot.vision.getLimelightSteerCommand();
+      turn = steerAdjust;
+    }
+
+    //If we aren't arcing one side, drive with throttle and turn values
+    if (Math.abs(OI.driverController.rightStick.getX()) < .15){
+      Robot.drive.diffDrive.arcadeDrive(throttle, turn , false);
+    } else {
+      double l = Math.max(OI.driverController.rightStick.getX(), 0);
+      double r = Math.max((-1 * OI.driverController.rightStick.getX()), 0);
+      Robot.drive.diffDrive.tankDrive(l, r);
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -2,6 +2,7 @@ package frc.robot.commands.hatch;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+import frc.robot.Robot;
 import frc.robot.commands.cargo.*;
 
 public class HatchFire extends CommandGroup {
@@ -26,8 +27,14 @@ public class HatchFire extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
     addParallel(new TiltDown());
-    addSequential(new WaitCommand(.1));
+    addSequential(new WaitCommand(.03));
     addParallel(new HatchRelease());
+    addSequential(new WaitCommand(.03));
+    addParallel(new HatchEject());
+  }
 
+  public void initialize(){
+    Robot.hatch.logEvent("HATCH READY");
+    //this.setTimeout(2);
   }
 }

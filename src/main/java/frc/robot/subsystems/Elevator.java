@@ -17,6 +17,7 @@ import frc.lib.util.Util;
 import frc.robot.HW;
 import frc.robot.Robot;
 import frc.robot.commands.elevator.ManualElevator;
+import frc.robot.commands.elevator.MotionMagicElevator;
 
 /**
  * An example subsystem. You can replace me with your own Subsystem.
@@ -27,16 +28,24 @@ public class Elevator extends Subsystem {
 
   // needs to be determined manually
   public final static int posDownLimit = 0;
-  public final static int posCargoL1 = 3800;
-  public final static int posCargoShip = 13500;
-  public final static int posHatchL2 = 13500;
-  public final static int posCargoL2 = 18000;
-  public final static int posHatchL3 = 25000;
-  public final static int posCargoL3 = 30000;
-  public final static int posUpLimit = 30000;
+  public final static int posCargoL1 = 5000;
+  public final static int posCargoShip = 10500;
+  public final static int posHatchL2 = 14000;
+  public final static int posCargoL2 = 17000;
+  public final static int posHatchL3 = 29000;
+  public final static int posCargoL3 = 31200;
+  public final static int posUpLimit = 31200;
 
   private int targetPosition = 0;
-  private int epsilon = 250;
+  private int epsilon = 1000;
+
+  private int kMaxSensorVelocity = 3500;
+  private int kCruiseVelocity = 2800;
+  private int kAcceleration = kCruiseVelocity * 2; //Set accerlaeration to happen in half a second
+  private double kF = 0.292;
+  private double kP = 0.7;
+  private double kI = 0.0;
+  private double kD = 40.0;
 
   private final SpectrumVictorSPX spx;
   public final LeaderTalonSRX srx;
@@ -73,12 +82,13 @@ public class Elevator extends Subsystem {
     srx.configClosedloopRamp(0.25);
     srx.configVoltageCompSaturation(11.5);
     srx.enableVoltageCompensation(true);
+    setMotionMagicParams();
   }
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new ManualElevator());
+    setDefaultCommand(new MotionMagicElevator());
   }
 
   public void softLimitsOn(boolean v){
@@ -131,6 +141,16 @@ public class Elevator extends Subsystem {
     }
   }
 
+  public void MotionMagicControl(){
+    srx.set(ControlMode.MotionMagic, targetPosition);
+  }
+
+  public void setMotionMagicParams(){
+    srx.configPIDF(0, kP, kI, kD, kF);
+    srx.configMotionCruiseVelocity(kCruiseVelocity);
+    srx.configMotionAcceleration(kAcceleration);
+  }
+
   public void forceSetTargetPosition(int position) {
     this.targetPosition = position;
   }
@@ -181,5 +201,6 @@ public class Elevator extends Subsystem {
     SmartDashboard.putNumber("Elevator/SRXout", srx.getMotorOutputPercent());
     SmartDashboard.putNumber("Elevator/SPXout", spx.getMotorOutputPercent());
     SmartDashboard.putNumber("Elevator/SRXcurrent", srx.getOutputCurrent());
+    SmartDashboard.putNumber("Elevator/Veloctiy", srx.getSelectedSensorVelocity());
   }
 }

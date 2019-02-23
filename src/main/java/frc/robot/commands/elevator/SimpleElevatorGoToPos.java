@@ -23,8 +23,13 @@ public class SimpleElevatorGoToPos extends Command {
 
   // Called just before this Command runs the first time
   protected void initialize() {
-    upSpeed = Robot.prefs.getNumber("ElevatorUpSpeed", 0.6);
-    downSpeed = Robot.prefs.getNumber("ElevatorDownSpeed", -0.3);
+    if (Robot.elevator.isNearPosition(pos)){
+      upSpeed = 0;
+      downSpeed = 0;
+    } else{
+      upSpeed = Robot.prefs.getNumber("ElevatorUpSpeed", 0.8);
+      downSpeed = Robot.prefs.getNumber("ElevatorDownSpeed", -0.4);
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run

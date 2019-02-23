@@ -2,11 +2,10 @@ package frc.lib.util;
 
 import badlog.lib.BadLog;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.team2363.logger.HelixEvents;
 
 import java.io.File;
 import java.util.function.Supplier;
-
-import com.team2363.logger.HelixEvents;
 
 public class SpectrumLogger {
 	private static SpectrumLogger instance;

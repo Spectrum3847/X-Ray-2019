@@ -12,7 +12,6 @@ import frc.lib.util.SpectrumLogger;
 import frc.robot.HW;
 import frc.robot.OI;
 import frc.robot.Robot;
-import frc.robot.commands.cargo.ManualCargo;
 
 /**
  * CargoMech Subsystem
@@ -37,7 +36,7 @@ public class CargoMech extends Subsystem {
 	 public CargoMech() {
 		cargoTopSRX.setInverted(true);
 		cargoBottomSRX.setInverted(true);
-		cargoTopSRX.configVoltageCompSaturation(11.5);
+		cargoTopSRX.configVoltageCompSaturation(12.0);
 		cargoTopSRX.enableVoltageCompensation(true);
 		cargoBottomSRX.configVoltageCompSaturation(11.5);
 		cargoBottomSRX.enableVoltageCompensation(true);
@@ -46,7 +45,7 @@ public class CargoMech extends Subsystem {
 	
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
-		setDefaultCommand(new ManualCargo());
+		//setDefaultCommand(new ManualCargo());
 	}
 	
 	public void periodic() {
