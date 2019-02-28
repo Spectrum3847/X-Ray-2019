@@ -23,7 +23,7 @@ public class Climb extends Command {
   protected void execute() {
       //Control the climber with the right stick, set a deadband value of 30%
       Robot.climber.set(1.0);
-      Robot.drive.diffDrive.tankDrive(1.0, 1.0);
+      Robot.drive.tankDrive(1.0, 1.0);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -35,7 +35,7 @@ public class Climb extends Command {
   // Called once after isFinished returns true
   protected void end() {
     Robot.climber.set(0.0);
-    Robot.drive.diffDrive.stopMotor();;
+    Robot.drive.stop();;
   }
 
   // Called when another command which requires one or more of the same

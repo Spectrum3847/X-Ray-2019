@@ -31,7 +31,7 @@ public class Elevator extends Subsystem {
   public final static int posCargoL1 = 5000;
   public final static int posCargoShip = 10500;
   public final static int posHatchL2 = 14000;
-  public final static int posCargoL2 = 17000;
+  public final static int posCargoL2 = 17500;
   public final static int posHatchL3 = 29000;
   public final static int posCargoL3 = 31200;
   public final static int posUpLimit = 31200;
@@ -199,7 +199,7 @@ public class Elevator extends Subsystem {
     SmartDashboard.putBoolean("Elevator/BottomLimitSW", getBottomLimitSW());
     SmartDashboard.putBoolean("Elevator/TopLimitSW", getTopLimitSW());
     SmartDashboard.putNumber("Elevator/SRXout", srx.getMotorOutputPercent());
-    SmartDashboard.putNumber("Elevator/SPXout", spx.getMotorOutputPercent());
+    //SmartDashboard.putNumber("Elevator/SPXout", spx.getMotorOutputPercent());
     SmartDashboard.putNumber("Elevator/SRXcurrent", srx.getOutputCurrent());
     SmartDashboard.putNumber("Elevator/Veloctiy", srx.getSelectedSensorVelocity());
   }

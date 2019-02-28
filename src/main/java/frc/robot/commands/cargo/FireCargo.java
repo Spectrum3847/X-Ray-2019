@@ -30,9 +30,9 @@ public class FireCargo extends CommandGroup {
     addParallel(new IntakeUp());
     addParallel(new TiltUp());
     addParallel(new RollerTopOn(0.5));
-    addSequential(new WaitCommand(.1));
+    addSequential(new WaitCommand(.05));
     addParallel(new RollerBottomOn(-1.0));
-    addSequential(new WaitCommand(.2));
+    addSequential(new WaitCommand(.1));
     addParallel(new RollerTopOn(-1.0));
   }
 }

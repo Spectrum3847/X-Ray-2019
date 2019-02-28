@@ -13,7 +13,7 @@ public class SpectrumAxisButton extends Button {
 		
 	public static enum ThresholdType
 	{
-			LESS_THAN, GREATER_THAN, EXACT, POV;	
+			LESS_THAN, GREATER_THAN, EXACT, POV, DEADBAND;	
 	}
 
 	public SpectrumAxisButton(Joystick joystick, int axis, double threshold, ThresholdType thresholdType) {
@@ -44,6 +44,8 @@ public class SpectrumAxisButton extends Button {
 			return joy.getRawAxis(this.axis) > this.targetVal;
 		case POV:
 			return joy.getPOV() == this.targetVal;
+		case DEADBAND:
+			return Math.abs(joy.getRawAxis(this.axis)) > this.targetVal;
 		default:
 		return false;
 		}

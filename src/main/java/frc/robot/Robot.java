@@ -103,7 +103,6 @@ public class Robot extends TimedRobot {
 
 	//Add any code that needs to run in all states
 	public void robotPeriodic() {
-		Dashboard.updateDashboard();
 	}
 	
 	 /**
@@ -189,7 +188,7 @@ public class Robot extends TimedRobot {
 	}
 	
     private static void initDebugger(){
-    	Debugger.setLevel(Debugger.info3); //Set the initial Debugger Level
+    	Debugger.setLevel(Debugger.debug2); //Set the initial Debugger Level
     	Debugger.flagOn(_general); //Set all the flags on, comment out ones you want off
     	Debugger.flagOn(_controls);
     	Debugger.flagOn(_auton);

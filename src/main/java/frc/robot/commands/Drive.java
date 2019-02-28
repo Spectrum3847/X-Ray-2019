@@ -20,24 +20,29 @@ public class Drive extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   protected void execute() {
-    //Square the turn input while keeping the sign
-    double turn = OI.driverController.leftStick.getX() * Math.abs(OI.driverController.leftStick.getX());
-    turn = turn * 0.8;
+    double turn = OI.driverController.leftStick.getX();
     double throttle = OI.driverController.triggers.getTwist();
 
-    if (OI.driverController.aButton.get() && Robot.vision.getLimelightHasValidTarget()){
-      double steerAdjust = Robot.vision.getLimelightSteerCommand();
-      turn = steerAdjust;
+    //Robot.drive.print("aBut: " + OI.driverController.aButton.get() + " valid: " + Robot.vision.getLimelightHasValidTarget());
+    //If we are in single side steering, drive normally or by vision
+    if (Math.abs(OI.driverController.rightStick.getX()) < .2){
+      //If we are in vision mode use it to steer, if not drive normally
+      if (OI.driverController.aButton.get() && Robot.vision.getLimelightHasValidTarget()){
+        Robot.drive.print("VISION TURNING!!!");
+        Robot.drive.visionDrive(throttle);
+      } else {      
+        Robot.drive.DriverArcadeDrive(throttle, turn);
+      } 
     }
-
-    //If we aren't arcing one side, drive with throttle and turn values
-    if (Math.abs(OI.driverController.rightStick.getX()) < .15){
-      Robot.drive.diffDrive.arcadeDrive(throttle, turn , false);
-    } else {
+    else {//Single side steering and put us in brake mode for it.
       double l = Math.max(OI.driverController.rightStick.getX(), 0);
       double r = Math.max((-1 * OI.driverController.rightStick.getX()), 0);
-      Robot.drive.diffDrive.tankDrive(l, r);
+      Robot.drive.tankDrive(l * .9 , r * .9);
     }
+    //If we aren't arcing one side, drive with throttle and turn values
+    
+    //Robot.drive.printDebug("Turn: " + turn + " Throttle: " + throttle);
+    //Robot.drive.printDebug("LeftOut: " + Robot.drive.leftFrontMotor.get() + " RightOut: " + Robot.drive.rightFrontMotor.get());
   }
 
   // Make this return true when this Command no longer needs to run execute()

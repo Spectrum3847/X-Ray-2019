@@ -112,7 +112,7 @@ public class CargoMech extends Subsystem {
 	
 	//check if the intake is complete, right now just the intakeSW but might need more logic in the future
 	public boolean isIntakeComplete() {
-		intakeComplete = getIntakeSW();
+		intakeComplete = getIntakeSW() && !OI.operatorController.Dpad.Right.get();
 		return intakeComplete;
 	}
 	
@@ -122,8 +122,8 @@ public class CargoMech extends Subsystem {
 		SmartDashboard.putNumber("Cargo/Top Output", cargoTopSRX.getMotorOutputPercent());
 		SmartDashboard.putNumber("Cargo/Bottom Current", cargoBottomSRX.getOutputCurrent());
 		SmartDashboard.putNumber("Cargo/Top Current", cargoTopSRX.getOutputCurrent());
-		SmartDashboard.putBoolean("Cargo/Mech On?", cargoTopSRX.getMotorOutputPercent() != 0 && 
-													cargoBottomSRX.getMotorOutputPercent() != 0);
+		//SmartDashboard.putBoolean("Cargo/Mech On?", cargoTopSRX.getMotorOutputPercent() != 0 && 
+													//cargoBottomSRX.getMotorOutputPercent() != 0);
 		SmartDashboard.putBoolean("Cargo/TiltUp", tiltUp);
 		SmartDashboard.putBoolean("Cargo/IntakeDown", intakeDown);
 		SmartDashboard.putBoolean("Cargo/Sensor SW", getIntakeSW());

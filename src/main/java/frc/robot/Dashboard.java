@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.util.Util;
@@ -8,6 +9,8 @@ import frc.lib.util.Util;
  * @author matthew, JAG
  */
 public class Dashboard {
+
+    private static final Notifier dashThread = new Notifier(new dashboardThread());
 	
 	public static final boolean ENABLE_DASHBOARD = true;
 	
@@ -24,7 +27,8 @@ public class Dashboard {
     	if(ENABLE_DASHBOARD){
             SmartDashboard.putBoolean("Compressor ENABLE", true);
             SmartDashboard.putBoolean("Limelight-LED Toggle", false);
-    	}
+        }
+        dashThread.startPeriodic(0.02);
     }
 
     //Check each subsystems dashboard values and update them
@@ -76,4 +80,12 @@ public class Dashboard {
         }
         t++;
     }
+
+    private static class dashboardThread implements Runnable {
+		
+		@Override
+		public void run() {
+			updateDashboard();
+		}
+	}
 }

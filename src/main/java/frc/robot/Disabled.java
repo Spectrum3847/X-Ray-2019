@@ -16,6 +16,5 @@ public class Disabled {
     //Periodic method called roughly once every 20ms
     public static void periodic() {
         Scheduler.getInstance().run();
-        Dashboard.updateDashboard();
     }
 }

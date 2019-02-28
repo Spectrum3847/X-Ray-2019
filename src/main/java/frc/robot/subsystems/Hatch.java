@@ -46,8 +46,8 @@ public class Hatch extends Subsystem {
 
 	//Add the dashboard values for this subsystem
 	public void dashboard() {
-        SmartDashboard.putBoolean("Hatch/Holding", holding);
-        SmartDashboard.putBoolean("Hatch/Ejecting", ejecting);
+        //SmartDashboard.putBoolean("Hatch/Holding", holding);
+        //SmartDashboard.putBoolean("Hatch/Ejecting", ejecting);
     }
 
     public static void printDebug(String msg){

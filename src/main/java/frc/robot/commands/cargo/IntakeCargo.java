@@ -1,6 +1,7 @@
 package frc.robot.commands.cargo;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import frc.robot.OI;
 import frc.robot.Robot;
 
 public class IntakeCargo extends CommandGroup {
@@ -29,6 +30,9 @@ public class IntakeCargo extends CommandGroup {
     addParallel(new TiltDown());
     addParallel(new RollerBottomOn(1.0));
     addParallel(new RollerTopOn(1.0));
+  }
+  protected void intialize(){
+    Robot.cargoMech.logEvent("Intaking Cargo");
   }
   protected boolean isFinished() {
     return Robot.cargoMech.isIntakeComplete();
