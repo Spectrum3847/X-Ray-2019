@@ -11,6 +11,7 @@ public class Disabled {
         a.start();
         Scheduler.getInstance().removeAll();
         a.close();
+        Robot.vision.teleopInit();
     }
 
     //Periodic method called roughly once every 20ms

@@ -22,14 +22,18 @@ public class Climb extends Command {
   // Called repeatedly when this Command is scheduled to run
   protected void execute() {
       //Control the climber with the right stick, set a deadband value of 30%
-      Robot.climber.set(1.0);
       Robot.drive.tankDrive(1.0, 1.0);
+      if (!Robot.climber.getLimit()){
+        Robot.climber.set(1.0);
+      } else {
+        Robot.climber.set(0.0);
+      }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   //finish when we hit the limit switch of the climber current is too high.
   protected boolean isFinished() {
-    return Robot.climber.getLimit();
+    return false;
   }
 
   // Called once after isFinished returns true

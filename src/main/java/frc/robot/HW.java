@@ -75,7 +75,7 @@ public class HW {
     public static final int DIGITAL_IO_9 = 9;  
     
     /**Pneumatics**/
-    public static final int CLIMBER_SOL = 7;
+    public static final int CLIMBER_SOL = 0;
     public static final int HATCH_EJECT_SOL = 11;
     public static final int HATCH_HOLD_SOL = 10;
     public static final int CARGO_INTAKE_SOL = 9;

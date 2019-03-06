@@ -31,10 +31,10 @@ public class Elevator extends Subsystem {
   public final static int posCargoL1 = 5000;
   public final static int posCargoShip = 10500;
   public final static int posHatchL2 = 14000;
-  public final static int posCargoL2 = 17500;
+  public final static int posCargoL2 = 18250;
   public final static int posHatchL3 = 29000;
-  public final static int posCargoL3 = 31200;
-  public final static int posUpLimit = 31200;
+  public final static int posCargoL3 = 32800;
+  public final static int posUpLimit = 32800;
 
   private int targetPosition = 0;
   private int epsilon = 1000;

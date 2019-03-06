@@ -79,7 +79,7 @@ public class Drivetrain extends Subsystem {
     rightMiddleMotor.enableVoltageCompensation(voltageCompensation);
     rightRearMotor.enableVoltageCompensation(voltageCompensation);*/
 
-    int currentLimit = 50;
+    int currentLimit = 65;
     leftFrontMotor.setSmartCurrentLimit(currentLimit);
     leftMiddleMotor.setSmartCurrentLimit(currentLimit);
     leftRearMotor.setSmartCurrentLimit(currentLimit);

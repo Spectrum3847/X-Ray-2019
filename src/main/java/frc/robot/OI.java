@@ -46,13 +46,15 @@ public class OI {
 
     //Driver Buttons
     //A button is aim with camera inside drive() command
-    //driverController.yButton.whileHeld(new Climb());
-    //driverController.selectButton.toggleWhenPressed(new ClimberKicker());
+    driverController.yButton.whileHeld(new Climb());
+    driverController.selectButton.whileHeld(new ClimberKicker());
     driverController.bButton.whileHeld(new BrakeMode());
     new SpectrumAxisButton(OI.driverController, XboxAxis.RIGHT_X, .3, ThresholdType.DEADBAND).whileHeld(new BrakeMode());
 
 
     //Operator Buttons
+
+    //Cargo and Hatch Controls
     IntakeCargo in = new IntakeCargo();
     rightTriggerButton = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.RIGHT_TRIGGER, .5, ThresholdType.GREATER_THAN);
     new SpectrumAndNotButton(rightTriggerButton, operatorController.Dpad.Left).whileHeld(in);
@@ -65,6 +67,14 @@ public class OI {
     new SpectrumTwoButton(leftDpad, leftTriggerButton).whileHeld(new HatchFire());
     new SpectrumTwoButton(leftDpad, rightTriggerButton).whileHeld(new HatchReady());
 
+    leftStickIn = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.LEFT_Y, -.25, ThresholdType.LESS_THAN);
+    leftStickIn.whileHeld(new RollerBottomOn(1.0));
+    leftStickIn.whileHeld(new RollerTopOn(1.0));
+
+    leftStickCargoShip = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.LEFT_Y, .25, ThresholdType.GREATER_THAN);
+    leftStickCargoShip.whileHeld(new CargoShipDrop());
+
+    //Elevator Controls
     operatorController.startButton.whileHeld(new ElevatorZero());
     SpectrumIOButton cargoButton = new SpectrumIOButton(Robot.cargoMech.CargoSW);
     SpectrumOrButton rightDpad =  new SpectrumOrButton(operatorController.Dpad.Right, new SpectrumOrButton(operatorController.Dpad.UpRight, operatorController.Dpad.DownRight));
@@ -80,13 +90,6 @@ public class OI {
 
     new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.RIGHT_Y, -.15, ThresholdType.LESS_THAN).whileHeld(new ManualElevator());
     new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.RIGHT_Y, .15, ThresholdType.GREATER_THAN).whileHeld(new ManualElevator());
-
-    leftStickIn = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.LEFT_Y, -.25, ThresholdType.LESS_THAN);
-    leftStickIn.whileHeld(new RollerBottomOn(1.0));
-    leftStickIn.whileHeld(new RollerTopOn(1.0));
-
-    leftStickCargoShip = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.LEFT_Y, .25, ThresholdType.GREATER_THAN);
-    leftStickCargoShip.whileHeld(new CargoShipDrop());
 
   }
 
