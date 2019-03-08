@@ -1,0 +1,46 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module PythonSandbox">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/PythonSandbox/modinfo.html"><img src="/moddoc/PythonSandbox/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Python Sandbox</td></tr>
+<tr><td class=modinfosynopsis>Simple example of image processing using OpenCV in Python on JeVois. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;Python</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;No&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;352&nbsp;288&nbsp;30.0&nbsp;YUYV&nbsp;352&nbsp;288&nbsp;30.0&nbsp;JeVois&nbsp;PythonSandbox</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This module is here for you to experiment with Python OpenCV on JeVois.</p>
+<p>By default, we get the next video frame from the camera as an OpenCV BGR (color) image named 'inimg'. We then apply some image processing to it to create an output BGR image named 'outimg'. We finally add some text drawings to outimg and send it to host over USB.</p>
+<p>See <a href="http://jevois.org/tutorials">http://jevois.org/tutorials</a> for tutorials on getting started with programming JeVois in Python without having to install any development software on your host computer.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr><td colspan=5>This module exposes no parameter</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfocfg><tr><td class=modinfocfg><b>script.cfg file</b><hr><pre># Script executed by the JeVois command-line interpreter when this module is loaded
+
+# Set camera to night mode so it will slow down framerate if light level is low:
+#setcam autowb 9
+</pre></td></tr></table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classPythonSandbox_1_1PythonSandbox.html">PythonSandbox</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2017 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

@@ -1,0 +1,52 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module PythonParallel">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/PythonParallel/modinfo.html"><img src="/moddoc/PythonParallel/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Python Parallel</td></tr>
+<tr><td class=modinfosynopsis>Simple example of parallel image processing using OpenCV in Python on JeVois. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;Python</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;1280&nbsp;240&nbsp;25.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;25.0&nbsp;JeVois&nbsp;PythonParallel<em>&nbsp;#&nbsp;CAUTION:&nbsp;has&nbsp;major&nbsp;issues</em></tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;25.0&nbsp;JeVois&nbsp;PythonParallel</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This module by default simply converts the input image to a grayscale OpenCV image, and then applies the Canny edge detection algorithm, 4 times running in parallel with 4 different edge coarseness settings. The resulting image is simply the 4 horizontally stacked results from the 4 parallel runs. Try to edit it to do something else!</p>
+<p>True multi-threaded processing is not supported by Python (the python <b>threading</b> module does not allow concurrent execution of several threads of python code). Parallel processing is somewhat feasible using the <b>mutiprocessing</b> python module, which is a process-based multiprocessing approach. Note that there are significant costs to parallelizing code over multiple processes, the main one being that data needs to be transferred back and forth between processes, using pipes, sockets, or other mechanisms. For machine vision, this is a significant problem as the amount of data (streaming video) that needs to be packaged, transferred, and unpacked is high. C++ is the preferred way of developping multi-threaded JeVois modules, where std::async() makes multi-threaded programming easy.</p>
+<p><b>You should consider this module highly experimental and buggy!</b> This module is currently not working well when running with USB output. There is some internal issue with using the Python <b>multiprocessing</b> module in JeVois. Just creating a python process pool interferes with our USB video output driver, even if we simply create the pool and destroy it immediately without using it at all. Once the python process pool has been created, any subsequent attempt to change video format will fail with a video buffer allocation error. This module may still be useful for robotics applications where parallel python processing is needed but no video output to USB is necessary).</p>
+<p>This module is hence not enabled by default. You need to edit <b>JEVOIS:/config/videomappings.cfg</b>, and uncomment the line with <a href='/moddoc/PythonParallel/modinfo.html'><strong class='jvmod'>PythonParallel</strong></a> in it, to enable it.</p>
+<p>Conflated with this problem is the fact that guvcview sometimes, when it starts, turns streaming on, then grabs only 5 frames, then stream off, then set same video format again, and then stream on again. We are not sure why guvcview is doing this, however, this breaks this module since the second streamon fails as it is unable to allocate video buffers.</p>
+<h2>Using this module </h2>
+<p>One way we have been able to use this module with USB video outputs is: start <code>guvcview -f yuyv -x 352x288</code> (launches  <a href='/moddoc/PythonSandbox/modinfo.html'><strong class='jvmod'>PythonSandbox</strong></a>), then use the pull-down menu to select 1280x240 (switches to <a href='/moddoc/PythonParallel/modinfo.html'><strong class='jvmod'>PythonParallel</strong></a>)</p>
+<p>This module is best used with no USB video outputs. Connect to JeVois over serial and issue: </p><pre class="fragment"> setpar serout USB # to get text results through serial-over-USB, or use Hard if you want results on the 4-pin serial
+ setpar serlog USB # to get log messages through serial-over-USB, or use Hard if you want them on the 4-pin serial
+ setmapping2 YUYV 320 240 25.0 JeVois PythonParallel
+ streamon</pre><p>As noted above, once you have loaded this module, any later attempts to change format again will fail.</p>
+<h2>Creating your own module </h2>
+<p>See <a href="http://jevois.org/tutorials">http://jevois.org/tutorials</a> for tutorials on getting started with programming JeVois in Python without having to install any development software on your host computer.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr><td colspan=5>This module exposes no parameter</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classPythonParallel_1_1PythonParallel.html">PythonParallel</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2018 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

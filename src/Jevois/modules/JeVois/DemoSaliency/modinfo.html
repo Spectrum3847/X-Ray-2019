@@ -1,0 +1,76 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module DemoSaliency">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/DemoSaliency/modinfo.html"><img src="/moddoc/DemoSaliency/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Demo Saliency</td></tr>
+<tr><td class=modinfosynopsis>Simple demo of the visual saliency algorithm of Itti et al., IEEE PAMI, 1998. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;No&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;176&nbsp;90&nbsp;120.0&nbsp;YUYV&nbsp;88&nbsp;72&nbsp;120.0&nbsp;JeVois&nbsp;DemoSaliency</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;150&nbsp;60.0&nbsp;YUYV&nbsp;160&nbsp;120&nbsp;60.0&nbsp;JeVois&nbsp;DemoSaliency</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;352&nbsp;180&nbsp;120.0&nbsp;YUYV&nbsp;176&nbsp;144&nbsp;120.0&nbsp;JeVois&nbsp;DemoSaliency</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;352&nbsp;180&nbsp;100.0&nbsp;YUYV&nbsp;176&nbsp;144&nbsp;100.0&nbsp;JeVois&nbsp;DemoSaliency</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;300&nbsp;60.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;60.0&nbsp;JeVois&nbsp;DemoSaliency</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;704&nbsp;360&nbsp;30.0&nbsp;YUYV&nbsp;352&nbsp;288&nbsp;30.0&nbsp;JeVois&nbsp;DemoSaliency</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;1280&nbsp;600&nbsp;15.0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;15.0&nbsp;JeVois&nbsp;DemoSaliency</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;260&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;DemoArUco</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>Visual saliency algorithm as described at <a href="http://ilab.usc.edu/bu/">http://ilab.usc.edu/bu/</a></p>
+<p>This algorithm finds the location in the camera's view that is the most attention-grabbing, conspicuous, or so-called salient. This location is marked on every video frame by the pink square. Salient locations detected on each frame are smoothed over time using a Kalman filter. The smoothed attention trajectory is shown with a green circle.</p>
+<p>For an introduction to visual saliency computation, see <a href="http://ilab.usc.edu/bu/">http://ilab.usc.edu/bu/</a></p>
+<h2>Serial Messages </h2>
+<p>This module can send standardized serial messages as described in <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a>, where all coordinates and sizes are standardized using <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a>. One message is issued on every video frame at the temporally smoothed attended (most salient) location (green circle in the video display):</p>
+<ul>
+<li>Serial message type: <b>2D</b> </li>
+<li><code>id</code>: always <b>sm</b> (shorthand for saliency map)</li>
+<li><code>x</code>, <code>y</code>: standardized 2D coordinates of temporally-filtered most salient point</li>
+<li><code>w</code>, <code>h</code>: standardized size of the pink square box around each attended point</li>
+<li><code>extra</code>: none (empty string)</li>
+</ul>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) cweight</td><td class=modinfopar>byte</td><td class=modinfopar>Color channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) iweight</td><td class=modinfopar>byte</td><td class=modinfopar>Intensity channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) oweight</td><td class=modinfopar>byte</td><td class=modinfopar>Orientation channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) fweight</td><td class=modinfopar>byte</td><td class=modinfopar>Flicker channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) mweight</td><td class=modinfopar>byte</td><td class=modinfopar>Motion channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) centermin</td><td class=modinfopar>size_t</td><td class=modinfopar>Lowest (finest) of the 3 center scales</td><td class=modinfopar>2</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) deltamin</td><td class=modinfopar>size_t</td><td class=modinfopar>Lowest (finest) of the 2 center-surround delta scales</td><td class=modinfopar>3</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) smscale</td><td class=modinfopar>size_t</td><td class=modinfopar>Scale of the saliency map</td><td class=modinfopar>4</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) mthresh</td><td class=modinfopar>byte</td><td class=modinfopar>Motion threshold</td><td class=modinfopar>0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) fthresh</td><td class=modinfopar>byte</td><td class=modinfopar>Flicker threshold</td><td class=modinfopar>0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) msflick</td><td class=modinfopar>bool</td><td class=modinfopar>Use multiscale flicker computation</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman2D.html">Kalman2D</A>) usevel</td><td class=modinfopar>bool</td><td class=modinfopar>Use velocity tracking, in addition to position</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman2D.html">Kalman2D</A>) procnoise</td><td class=modinfopar>float</td><td class=modinfopar>Process noise standard deviation</td><td class=modinfopar>0.003F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman2D.html">Kalman2D</A>) measnoise</td><td class=modinfopar>float</td><td class=modinfopar>Measurement noise standard deviation</td><td class=modinfopar>0.05F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman2D.html">Kalman2D</A>) postnoise</td><td class=modinfopar>float</td><td class=modinfopar>A posteriori error estimate standard deviation</td><td class=modinfopar>0.3F</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfocfg><tr><td class=modinfocfg><b>script.cfg file</b><hr><pre># Optional script to run each time the module is loaded. Commands should be exactly as you would interactively type into
+# the Engine user interface:
+info
+</pre></td></tr></table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classDemoSaliency.html">DemoSaliency</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

@@ -1,0 +1,93 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module DemoArUco">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/DemoArUco/modinfo.html"><img src="/moddoc/DemoArUco/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Demo ArUco</td></tr>
+<tr><td class=modinfosynopsis>Simple demo of ArUco augmented reality markers detection and decoding. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;DemoArUco</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;260&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;DemoArUco</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;500&nbsp;20.0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;20.0&nbsp;JeVois&nbsp;DemoArUco</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+<div class=galleryItem><a href="screenshot2.png"><img src="screenshot2.png"></a></div>
+<div class=galleryItem><a href="screenshot3.png"><img src="screenshot3.png"></a></div>
+<div class=galleryItem><a href="screenshot4.png"><img src="screenshot4.png"></a></div>
+<div class=galleryItem><a href="screenshot5.png"><img src="screenshot5.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>Detect and decode patterns known as ArUco markers, which are small 2D barcodes often used in augmented reality and robotics.</p>
+<p>ArUco markers are small 2D barcodes. Each ArUco marker corresponds to a number, encoded into a small grid of black and white pixels. The ArUco decoding algorithm is capable of locating, decoding, and of estimating the pose (location and orientation in space) of any ArUco markers in the camera's field of view.</p>
+<p>ArUco markers are very useful as tags for many robotics and augmented reality applications. For example, one may place an ArUco next to a robot's charging station, an elevator button, or an object that a robot should manipulate.</p>
+<p>For more information about ArUco, see <a href="https://www.uco.es/investiga/grupos/ava/node/26">https://www.uco.es/investiga/grupos/ava/node/26</a></p>
+<p>The implementation of ArUco used by JeVois is the one of OpenCV-Contrib, documented here: <a href="http://docs.opencv.org/3.2.0/d5/dae/tutorial_aruco_detection.html">http://docs.opencv.org/3.2.0/d5/dae/tutorial_aruco_detection.html</a></p>
+<p>ArUco markers can be created with several standard dictionaries. Different dictionaries give rise to different numbers of pixels in the markers, and to different numbers of possible symbols that can be created using the dictionary. The default dictionary used by JeVois is 4x4 with 50 symbols. Other dictionaries are also supported by setting the parameter <code>dictionary</code> over serial port or in a config file, up to 7x7 with 1000 symbols.</p>
+<h2>Creating and printing markers </h2>
+<p>We have created the 50 markers available in the default dictionary (4x4_50) as PNG images that you can download and print, at <a href="http://jevois.org/data/ArUco.zip">http://jevois.org/data/ArUco.zip</a></p>
+<p>To make your own, for example, using another dictionary, see the documentation of the ArUco component of JeVoisBase. Some utilities are provided with the component.</p>
+<h2>Serial Messages </h2>
+<p>This module can send standardized serial messages as described in <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a>.</p>
+<p>When <code>dopose</code> is turned on, 3D messages will be sent, otherwise 2D messages.</p>
+<p>One message is issued for every detected ArUco, on every video frame.</p>
+<p>2D messages when <code>dopose</code> is off:</p>
+<ul>
+<li>Serial message type: <b>2D</b> </li>
+<li><code>id</code>: decoded ArUco marker ID, with a prefix 'U'</li>
+<li><code>x</code>, <code>y</code>, or vertices: standardized 2D coordinates of marker center or corners</li>
+<li><code>w</code>, <code>h</code>: standardized marker size</li>
+<li><code>extra</code>: none (empty string)</li>
+</ul>
+<p>3D messages when <code>dopose</code> is on:</p>
+<ul>
+<li>Serial message type: <b>3D</b> </li>
+<li><code>id</code>: decoded ArUco marker ID, with a prefix 'U'</li>
+<li><code>x</code>, <code>y</code>, <code>z</code>, or vertices: 3D coordinates in millimeters of marker center or corners</li>
+<li><code>w</code>, <code>h</code>, <code>d</code>: marker size in millimeters, a depth of 1mm is always used</li>
+<li><code>extra</code>: none (empty string)</li>
+</ul>
+<p>If you will use the quaternion data (Detail message style; see <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a>), you should probably set the <code>serprec</code> parameter to something non-zero to get enough accuracy in the quaternion values.</p>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+<h2>Things to try </h2>
+<ul>
+<li>First, use a video viewer software on a host computer and select one of the video modes with video output over USB. Point your JeVois camera towards one of the screenshots provided with this module, or towards some ArUco markers that you find on the web or that you have printed from the collection above (note: the default dictionary is 4x4_50, see parameter <code>dictionary</code>).</li>
+<li>Then try it with no video output, as it would be used by a robot. Connect to the command-line interface of your JeVois camera through the serial-over-USB connection (see <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserCli.html">Command-line interface user guide</a>; on Linux, you would use <b>sudo screen /dev/ttyACM0 115200</b>) and try: <pre class="fragment">  setpar serout USB
+  setmapping2 YUYV 320 240 30.0 JeVois DemoArUco
+  streamon</pre> and point the camera to some markers; the camera should issue messages about all the markers it identifies.</li>
+</ul>
+<h2>Computing and showing 3D pose </h2>
+<p>The OpenCV ArUco module can also compute the 3D location and orientation of each marker in the world when <code>dopose</code> is true. The requires that the camera be calibrated, see the documentation of the ArUco component in JeVoisBase. A generic calibration that is for a JeVois camera with standard lens is included in files <b>calibration640x480.yaml</b>, <b>calibration352x288.yaml</b>, etc in the jevoisbase share directory (on the MicroSD, this is in <b>JEVOIS:/share/camera/</b>).</p>
+<p>When doing pose estimation, you should set the <code>markerlen</code> parameter to the size (width) in millimeters of your actual physical markers. Knowing that size will allow the pose estimation algorithm to know where in the world your detected markers are.</p>
+<h2>Tutorial and video </h2>
+<p>Check out this tutorial on how to <a href="http://jevois.org/tutorials/UserRobotCar.html">build a simple visually-guided toy robot car for under $100 with JeVois</a>, which uses ArUco at its core. A demo video is here:</p>
+<p> <div align='center'><iframe width='560' height='315' src='http://www.youtube.com/embed/7cMtD-ef83E?rel=0&loop=1' frameborder='0' allowfullscreen align='middle'></iframe></div></p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) camparams</td><td class=modinfopar>std::string</td><td class=modinfopar>File stem of camera parameters, or empty. Camera resolution will be appended, as well as a .yaml extension. For example, specifying &#39;calibration&#39; here and running the camera sensor at 320x240 will attempt to load calibration320x240.yaml from within directory  JEVOIS_SHARE_PATH /camera/ - Note that this parameter cannot be changed at runtime (must be set in the module&#39;s params.cfg).</td><td class=modinfopar>calibration</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) detparams</td><td class=modinfopar>std::string</td><td class=modinfopar>Filename of detector parameters, or empty - Note that this parameter cannot be changed at runtime (must be set in the module&#39;s params.cfg).</td><td class=modinfopar></td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) dictionary</td><td class=modinfopar>Dict</td><td class=modinfopar>Symbol dictionary to use - Note that this parameter cannot be changed at runtime (must be set in the module&#39;s params.cfg).</td><td class=modinfopar>Dict::D4X4_50</td><td class=modinfopar>Dict_Values</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) dopose</td><td class=modinfopar>bool</td><td class=modinfopar>Compute (and show) pose vectors, requires a valid camera calibration</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) markerlen</td><td class=modinfopar>float</td><td class=modinfopar>Marker side length (millimeters), used only for pose estimation</td><td class=modinfopar>100.0F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) showcube</td><td class=modinfopar>bool</td><td class=modinfopar>Show a 3D cube on top of each detected marker, when dopose is also true</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classDemoArUco.html">DemoArUco</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

@@ -1,0 +1,77 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module ColorFiltering">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/ColorFiltering/modinfo.html"><img src="/moddoc/ColorFiltering/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Color Filtering</td></tr>
+<tr><td class=modinfosynopsis>Image filtering using OpenCV. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;No&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;240&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;ColorFiltering</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+<div class=galleryItem><a href="screenshot2.png"><img src="screenshot2.png"></a></div>
+<div class=galleryItem><a href="screenshot3.png"><img src="screenshot3.png"></a></div>
+<div class=galleryItem><a href="screenshot4.png"><img src="screenshot4.png"></a></div>
+<div class=galleryItem><a href="screenshot5.png"><img src="screenshot5.png"></a></div>
+<div class=galleryItem><a href="screenshot6.png"><img src="screenshot6.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This module is to learn about basic image filtering. It was developed to allow students to instantly observe the effects of different filters and their parameters on live video. The module implements a variety of filters using OpenCV. Each filter exposes some paremeters (e.g., kernel size) that can be set interactively to understand their effects onto the filter behavior.</p>
+<p>Available filters:</p>
+<ul>
+<li>Blur: Replace each pixel by the average of all pixels in a box around the pixel of interest. Leads to a blur effect on the image, more pronounced with bigger box sizes. See <a href="http://docs.opencv.org/3.2.0/d4/d86/group__imgproc__filter.html#ga8c45db9afe636703801b0b2e440fce37">http://docs.opencv.org/3.2.0/d4/d86/group__imgproc__filter.html#ga8c45db9afe636703801b0b2e440fce37</a></li>
+<li>Median: Replaces each pixel by the median value within a box around that pixel. Tends to blur and remove salt-and-peper noise from the image. <a href="http://docs.opencv.org/3.2.0/d4/d86/group__imgproc__filter.html#ga564869aa33e58769b4469101aac458f9">http://docs.opencv.org/3.2.0/d4/d86/group__imgproc__filter.html#ga564869aa33e58769b4469101aac458f9</a></li>
+<li>Morpho: mathematical morphology operations, see <a href="http://docs.opencv.org/3.2.0/d9/d61/tutorial_py_morphological_ops.html">http://docs.opencv.org/3.2.0/d9/d61/tutorial_py_morphological_ops.html</a> for an introduction, and <a href="http://docs.opencv.org/3.2.0/d4/d86/group__imgproc__filter.html">http://docs.opencv.org/3.2.0/d4/d86/group__imgproc__filter.html</a></li>
+<li>Laplacian: Computes second spatial derivative of the image. Tends to amplify edges and noise. See <a href="http://docs.opencv.org/3.2.0/d4/d86/group__imgproc__filter.html#gad78703e4c8fe703d479c1860d76429e6">http://docs.opencv.org/3.2.0/d4/d86/group__imgproc__filter.html#gad78703e4c8fe703d479c1860d76429e6</a></li>
+<li>Bilateral: bi-lateral filter, very slow, see <a href="http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/MANDUCHI1/Bilateral_Filtering.html">http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/MANDUCHI1/Bilateral_Filtering.html</a> and <a href="http://docs.opencv.org/3.2.0/d4/d86/group__imgproc__filter.html#ga9d7064d478c95d60003cf839430737ed">http://docs.opencv.org/3.2.0/d4/d86/group__imgproc__filter.html#ga9d7064d478c95d60003cf839430737ed</a></li>
+</ul>
+<h2>How to use this module </h2>
+<ul>
+<li>Either try it with JeVois Inventor using <b>YUYV 640x240 @ 30 fps</b>. Note that each time you select a new <code>effect</code>, this will affect the set of parameters that are available for that effect, but currently JeVois Inventor has no way of being notified of that change. So just click to another tab (e.g., the <b>Info</b> tab), and then back to the <b>Parameters</b> tab each time you change the effect. This will refresh the parameter list.</li>
+<li>Or, open a video viewer on your host computer and select <b>YUYV 640x240 @ 30 fps</b> (see <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserQuick.html">Quickstart user guide</a>)</li>
+<li>Open a serial communication to JeVois (see <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserCli.html">Command-line interface user guide</a>)</li>
+<li>Type <code>help</code> and observe the available parameter called <code>effect</code> </li>
+<li>Start by setting the <code>effect</code> parameter to a given effect type. For example: <code>setpar effect Median</code> or <code>setpar effect Morpho</code> (commands are case-sensitive).</li>
+<li><p class="startli">Then type <code>help</code> to see what additional parameters are available for each effect. For example, for Median, you can adjust the kernel size (parameter <code>ksize</code>). For Morpho, you can select the type of morphological operation (parameter <code>op</code>), structuring element shape (parameter <code>kshape</code>) and size (parameter <code>ksize</code>), etc.</p>
+<p class="startli">Complete example: </p><div class="fragment"><div class="line">setpar effect Morpho</div><div class="line">help</div><div class="line">setpar op Open</div><div class="line">setpar ksize 7 7</div></div><!-- fragment --><p class="startli">With <strong class='jvversion'>JeVois v1.5</strong> and above, you may want to use <code>help2</code> instead of <code>help</code>, which is a shorter and more compact help message that shows parameters and commands of the running machine vision module only (and no general parameters related to the JeVois core).</p>
+</li>
+</ul>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classColorFiltering.html">ColorFiltering</A>) effect</td><td class=modinfopar>Effect</td><td class=modinfopar>Image processing effect to apply</td><td class=modinfopar>Effect::Morpho</td><td class=modinfopar>Effect_Values</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlurFilter.html">BlurFilter</A>) ksize</td><td class=modinfopar>cv::Size</td><td class=modinfopar>Blur kernel width and height</td><td class=modinfopar>cv::Size(3, 3)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlurFilter.html">BlurFilter</A>) anchor</td><td class=modinfopar>cv::Point</td><td class=modinfopar>Anchor point x and y; default value [-1 -1] means that the anchor is at the kernel center</td><td class=modinfopar>cv::Point(-1, -1)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classLaplacianFilter.html">LaplacianFilter</A>) ksize</td><td class=modinfopar>unsigned int</td><td class=modinfopar>Laplacian kernel size</td><td class=modinfopar>1</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classLaplacianFilter.html">LaplacianFilter</A>) scale</td><td class=modinfopar>double</td><td class=modinfopar>Laplacian scale factor applied to the computed values</td><td class=modinfopar>1.0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classLaplacianFilter.html">LaplacianFilter</A>) delta</td><td class=modinfopar>double</td><td class=modinfopar>Laplacian delta offset applied to the computed values</td><td class=modinfopar>0.0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classMedianFilter.html">MedianFilter</A>) ksize</td><td class=modinfopar>unsigned int</td><td class=modinfopar>Median kernel size (must be an odd number &gt;= 3)</td><td class=modinfopar>3</td><td class=modinfopar>boost::regex(^[3579]|\\\\d+[13579]$)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classMorphologyFilter.html">MorphologyFilter</A>) op</td><td class=modinfopar>MorphoOp</td><td class=modinfopar>Morphological operation to apply</td><td class=modinfopar>MorphoOp::Close</td><td class=modinfopar>MorphoOp_Values</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classMorphologyFilter.html">MorphologyFilter</A>) kshape</td><td class=modinfopar>KernelShape</td><td class=modinfopar>Kernel shape</td><td class=modinfopar>KernelShape::Rectangle</td><td class=modinfopar>KernelShape_Values</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classMorphologyFilter.html">MorphologyFilter</A>) ksize</td><td class=modinfopar>cv::Size</td><td class=modinfopar>Kernel width and height</td><td class=modinfopar>cv::Size(7, 7)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classMorphologyFilter.html">MorphologyFilter</A>) anchor</td><td class=modinfopar>cv::Point</td><td class=modinfopar>Anchor point x and y; default value [-1 -1] means that the anchor is at the kernel center</td><td class=modinfopar>cv::Point(-1, -1)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classMorphologyFilter.html">MorphologyFilter</A>) iter</td><td class=modinfopar>unsigned int</td><td class=modinfopar>Number of iterations of the filter to apply</td><td class=modinfopar>1U</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBilateralFilter.html">BilateralFilter</A>) d</td><td class=modinfopar>int</td><td class=modinfopar>Diameter of each pixel neighborhood that is used during filtering. If it is non-positive, it is computed from sigmaSpace</td><td class=modinfopar>0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBilateralFilter.html">BilateralFilter</A>) sigmaColor</td><td class=modinfopar>double</td><td class=modinfopar>Filter sigma in the color space. A larger value of the parameter means that farther colors within the pixel neighborhood (see sigmaSpace) will be mixed together, resulting in larger areas of semi-equal color. </td><td class=modinfopar>2.0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBilateralFilter.html">BilateralFilter</A>) sigmaSpace</td><td class=modinfopar>double</td><td class=modinfopar>Filter sigma in the coordinate space. A larger value of the parameter means that farther pixels will influence each other as long as their colors are close enough (see sigmaColor). When d&gt;0, it specifies the neighborhood size regardless of sigmaSpace. Otherwise, d is proportional to sigmaSpace.</td><td class=modinfopar>2.0</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classColorFiltering.html">ColorFiltering</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

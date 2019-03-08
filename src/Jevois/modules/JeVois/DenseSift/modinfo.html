@@ -1,0 +1,45 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module DenseSift">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/DenseSift/modinfo.html"><img src="/moddoc/DenseSift/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Dense SIFT</td></tr>
+<tr><td class=modinfosynopsis>Simple demo of dense SIFT feature descriptors extraction. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;No&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;288&nbsp;120&nbsp;5.0&nbsp;YUYV&nbsp;160&nbsp;120&nbsp;5.0&nbsp;JeVois&nbsp;DenseSift</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>GREY&nbsp;128&nbsp;117&nbsp;5.0&nbsp;YUYV&nbsp;160&nbsp;120&nbsp;5.0&nbsp;JeVois&nbsp;DenseSift</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>Compute SIFT keypoint descriptors on a regular grid over the input image.</p>
+<p>This module is useful when using JeVois as a pre-processor, delivering a dense array of keypoint descriptors to a host computer, where the array is disguised as a grayscale video frame. Upon receiving the array of descriptors, the host computer can further process them. For example, the host computer may compute camera motion in space by matching descriptors across successive frames, or may attempt to detect and identify objects based on the descriptors.</p>
+<p>Beware that changing the values for the <code>step</code> and <code>binsize</code> parameters changes the output image size, so you need to adjust your video mappings accordingly. Hence, setting those parameters is best done once and for all in the module's optional <b>params.cfg</b> or <b>script.cfg</b> file.</p>
+<p>This module can either have a color YUYV output, which shows the original camera image, keypoint locations, and descriptor values; or a greyscale output, which is just the descriptor values.</p>
+<p>This algorithm is implemented using the VLfeat library. It is quite slow, maybe because this library is a bit old and appears to be single-threaded.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDenseSift.html">DenseSift</A>) step</td><td class=modinfopar>unsigned int</td><td class=modinfopar>Keypoint step (pixels)</td><td class=modinfopar>11</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDenseSift.html">DenseSift</A>) binsize</td><td class=modinfopar>unsigned int</td><td class=modinfopar>Descriptor bin size</td><td class=modinfopar>8</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classDenseSift.html">DenseSift</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

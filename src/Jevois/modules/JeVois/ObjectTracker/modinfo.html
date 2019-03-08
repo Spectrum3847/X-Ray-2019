@@ -1,0 +1,114 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module ObjectTracker">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/ObjectTracker/modinfo.html"><img src="/moddoc/ObjectTracker/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Object Tracker</td></tr>
+<tr><td class=modinfosynopsis>Simple color-based object detection/tracking. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;254&nbsp;60.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;60.0&nbsp;JeVois&nbsp;ObjectTracker</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;60.0&nbsp;JeVois&nbsp;ObjectTracker</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This modules isolates pixels within a given HSV range (hue, saturation, and value of color pixels), does some cleanups, and extracts object contours. It sends information about object centers over serial.</p>
+<p>This module usually works best with the camera sensor set to manual exposure, manual gain, manual color balance, etc so that HSV color values are reliable. See the file <b>script.cfg</b> file in this module's directory for an example of how to set the camera settings each time this module is loaded.</p>
+<p>This code was loosely inspired by: <a href="https://raw.githubusercontent.com/kylehounslow/opencv-tuts/master/object-tracking-tut/objectTrackingTut.cpp">https://raw.githubusercontent.com/kylehounslow/opencv-tuts/master/object-tracking-tut/objectTrackingTut.cpp</a> written by Kyle Hounslow, 2013.</p>
+<h2>Serial Messages </h2>
+<p>This module can send standardized serial messages as described in <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a>. One message is issued on every video frame for each detected and good object (good objects have a pixel area within the range specified by <code>objectarea</code>, and are only reported when the image is clean enough according to <code>maxnumobj</code>). The <code>id</code> field in the messages simply is <b>blob</b> for all messages.</p>
+<ul>
+<li>Serial message type: <b>2D</b> </li>
+<li><code>id</code>: always <b>blob</b> </li>
+<li><code>x</code>, <code>y</code>, or vertices: standardized 2D coordinates of blob center or of corners of bounding box (depending on <code>serstyle</code>)</li>
+<li><code>w</code>, <code>h</code>: standardized object size</li>
+<li><code>extra</code>: none (empty string)</li>
+</ul>
+<p> <strong class='jvversion'>JeVois v1.8.1</strong>: Note that this module sends one message per detected object (blob) and per frame. You may want to specify <code>setpar serstamp Frame</code> if you need to get all the objects on one given frame (they will have the same frame number prefix). Here is an example output with <code>setpar serstyle Detail</code> and <code>setpar serstamp Frame</code> (see <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more info about <code>serstamp</code> and <code>serstyle</code>):</p>
+<pre class="fragment">2940 D2 blob 4 -238 237 -238 19 13 19 13 237
+2940 D2 blob 4 266 209 194 206 213 -277 285 -274
+2940 D2 blob 4 575 -243 499 -511 613 -544 689 -275
+2940 D2 blob 4 -150 -413 -150 -613 50 -613 50 -413
+2940 D2 blob 4 -913 -306 -1000 -306 -1000 -750 -913 -750
+2941 D2 blob 4 -313 119 -313 -106 -63 -106 -63 119
+2941 D2 blob 4 189 105 115 99 157 -385 231 -379
+2941 D2 blob 4 469 -275 469 -500 575 -500 575 -275
+2941 D2 blob 4 -200 -531 -200 -744 -13 -744 -13 -531
+2942 D2 blob 4 -381 -13 -381 -244 -113 -244 -113 -13
+2942 D2 blob 4 478 -213 310 -402 414 -494 582 -305
+2942 D2 blob 4 144 -6 53 -15 114 -668 206 -660
+</pre><p> In this example, we detected 5 blobs on frame 2940, then 4 blobs on frame 2941, then 3 blobs on frame 2942.</p>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+<h2>Trying it out </h2>
+<p>The default parameter settings (which are set in <b>script.cfg</b> explained below) attempt to detect light blue objects. Present a light blue object to the JeVois camera and see whether it is detected. When detected and good enough according to <code>objectarea</code> and <code>maxnumobj</code>, a green circle will be drawn at the center of each good object.</p>
+<p>For further use of this module, you may want to check out the following tutorials:</p>
+<ul>
+<li><a href="http://jevois.org/tutorials/UserColorTracking.html">Tuning the color-based object tracker using a python graphical interface</a></li>
+<li><a href="http://jevois.org/tutorials/UserPanTilt.html">Making a motorized pan-tilt head for JeVois and tracking objects</a></li>
+<li><a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/ArduinoTutorial.html">Tutorial on how to write Arduino code that interacts with JeVois</a></li>
+</ul>
+<h2>Tuning </h2>
+<p>You should adjust parameters <code>hrange</code>, <code>srange</code>, and <code>vrange</code> to isolate the range of Hue, Saturation, and Value (respectively) that correspond to the objects you want to detect. Note that there is a <b>script.cfg</b> file in this module's directory that provides a range tuned to a lighgt blue object, as shown in the demo screenshot.</p>
+<p>Tuning the parameters is best done interactively by connecting to your JeVois camera while it is looking at some object of the desired color. Once you have achieved a tuning, you may want to set the hrange, srange, and vrange parameters in your <b>script.cfg</b> file for this module on the microSD card (see below).</p>
+<p>Typically, you would start by narrowing down on the hue, then the value, and finally the saturation. Make sure you also move your camera around and show it typical background clutter so check for false positives (detections of things which you are not interested, which can happen if your ranges are too wide).</p>
+<h2>Config file </h2>
+<p>JeVois allows you to store parameter settings and commands in a file named <b>script.cfg</b> stored in the directory of a module. The file <b>script.cfg</b> may contain any sequence of commands as you would type them interactively in the JeVois command-line interface. For the <a href='/moddoc/ObjectTracker/modinfo.html'><strong class='jvmod'>ObjectTracker</strong></a> module, a default script is provided that sets the camera to manual color, gain, and exposure mode (for more reliable color values), and to setup communication with a pan/tilt head as described in <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/ArduinoTutorial.html">Tutorial on how to write Arduino code that interacts with JeVois</a>.</p>
+<p>The <b>script.cfg</b> file for <a class="el" href="classObjectTracker.html" title="Simple color-based object detection/tracking. ">ObjectTracker</a> is stored on your microSD at <b>JEVOIS:/modules/JeVois/ObjectTracker/script.cfg</b> and is shown in <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/ArduinoTutorial.html">Tutorial on how to write Arduino code that interacts with JeVois</a> as an example.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) hrange</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;</td><td class=modinfopar>Range of H values for HSV window (0=red/do not use because of wraparound, 30=yellow, 45=light green, 60=green, 75=green cyan, 90=cyan, 105=light blue, 120=blue, 135=purple, 150=pink)</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;(10, 245)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) srange</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;</td><td class=modinfopar>Range of S (saturation) values for HSV window</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;(10, 245)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) vrange</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;</td><td class=modinfopar>Range of V (brightness) values for HSV window</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;(10, 245)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) maxnumobj</td><td class=modinfopar>size_t</td><td class=modinfopar>Max number of objects to declare a clean image</td><td class=modinfopar>10</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) objectarea</td><td class=modinfopar>jevois::Range&lt;unsigned int&gt;</td><td class=modinfopar>Range of object area (in pixels) to track</td><td class=modinfopar>jevois::Range&lt;unsigned int&gt;(20*20, 100*100)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) erodesize</td><td class=modinfopar>size_t</td><td class=modinfopar>Erosion structuring element size (pixels)</td><td class=modinfopar>3</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) dilatesize</td><td class=modinfopar>size_t</td><td class=modinfopar>Dilation structuring element size (pixels)</td><td class=modinfopar>8</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfocfg><tr><td class=modinfocfg><b>script.cfg file</b><hr><pre># Demo configuration script for ObjectTracker module.
+
+# Set camera to fixed color balance, gain, and exposure, so that we get more reliable colors than we would obtain under
+# automatic mode:
+setcam autowb 1
+setcam autogain 0
+setcam autoexp 0
+setcam redbal 110
+setcam bluebal 170
+setcam gain 16
+setcam absexp 500
+
+# Detect a light blue flash drive:
+setpar hrange 95...110
+setpar srange 100...255
+setpar vrange 60...253
+
+# Send info log messages to None, send serial strings from module to Hard serial port:
+setpar serlog None
+setpar serout Hard
+
+# Apply high gain to our pan/tilt servos, sending the commands below to our Arduino over the Hard serial port that we
+# configured above to handle the serout messages. The Arduino controlling the pan/tilt servos will receive and parse
+# these commands, and will set the servo gains:
+serout PANGAIN 400
+serout TILTGAIN 300
+</pre></td></tr></table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classObjectTracker.html">ObjectTracker</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

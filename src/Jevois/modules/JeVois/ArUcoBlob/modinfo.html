@@ -1,0 +1,157 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module ArUcoBlob">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/ArUcoBlob/modinfo.html"><img src="/moddoc/ArUcoBlob/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>ArUco Blob</td></tr>
+<tr><td class=modinfosynopsis>Combined ArUco marker + multiple color-based object detection. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;266&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;ArUcoBlob</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;ArUcoBlob</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.jpg"><img src="screenshot1.jpg"></a></div>
+<div class=galleryItem><a href="screenshot2.jpg"><img src="screenshot2.jpg"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This modules 1) detects ArUco markers (small black-and-white geometric patterns which can be used as tags for some objects), and, in parallel, 2) isolates pixels within multiple given HSV ranges (hue, saturation, and value of color pixels), does some cleanups, and extracts object contours. It sends information about detected ArUco tags and color objects over serial.</p>
+<p>This module was developed to allow students to easily develop visually-guided robots that can at the same time detect ArUco markers placed in the environment to signal certain key objects (e.g., charging station, home base) and colored objects of different kinds (e.g., blue people, green trees, and yellow fires).</p>
+<p>This module usually works best with the camera sensor set to manual exposure, manual gain, manual color balance, etc so that HSV color values are reliable. See the file <b>script.cfg</b> file in this module's directory for an example of how to set the camera settings each time this module is loaded.</p>
+<p>Since this is a combination module, refer to:</p>
+<ul>
+<li> <a href='/moddoc/DemoArUco/modinfo.html'><strong class='jvmod'>DemoArUco</strong></a> for the ArUco algorithm and messages</li>
+<li> <a href='/moddoc/ObjectTracker/modinfo.html'><strong class='jvmod'>ObjectTracker</strong></a> for the blob detection algorithm and messages</li>
+</ul>
+<p>The number of parallel blob trackers is determined by parameter <code>numtrack</code>, which should be set before the module is initialized, i.e., in the module's <b>params.cfg</b> file. It cannot be changed while the module is running.</p>
+<p>The module runs at about 50 frames/s with 3 parallel blob detectors plus ArUco, at 320x240 camera sensor resolution. Increasing to 10 parallel blob detectors will still get you about 25 frames/s (but finding robust non-overlapping HSV ranges for all those detectors will become challenging!)</p>
+<p>To configure parameters <code>hrange</code>, <code>srange</code>, and <code>vrange</code> for each detector in the module's <b>scrip.cfg</b>, we recommend that you do it one by one for each kind of colored object you want, using the <a href='/moddoc/ObjectTracker/modinfo.html'><strong class='jvmod'>ObjectTracker</strong></a> module (which shares the same color blob detection code, just for one HSV range) and the tutorial on <a href="http://jevois.org/tutorials/UserColorTracking.html">Tuning the color-based object tracker using a python graphical interface</a>, or the sliders in JeVois Inventor. Just make sure that both modules have the same camera settings in their respective <b>script.cfg</b> files.</p>
+<h2>Using the serial outputs </h2>
+<p>We recommend the following settings (to apply after you load the module, for example in the module's <b>script.cfg</b> file): </p><div class="fragment"><div class="line">setpar serout USB      <span class="comment"># to send to serial-over-USB, or use Hard to send to 4-pin serial port</span></div><div class="line">setpar serstyle Normal <span class="comment"># to get ID, center location, size for every detected color blob and ArUco tag</span></div><div class="line">setpar serstamp Frame  <span class="comment"># to add video frame number to all messages</span></div></div><!-- fragment --><p>With a scene as shown in this module's screenshots, you would then get outputs like:</p>
+<pre class="fragment">...
+1557 N2 U42 -328 -9 706 569
+1557 N2 U18 338 -241 613 444
+1557 N2 blob0 616 91 406 244
+1557 N2 blob1 28 584 881 331
+1557 N2 blob2 47 -553 469 206
+1558 N2 U42 -328 -9 706 569
+1558 N2 U18 338 -241 613 444
+1558 N2 blob0 547 113 519 275
+1558 N2 blob1 28 581 881 338
+1558 N2 blob2 47 -553 469 206
+1559 N2 U42 -331 -13 700 563
+1559 N2 U18 338 -244 613 450
+1559 N2 blob0 369 153 200 194
+1559 N2 blob0 616 94 381 250
+1559 N2 blob1 28 581 881 338
+1559 N2 blob2 47 -553 469 206
+...
+</pre><p>which basically means that, on frame 1557, ArUco markers U42 and U18 were detected, then blob detector named "blob0" (configured for light blue objects in <b>script.cfg</b>) detected one blob, then "blob1" (configured for yellow) also detected one, and finally "blob2" (configured for green) found one too. That was all for frame 1157, and we then switch to frame 1158 (with essentially the same detections), then frame 1159 (note how blob0 detected 2 different blobs on that frame), and so on. See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more info about these messages.</p>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+<h2>Running with no video output (standalone mode) </h2>
+<p>Try these settings in the global initialization script file of JeVois, which is executed when JeVois powers up, in <b>JEVOIS:/config/initscript.cfg</b>:</p>
+<div class="fragment"><div class="line">setmapping2 YUYV 320 240 45.0 JeVois ArUcoBlob <span class="comment"># to select this module upon power up</span></div><div class="line">setpar serout Hard     <span class="comment"># to send detection messages to 4-pin serial port</span></div><div class="line">setpar serstyle Normal <span class="comment"># to get ID, center location, size</span></div><div class="line">setpar serstamp Frame  <span class="comment"># to add video frame number to all messages</span></div><div class="line">streamon               <span class="comment"># start capturing and processing camera sensor data</span></div></div><!-- fragment --><p>Make sure you do not have conflicting settings in the module's <b>params.cfg</b> or <b>script.cfg</b> file; as a reminder, the order of execution is: 1) <b>initscript.cfg</b> runs, which loads the module through the <code>setmapping2</code> command; 2) as part of the loading process and before the module is initialized, settings in <b>params.cfg</b> are applied; 3) the module is then initialized and commands in <b>script.cfg</b> are run; 4) the additional commands following <code>setmapping2</code> in <b>initscript.cfg</b> are finally run. Next time JeVois starts up, it will automatically load this module and start sending messages to the hardware 4-pin serial port, which you should then connect to an Arduino or other robot controller.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUcoBlob.html">ArUcoBlob</A>) numtrack</td><td class=modinfopar>size_t</td><td class=modinfopar>Number of parallel blob trackers to run. They will be named blob0, blob1, etc for parameters and serial messages</td><td class=modinfopar>3</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) hrange</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;</td><td class=modinfopar>Range of H values for HSV window (0=red/do not use because of wraparound, 30=yellow, 45=light green, 60=green, 75=green cyan, 90=cyan, 105=light blue, 120=blue, 135=purple, 150=pink)</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;(10, 245)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) srange</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;</td><td class=modinfopar>Range of S (saturation) values for HSV window</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;(10, 245)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) vrange</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;</td><td class=modinfopar>Range of V (brightness) values for HSV window</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;(10, 245)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) maxnumobj</td><td class=modinfopar>size_t</td><td class=modinfopar>Max number of objects to declare a clean image</td><td class=modinfopar>10</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) objectarea</td><td class=modinfopar>jevois::Range&lt;unsigned int&gt;</td><td class=modinfopar>Range of object area (in pixels) to track</td><td class=modinfopar>jevois::Range&lt;unsigned int&gt;(20*20, 100*100)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) erodesize</td><td class=modinfopar>size_t</td><td class=modinfopar>Erosion structuring element size (pixels)</td><td class=modinfopar>3</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBlobDetector.html">BlobDetector</A>) dilatesize</td><td class=modinfopar>size_t</td><td class=modinfopar>Dilation structuring element size (pixels)</td><td class=modinfopar>8</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) camparams</td><td class=modinfopar>std::string</td><td class=modinfopar>File stem of camera parameters, or empty. Camera resolution will be appended, as well as a .yaml extension. For example, specifying &#39;calibration&#39; here and running the camera sensor at 320x240 will attempt to load calibration320x240.yaml from within directory  JEVOIS_SHARE_PATH /camera/ - Note that this parameter cannot be changed at runtime (must be set in the module&#39;s params.cfg).</td><td class=modinfopar>calibration</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) detparams</td><td class=modinfopar>std::string</td><td class=modinfopar>Filename of detector parameters, or empty - Note that this parameter cannot be changed at runtime (must be set in the module&#39;s params.cfg).</td><td class=modinfopar></td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) dictionary</td><td class=modinfopar>Dict</td><td class=modinfopar>Symbol dictionary to use - Note that this parameter cannot be changed at runtime (must be set in the module&#39;s params.cfg).</td><td class=modinfopar>Dict::D4X4_50</td><td class=modinfopar>Dict_Values</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) dopose</td><td class=modinfopar>bool</td><td class=modinfopar>Compute (and show) pose vectors, requires a valid camera calibration</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) markerlen</td><td class=modinfopar>float</td><td class=modinfopar>Marker side length (millimeters), used only for pose estimation</td><td class=modinfopar>100.0F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) showcube</td><td class=modinfopar>bool</td><td class=modinfopar>Show a 3D cube on top of each detected marker, when dopose is also true</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfocfg><tr><td class=modinfocfg><b>params.cfg file</b><hr><pre># Optional parameter setting file to run each time the
+# module is loaded, BEFORE it is started.
+#
+# Only entries of the form "param = value" are allowed,
+# and you can only set the module's parameters here (not
+# any of the system parameters).
+#
+# Example:
+#
+# serstyle = Detail
+
+# For ArUcoBlob, you can change the number of parallel blob detectors here:
+numtrack = 3
+</pre></td></tr></table></td></tr>
+<tr><td><table class=modinfocfg><tr><td class=modinfocfg><b>script.cfg file</b><hr><pre># Optional script to run each time the module is loaded,
+# AFTER it is started.
+#
+# Commands in this file should be exactly as you would type
+# interactively into the JeVois command-line interface.
+#
+# Example:
+#
+# setcam brightness 1
+# setpar cpumax 1200
+# info
+
+# Set camera to fixed color balance, gain, and exposure, so that we get more reliable colors than we would obtain under
+# automatic mode:
+setcam autowb 1
+setcam autogain 0
+setcam autoexp 0
+setcam redbal 110
+setcam bluebal 170
+setcam gain 16
+setcam absexp 500
+
+# Number of parallel threads has to be configured before the module is initialized. See params.cfg for this module.
+
+# Hue values: 0=red/do not use because of wraparound, 30=yellow, 45=light green, 60=green, 75=green cyan, 90=cyan,
+#             105=light blue, 120=blue, 135=purple, 150=pink
+# Saturation values: from 0 (grey) to 255 (saturated color)
+# Value (brightness) values: from 0 (dark) to 255 (bright)
+
+# Detect light blue objects for blob0:
+setpar blob0:hrange 95...110
+setpar blob0:srange 100...255
+setpar blob0:vrange 60...253
+
+# Detect yellow objects for blob1:
+setpar blob1:hrange 15...45
+setpar blob1:srange 100...255
+setpar blob1:vrange 60...253
+
+# Detect green objects for blob2:
+setpar blob2:hrange 50...80
+setpar blob2:srange 100...255
+setpar blob2:vrange 60...253
+
+# Send info log messages to None, send serial strings from module to Hard serial port:
+setpar serlog None
+setpar serout Hard
+
+# Apply high gain to our pan/tilt servos, sending the commands below to our Arduino over the Hard serial port that we
+# configured above to handle the serout messages. The Arduino controlling the pan/tilt servos will receive and parse
+# these commands, and will set the servo gains:
+serout PANGAIN 400
+serout TILTGAIN 300
+</pre></td></tr></table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classArUcoBlob.html">ArUcoBlob</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2018 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

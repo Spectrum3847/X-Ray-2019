@@ -1,0 +1,100 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module DarknetYOLO">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/DarknetYOLO/modinfo.html"><img src="/moddoc/DarknetYOLO/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Darknet YOLO</td></tr>
+<tr><td class=modinfosynopsis>Detect multiple objects in scenes using the Darknet YOLO deep neural network. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0.0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;0.4&nbsp;JeVois&nbsp;DarknetYOLO</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;1280&nbsp;480&nbsp;15.0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;15.0&nbsp;JeVois&nbsp;DarknetYOLO</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.jpg"><img src="screenshot1.jpg"></a></div>
+<div class=galleryItem><a href="screenshot2.jpg"><img src="screenshot2.jpg"></a></div>
+<div class=galleryItem><a href="screenshot3.jpg"><img src="screenshot3.jpg"></a></div>
+<div class=galleryItem><a href="screenshot4.jpg"><img src="screenshot4.jpg"></a></div>
+<div class=galleryItem><a href="screenshot5.jpg"><img src="screenshot5.jpg"></a></div>
+<div class=galleryItem><a href="screenshot6.jpg"><img src="screenshot6.jpg"></a></div>
+<div class=galleryItem><a href="screenshot7.jpg"><img src="screenshot7.jpg"></a></div>
+<div class=galleryItem><a href="screenshot8.jpg"><img src="screenshot8.jpg"></a></div>
+<div class=galleryItem><a href="screenshot9.jpg"><img src="screenshot9.jpg"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>Darknet is a popular neural network framework, and YOLO is a very interesting network that detects all objects in a scene in one pass. This module detects all instances of any of the objects it knows about (determined by the network structure, labels, dataset used for training, and weights obtained) in the image that is given to it.</p>
+<p>See <a href="https://pjreddie.com/darknet/yolo/">https://pjreddie.com/darknet/yolo/</a></p>
+<p>This module runs a YOLO network and shows all detections obtained. The YOLO network is currently quite slow, hence it is only run once in a while. Point your camera towards some interesting scene, keep it stable, and wait for YOLO to tell you what it found. The framerate figures shown at the bottom left of the display reflect the speed at which each new video frame from the camera is processed, but in this module this just amounts to converting the image to RGB, sending it to the neural network for processing in a separate thread, and creating the demo display. Actual network inference speed (time taken to compute the predictions on one image) is shown at the bottom right. See below for how to trade-off speed and accuracy.</p>
+<p>Note that by default this module runs tiny-YOLO V3 which can detect and recognize 80 different kinds of objects from the Microsoft COCO dataset. This module can also run tiny-YOLO V2 for COCO, or tiny-YOLO V2 for the Pascal-VOC dataset with 20 object categories. See the module's <b>params.cfg</b> file to switch network.</p>
+<ul>
+<li>The 80 COCO object categories are: person, bicycle, car, motorbike, aeroplane, bus, train, truck, boat, traffic, fire, stop, parking, bench, bird, cat, dog, horse, sheep, cow, elephant, bear, zebra, giraffe, backpack, umbrella, handbag, tie, suitcase, frisbee, skis, snowboard, sports, kite, baseball, baseball, skateboard, surfboard, tennis, bottle, wine, cup, fork, knife, spoon, bowl, banana, apple, sandwich, orange, broccoli, carrot, hot, pizza, donut, cake, chair, sofa, pottedplant, bed, diningtable, toilet, tvmonitor, laptop, mouse, remote, keyboard, cell, microwave, oven, toaster, sink, refrigerator, book, clock, vase, scissors, teddy, hair, toothbrush.</li>
+<li>The 20 Pascal-VOC object categories are: aeroplane, bicycle, bird, boat, bottle, bus, car, cat, chair, cow, diningtable, dog, horse, motorbike, person, pottedplant, sheep, sofa, train, tvmonitor.</li>
+</ul>
+<p>Sometimes it will make mistakes! The performance of yolov3-tiny is about 33.1% correct (mean average precision) on the COCO test set.</p>
+<p> <div align='center'><iframe width='560' height='315' src='http://www.youtube.com/embed/d5CfljT5kec?rel=0&loop=1' frameborder='0' allowfullscreen align='middle'></iframe></div></p>
+<h2>Speed and network size </h2>
+<p>The parameter <code>netin</code> allows you to rescale the neural network to the specified size. Beware that this will only work if the network used is fully convolutional (as is the case of the default tiny-yolo network). This not only allows you to adjust processing speed (and, conversely, accuracy), but also to better match the network to the input images (e.g., the default size for tiny-yolo is 416x416, and, thus, passing it a input image of size 640x480 will result in first scaling that input to 416x312, then letterboxing it by adding gray borders on top and bottom so that the final input to the network is 416x416). This letterboxing can be completely avoided by just resizing the network to 320x240.</p>
+<p>Here are expected processing speeds for yolov2-tiny-voc:</p><ul>
+<li>when netin = [0 0], processes letterboxed 416x416 inputs, about 2450ms/image</li>
+<li>when netin = [320 240], processes 320x240 inputs, about 1350ms/image</li>
+<li>when netin = [160 120], processes 160x120 inputs, about 695ms/image</li>
+</ul>
+<p>YOLO V3 is faster, more accurate, uses less memory, and can detect 80 COCO categories:</p><ul>
+<li>when netin = [320 240], processes 320x240 inputs, about 870ms/image</li>
+</ul>
+<p> <div align='center'><iframe width='560' height='315' src='http://www.youtube.com/embed/77VRwFtIe8I?rel=0&loop=1' frameborder='0' allowfullscreen align='middle'></iframe></div></p>
+<h2>Serial messages </h2>
+<p>When detections are found which are above threshold, one message will be sent for each detected object (i.e., for each box that gets drawn when USB outputs are used), using a standardized 2D message:</p><ul>
+<li>Serial message type: <b>2D</b> </li>
+<li><code>id</code>: the category of the recognized object, followed by ':' and the confidence score in percent</li>
+<li><code>x</code>, <code>y</code>, or vertices: standardized 2D coordinates of object center or corners</li>
+<li><code>w</code>, <code>h</code>: standardized object size</li>
+<li><code>extra</code>: any number of additional category:score pairs which had an above-threshold score for that box</li>
+</ul>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknetYOLO.html">DarknetYOLO</A>) netin</td><td class=modinfopar>cv::Size</td><td class=modinfopar>Width and height (in pixels) of the neural network input layer, or [0 0] to make it match camera frame size. NOTE: for YOLO v3 sizes must be multiples of 32.</td><td class=modinfopar>cv::Size(320, 224)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classYolo.html">Yolo</A>) dataroot</td><td class=modinfopar>std::string</td><td class=modinfopar>Root path for data, config, and weight files. If empty, use the module&#39;s path.</td><td class=modinfopar>JEVOIS_SHARE_PATH /darknet/yolo</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classYolo.html">Yolo</A>) datacfg</td><td class=modinfopar>std::string</td><td class=modinfopar>Data configuration file (if relative, relative to dataroot)</td><td class=modinfopar>cfg/coco.data</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classYolo.html">Yolo</A>) cfgfile</td><td class=modinfopar>std::string</td><td class=modinfopar>Network configuration file (if relative, relative to dataroot)</td><td class=modinfopar>cfg/yolov3-tiny.cfg</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classYolo.html">Yolo</A>) weightfile</td><td class=modinfopar>std::string</td><td class=modinfopar>Network weights file (if relative, relative to dataroot)</td><td class=modinfopar>weights/yolov3-tiny.weights</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classYolo.html">Yolo</A>) namefile</td><td class=modinfopar>std::string</td><td class=modinfopar>Category names file, or empty to fetch it from the network config file (if relative, relative to dataroot)</td><td class=modinfopar></td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classYolo.html">Yolo</A>) nms</td><td class=modinfopar>float</td><td class=modinfopar>Non-maximum suppression intersection-over-union threshold in percent</td><td class=modinfopar>45.0F</td><td class=modinfopar>jevois::Range&lt;float&gt;(0.0F, 100.0F)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classYolo.html">Yolo</A>) thresh</td><td class=modinfopar>float</td><td class=modinfopar>Detection threshold in percent confidence</td><td class=modinfopar>24.0F</td><td class=modinfopar>jevois::Range&lt;float&gt;(0.0F, 100.0F)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classYolo.html">Yolo</A>) hierthresh</td><td class=modinfopar>float</td><td class=modinfopar>Hierarchical detection threshold in percent confidence</td><td class=modinfopar>50.0F</td><td class=modinfopar>jevois::Range&lt;float&gt;(0.0F, 100.0F)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classYolo.html">Yolo</A>) threads</td><td class=modinfopar>int</td><td class=modinfopar>Number of parallel computation threads</td><td class=modinfopar>6</td><td class=modinfopar>jevois::Range&lt;int&gt;(1, 1024)</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfocfg><tr><td class=modinfocfg><b>params.cfg file</b><hr><pre># Parameters for module DarknetYOLO to allow for network selection
+
+# Tiny YOLO v2 trained on Pascal VOC (20 object categories):
+#datacfg=cfg/voc.data
+#cfgfile=cfg/yolov2-tiny-voc.cfg
+#weightfile=weights/yolov2-tiny-voc.weights
+#netin=320 240
+
+# Tiny YOLO v3 trained on COCO (80 object categories):
+datacfg=cfg/coco.data
+cfgfile=cfg/yolov3-tiny.cfg
+weightfile=weights/yolov3-tiny.weights
+netin=160 120
+</pre></td></tr></table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classDarknetYOLO.html">DarknetYOLO</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2017 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

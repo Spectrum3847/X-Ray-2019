@@ -1,0 +1,90 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module DarknetSaliency">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/DarknetSaliency/modinfo.html"><img src="/moddoc/DarknetSaliency/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Darknet Saliency</td></tr>
+<tr><td class=modinfosynopsis>Detect salient objects and identify them using Darknet deep neural network. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;5.0&nbsp;JeVois&nbsp;DarknetSaliency</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;460&nbsp;240&nbsp;15.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;15.0&nbsp;JeVois&nbsp;DarknetSaliency<em>&nbsp;#&nbsp;not&nbsp;for&nbsp;mac&nbsp;(width&nbsp;not&nbsp;multiple&nbsp;of&nbsp;16)</em></tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;560&nbsp;240&nbsp;15.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;15.0&nbsp;JeVois&nbsp;DarknetSaliency</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;880&nbsp;480&nbsp;15.0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;15.0&nbsp;JeVois&nbsp;DarknetSaliency<em>&nbsp;#&nbsp;set&nbsp;foa&nbsp;param&nbsp;to&nbsp;256&nbsp;256</em></tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;880&nbsp;480&nbsp;15.0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;15.0&nbsp;JeVois&nbsp;DarknetSaliency</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>Darknet is a popular neural network framework. This module first finds the most conspicuous (salient) object in the scene, then identifies it using a deep neural network. It returns the top scoring candidates.</p>
+<p>See <a href="http://ilab.usc.edu/bu/">http://ilab.usc.edu/bu/</a> for more information about saliency detection, and <a href="https://pjreddie.com/darknet">https://pjreddie.com/darknet</a> for more information about the Darknet deep neural network framework.</p>
+<p>This module runs a Darknet network on an image window around the most salient point and shows the top-scoring results. The network is currently a bit slow, hence it is only run once in a while. Point your camera towards some interesting object, and wait for Darknet to tell you what it found. The framerate figures shown at the bottom left of the display reflect the speed at which each new video frame from the camera is processed, but in this module this just amounts to computing the saliency map from the camera input, converting the input image to RGB, cropping it around the most salient location, sending it to the neural network for processing in a separate thread, and creating the demo display. Actual network inference speed (time taken to compute the predictions on one image crop) is shown at the bottom right. See below for how to trade-off speed and accuracy.</p>
+<p>Note that by default this module runs the Imagenet1k tiny Darknet (it can also run the slightly slower but a bit more accurate Darknet Reference network; see parameters). There are 1000 different kinds of objects (object classes) that this network can recognize (too long to list here).</p>
+<p>Sometimes it will make mistakes! The performance of darknet-tiny is about 58.7% correct (mean average precision) on the test set, and Darknet Reference is about 61.1% correct on the test set. This is when running these networks at 224x224 network input resolution (see parameter <code>netin</code> below).</p>
+<p> <div align='center'><iframe width='560' height='315' src='http://www.youtube.com/embed/77VRwFtIe8I?rel=0&loop=1' frameborder='0' allowfullscreen align='middle'></iframe></div></p>
+<h2>Neural network size and speed </h2>
+<p>When using networks that are fully convolutional (as is the case for the default networks provided with this module), one can resize the network to any desired input size. The network size direcly affects both speed and accuracy. Larger networks run slower but are more accurate.</p>
+<p>This module provides two parameters that allow you to adjust this tradeoff:</p><ul>
+<li><code>foa</code> determines the size of a region of interest that is cropped around the most salient location</li>
+<li><code>netin</code> determines the size to which that region of interest is rescaled and fed to the neural network</li>
+</ul>
+<p>For example:</p>
+<ul>
+<li>with netin = (224 224), this module runs at about 450ms/prediction.</li>
+<li>with netin = (128 128), this module runs at about 180ms/prediction.</li>
+</ul>
+<p>Finally note that, when using video mappings with USB output, irrespective of <code>foa</code> and <code>netin</code>, the crop around the most salient image region (with size given by <code>foa</code>) will always also be rescaled so that, when placed to the right of the input image, it fills the desired USB output dims. For example, if camera mode is 320x240 and USB output size is 544x240, then the attended and recognized object will be rescaled to 224x224 (since 224 = 544-320) for display purposes only. This is so that one does not need to change USB video resolution while playing with different values of <code>foa</code> and <code>netin</code> live.</p>
+<h2>Serial messages </h2>
+<p>On every frame where detection results were obtained that are above <code>thresh</code>, this module sends a standardized 2D message as specified in UserSerialStyle:</p><ul>
+<li>Serial message type: <b>2D</b> </li>
+<li><code>id</code>: top-scoring category name of the recognized object, followed by ':' and the confidence score in percent</li>
+<li><code>x</code>, <code>y</code>, or vertices: standardized 2D coordinates of object center or corners</li>
+<li><code>w</code>, <code>h</code>: standardized object size</li>
+<li><code>extra</code>: any number of additional category:score pairs which had an above-threshold score, in order of decreasing score where <em>category</em> is the category name (from <code>namefile</code>) and <em>score</em> is the confidence score from 0.0 to 100.0</li>
+</ul>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknetSaliency.html">DarknetSaliency</A>) foa</td><td class=modinfopar>cv::Size</td><td class=modinfopar>Width and height (in pixels) of the focus of attention. This is the size of the image crop that is taken around the most salient location in each frame. The foa size must fit within the camera input frame size.</td><td class=modinfopar>cv::Size(128, 128)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknetSaliency.html">DarknetSaliency</A>) netin</td><td class=modinfopar>cv::Size</td><td class=modinfopar>Width and height (in pixels) of the neural network input layer. This is the size to which the image crop taken around the most salient location in each frame will be rescaled before feeding to the neural network.</td><td class=modinfopar>cv::Size(128, 128)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) cweight</td><td class=modinfopar>byte</td><td class=modinfopar>Color channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) iweight</td><td class=modinfopar>byte</td><td class=modinfopar>Intensity channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) oweight</td><td class=modinfopar>byte</td><td class=modinfopar>Orientation channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) fweight</td><td class=modinfopar>byte</td><td class=modinfopar>Flicker channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) mweight</td><td class=modinfopar>byte</td><td class=modinfopar>Motion channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) centermin</td><td class=modinfopar>size_t</td><td class=modinfopar>Lowest (finest) of the 3 center scales</td><td class=modinfopar>2</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) deltamin</td><td class=modinfopar>size_t</td><td class=modinfopar>Lowest (finest) of the 2 center-surround delta scales</td><td class=modinfopar>3</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) smscale</td><td class=modinfopar>size_t</td><td class=modinfopar>Scale of the saliency map</td><td class=modinfopar>4</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) mthresh</td><td class=modinfopar>byte</td><td class=modinfopar>Motion threshold</td><td class=modinfopar>0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) fthresh</td><td class=modinfopar>byte</td><td class=modinfopar>Flicker threshold</td><td class=modinfopar>0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) msflick</td><td class=modinfopar>bool</td><td class=modinfopar>Use multiscale flicker computation</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknet.html">Darknet</A>) netw</td><td class=modinfopar>Net</td><td class=modinfopar>Network to load. This meta-parameter sets parameters dataroot, datacfg, cfgfile, weightfile, and namefile for the chosen network.</td><td class=modinfopar>Net::Tiny</td><td class=modinfopar>Net_Values</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknet.html">Darknet</A>) dataroot</td><td class=modinfopar>std::string</td><td class=modinfopar>Root path for data, config, and weight files. If empty, use the module&#39;s path.</td><td class=modinfopar>JEVOIS_SHARE_PATH /darknet/single</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknet.html">Darknet</A>) datacfg</td><td class=modinfopar>std::string</td><td class=modinfopar>Data configuration file (if relative, relative to dataroot)</td><td class=modinfopar>cfg/imagenet1k.data</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknet.html">Darknet</A>) cfgfile</td><td class=modinfopar>std::string</td><td class=modinfopar>Network configuration file (if relative, relative to dataroot)</td><td class=modinfopar>cfg/tiny.cfg</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknet.html">Darknet</A>) weightfile</td><td class=modinfopar>std::string</td><td class=modinfopar>Network weights file (if relative, relative to dataroot)</td><td class=modinfopar>weights/tiny.weights</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknet.html">Darknet</A>) namefile</td><td class=modinfopar>std::string</td><td class=modinfopar>Category names file, or empty to fetch it from the network config file (if relative, relative to dataroot)</td><td class=modinfopar></td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknet.html">Darknet</A>) top</td><td class=modinfopar>unsigned int</td><td class=modinfopar>Max number of top-scoring predictions that score above thresh to return</td><td class=modinfopar>5</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknet.html">Darknet</A>) thresh</td><td class=modinfopar>float</td><td class=modinfopar>Threshold (in percent confidence) above which predictions will be reported</td><td class=modinfopar>20.0F</td><td class=modinfopar>jevois::Range&lt;float&gt;(0.0F, 100.0F)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classDarknet.html">Darknet</A>) threads</td><td class=modinfopar>int</td><td class=modinfopar>Number of parallel computation threads</td><td class=modinfopar>6</td><td class=modinfopar>jevois::Range&lt;int&gt;(1, 1024)</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classDarknetSaliency.html">DarknetSaliency</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2017 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

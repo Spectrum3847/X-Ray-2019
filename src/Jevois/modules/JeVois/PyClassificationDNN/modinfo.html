@@ -1,0 +1,50 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module PyClassificationDNN">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/PyClassificationDNN/modinfo.html"><img src="/moddoc/PyClassificationDNN/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Py Classification DNN</td></tr>
+<tr><td class=modinfosynopsis>Object recognition using OpenCV Deep Neural Networks (DNN) </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;Python</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;No&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;264&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This module runs an object classification deep neural network using the OpenCV DNN library. Classification (recognition) networks analyze a central portion of the whole scene and produce identity labels and confidence scores about what the object in the field of view might be.</p>
+<p>This module supports detection networks implemented in TensorFlow, Caffe, Darknet, Torch, ONNX, etc as supported by the OpenCV DNN module.</p>
+<p>Included with the standard JeVois distribution are:</p>
+<ul>
+<li>SqueezeNet v1.1, Caffe model</li>
+<li>more to come, please contribute!</li>
+</ul>
+<p>See the module's constructor (<b>init</b>) code and select a value for <b>model</b> to switch network.</p>
+<p>Object category names for models trained on ImageNet are at <a href="https://github.com/jevois/jevoisbase/blob/master/share/opencv-dnn/classification/synset_words.txt">https://github.com/jevois/jevoisbase/blob/master/share/opencv-dnn/classification/synset_words.txt</a></p>
+<p>Sometimes it will make mistakes! The performance of SqueezeNet v1.1 is about 56.1% correct (mean average precision, top-1) on the ImageNet test set.</p>
+<p>This module is adapted from the sample OpenCV code: <a href="https://github.com/opencv/opencv/blob/master/samples/dnn/classification.py">https://github.com/opencv/opencv/blob/master/samples/dnn/classification.py</a></p>
+<p>More pre-trained models are available on github in opencv_extra</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr><td colspan=5>This module exposes no parameter</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classPyClassificationDNN_1_1PyClassificationDNN.html">PyClassificationDNN</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2018 by Laurent Itti</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://jevois.org</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>880 W 1st St Suite 807, Los Angeles CA 90012, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

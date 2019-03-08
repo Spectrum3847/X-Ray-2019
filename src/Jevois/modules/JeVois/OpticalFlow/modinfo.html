@@ -1,0 +1,66 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module OpticalFlow">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/OpticalFlow/modinfo.html"><img src="/moddoc/OpticalFlow/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Optical Flow</td></tr>
+<tr><td class=modinfosynopsis>Fast optical flow computation using OF_DIS. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;No&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>GREY&nbsp;176&nbsp;288&nbsp;100&nbsp;YUYV&nbsp;176&nbsp;144&nbsp;100&nbsp;JeVois&nbsp;OpticalFlow</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>Computes horizontal and vertical optical flow into two separate optical flow maps. This module is intended for use as a pre-processor, that is, the images sent out may be further processed by the host computer.</p>
+<p>The optical flow image output is twice taller than the camera input image:</p>
+<ul>
+<li>On top is the horizontal motion map<ul>
+<li>darker shades of gray for things moving rightward from the viewpoint of the camera,</li>
+<li>lighter shades for things that move leftward,</li>
+<li>mid-grey level for no motion</li>
+</ul>
+</li>
+<li>below it is the vertical motion map<ul>
+<li>dark for things moving downward,</li>
+<li>bright for upward,</li>
+<li>mid-grey for no vertical motion.</li>
+</ul>
+</li>
+</ul>
+<p>You should be able to run this algorithm at 100 frames/s with 176x144 video camera resolution.</p>
+<p>This module has parameters to tune the algorithm. Interested users are referred to the original paper and implementation for how to set these:</p>
+<p>"Fast Optical Flow using Dense Inverse Search" by Till Kroeger, Radu Timofte, Dengxin Dai and Luc Van Gool, Proc ECCV, 2016.</p>
+<p>Also see here: <a href="http://www.vision.ee.ethz.ch/~kroegert/OFlow/">http://www.vision.ee.ethz.ch/~kroegert/OFlow/</a></p>
+<h2>Trying it out </h2>
+<p>Have JeVois point towards an otherwise static scene, and swipe one finger in front of it, either moving from left to right of the field of view, from top to bottom, etc to confirm the different greyscale values as described above.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFastOpticalFlow.html">FastOpticalFlow</A>) opoint</td><td class=modinfopar>int</td><td class=modinfopar>Algorithm operating point</td><td class=modinfopar>1</td><td class=modinfopar>jevois::Range&lt;int&gt;(1, 4)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFastOpticalFlow.html">FastOpticalFlow</A>) factor</td><td class=modinfopar>float</td><td class=modinfopar>Factor to use when converting float velocities to byte</td><td class=modinfopar>25.0F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFastOpticalFlow.html">FastOpticalFlow</A>) thetasf</td><td class=modinfopar>int</td><td class=modinfopar>Finest scale in the pyramid, or -1 for auto</td><td class=modinfopar>-1</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFastOpticalFlow.html">FastOpticalFlow</A>) thetait</td><td class=modinfopar>int</td><td class=modinfopar>Number of gradient descent iterations, or -1 for auto</td><td class=modinfopar>5</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFastOpticalFlow.html">FastOpticalFlow</A>) thetaps</td><td class=modinfopar>int</td><td class=modinfopar>Patch size in pixels, or -1 for auto</td><td class=modinfopar>-1</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFastOpticalFlow.html">FastOpticalFlow</A>) thetaov</td><td class=modinfopar>float</td><td class=modinfopar>Patch overlap on each scale, or -1 for auto</td><td class=modinfopar>0.1F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFastOpticalFlow.html">FastOpticalFlow</A>) usevref</td><td class=modinfopar>bool</td><td class=modinfopar>Use variational refinement when true</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classOpticalFlow.html">OpticalFlow</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

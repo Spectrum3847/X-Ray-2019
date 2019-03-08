@@ -1,0 +1,54 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module DemoEyeTracker">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/DemoEyeTracker/modinfo.html"><img src="/moddoc/DemoEyeTracker/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Demo Eye Tracker</td></tr>
+<tr><td class=modinfosynopsis>Pupil detection and eye-tracker using the openEyes toolkit. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;No&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>GREY&nbsp;640&nbsp;480&nbsp;30.0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;30.0&nbsp;JeVois&nbsp;DemoEyeTracker</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>GREY&nbsp;320&nbsp;240&nbsp;60.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;60.0&nbsp;JeVois&nbsp;DemoEyeTracker</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>GREY&nbsp;176&nbsp;144&nbsp;120.0&nbsp;YUYV&nbsp;176&nbsp;144&nbsp;120.0&nbsp;JeVois&nbsp;DemoEyeTracker</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This module implements an eye tracker, which is based on detecting the outline of the pupil.</p>
+<p>Note that the camera has to be very close to the eye for this to work well. To be useful in practice, some sort of prism or tele-lens should be used so that the camera can be out of the field of view of the human participant.</p>
+<p>This module can easily run at 120 frames/s.</p>
+<p>The original eye tracking software used here can be found at <a href="http://thirtysixthspan.com/openEyes/software.html">http://thirtysixthspan.com/openEyes/software.html</a></p>
+<p>This module only performs the required image processing. To build a complete eye tracking system, additional software is required (which can be provided by several open-source eye-tracking toolkits):</p>
+<ul>
+<li>Establish a calibration procedure, whereby the participant will be asked to look at small dots at known locations on the computer screen. This will allow a comparison between coordinates of the pupil center as reported by JeVois and coordinates on the computer screen.</li>
+<li>Compute the calibration transform (mapping from pupil coordinates reported by JeVois to screen coordinates) based on the data obtained by the calibration procedure. This has to be done once for each participant and eye-tracking session, or every time a participant moves her/his head by a large amount.</li>
+<li>On new eye-tracking sessions, convert pupil coordinates reported by JeVois to screen coordinates.</li>
+<li>If desired, extract events in the raw calibrated data stream, such as fixations, rapid saccadic eye movements, smooth pursuit movements, and blinks.</li>
+</ul>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classEyeTracker.html">EyeTracker</A>) edgethresh</td><td class=modinfopar>unsigned char</td><td class=modinfopar>Pupil edge threshold</td><td class=modinfopar>20</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classEyeTracker.html">EyeTracker</A>) numrays</td><td class=modinfopar>int</td><td class=modinfopar>Number of rays</td><td class=modinfopar>18</td><td class=modinfopar>jevois::Range&lt;int&gt;(4, 180)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classEyeTracker.html">EyeTracker</A>) mincand</td><td class=modinfopar>int</td><td class=modinfopar>Minimum number of feature candidates</td><td class=modinfopar>10</td><td class=modinfopar>jevois::Range&lt;int&gt;(1, 50)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classEyeTracker.html">EyeTracker</A>) corneal</td><td class=modinfopar>int</td><td class=modinfopar>Corneal window size</td><td class=modinfopar>51</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classDemoEyeTracker.html">DemoEyeTracker</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

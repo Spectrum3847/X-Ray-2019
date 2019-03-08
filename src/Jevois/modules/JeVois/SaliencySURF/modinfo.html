@@ -1,0 +1,79 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module SaliencySURF">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/SaliencySURF/modinfo.html"><img src="/moddoc/SaliencySURF/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Saliency SURF</td></tr>
+<tr><td class=modinfosynopsis>Simple salient region detection and identification using keypoint matching. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;No&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;288&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;SaliencySURF</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+<div class=galleryItem><a href="screenshot2.png"><img src="screenshot2.png"></a></div>
+<div class=galleryItem><a href="screenshot3.jpg"><img src="screenshot3.jpg"></a></div>
+<div class=galleryItem><a href="screenshot4.png"><img src="screenshot4.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This module finds objects by matching keypoint descriptors between a current set of salient regions and a set of training images.</p>
+<p>Here we use SURF keypoints and descriptors as provided by OpenCV. The algorithm is quite slow and consists of 3 phases:</p><ul>
+<li>detect keypoint locations,</li>
+<li>compute keypoint descriptors,</li>
+<li>and match descriptors from current image to training image descriptors.</li>
+</ul>
+<p>Here, we alternate between computing keypoints and descriptors on one frame (or more, depending on how slow that gets), and doing the matching on the next frame. This module also provides an example of letting some computation happen even after we exit the <code><a class="el" href="classSaliencySURF.html#a340f89f4372a34de84e9f23c86335523" title="Processing function. ">process()</a></code> function. Here, we keep detecting keypoints and computing descriptors even outside <code><a class="el" href="classSaliencySURF.html#a340f89f4372a34de84e9f23c86335523" title="Processing function. ">process()</a></code>.</p>
+<p>Also see the <a href='/moddoc/ObjectDetect/modinfo.html'><strong class='jvmod'>ObjectDetect</strong></a> module for a related algorithm (without attention).</p>
+<h2>Training </h2>
+<p>Simply add images of the objects you want to detect into <b>JEVOIS:/modules/JeVois/SaliencySURF/images/</b> on your JeVois microSD card.</p>
+<p>Those will be processed when the module starts.</p>
+<p>The names of recognized objects returned by this module are simply the file names of the pictures you have added in that directory. No additional training procedure is needed.</p>
+<p>Beware that the more images you add, the slower the algorithm will run, and the higher your chances of confusions among several of your objects.</p>
+<p>This module provides parameters that allow you to determine how strict a match should be. With stricter matching, you may sometimes miss an object (i.e., it was there, but was not detected by the algorithm). With looser matching, you may get more false alarms (i.e., there was something else in the camera's view, but it was matched as one of your objects). If you are experiencing difficulties getting any matches, try to loosen the settings, for example:</p>
+<pre class="fragment">setpar goodpts 5 ... 100
+setpar distthresh 0.5
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliencySURF.html">SaliencySURF</A>) inhsigma</td><td class=modinfopar>float</td><td class=modinfopar>Sigma (pixels) used for inhibition of return</td><td class=modinfopar>32.0F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliencySURF.html">SaliencySURF</A>) regions</td><td class=modinfopar>size_t</td><td class=modinfopar>Number of salient regions</td><td class=modinfopar>2</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliencySURF.html">SaliencySURF</A>) rsiz</td><td class=modinfopar>size_t</td><td class=modinfopar>Width and height (pixels) of salient regions</td><td class=modinfopar>64</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliencySURF.html">SaliencySURF</A>) save</td><td class=modinfopar>bool</td><td class=modinfopar>Save regions when true, useful to create a training set. They will be saved to /jevois/data/saliencysurf/</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classObjectMatcher.html">ObjectMatcher</A>) hessian</td><td class=modinfopar>double</td><td class=modinfopar>Hessian threshold</td><td class=modinfopar>800.0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classObjectMatcher.html">ObjectMatcher</A>) traindir</td><td class=modinfopar>std::string</td><td class=modinfopar>Directory where training images are</td><td class=modinfopar>images</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classObjectMatcher.html">ObjectMatcher</A>) goodpts</td><td class=modinfopar>jevois::Range&lt;size_t&gt;</td><td class=modinfopar>Number range of good matches considered</td><td class=modinfopar>jevois::Range&lt;size_t&gt;(15, 100)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classObjectMatcher.html">ObjectMatcher</A>) distthresh</td><td class=modinfopar>double</td><td class=modinfopar>Maximum distance for a match to be considered good</td><td class=modinfopar>0.2</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) cweight</td><td class=modinfopar>byte</td><td class=modinfopar>Color channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) iweight</td><td class=modinfopar>byte</td><td class=modinfopar>Intensity channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) oweight</td><td class=modinfopar>byte</td><td class=modinfopar>Orientation channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) fweight</td><td class=modinfopar>byte</td><td class=modinfopar>Flicker channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) mweight</td><td class=modinfopar>byte</td><td class=modinfopar>Motion channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) centermin</td><td class=modinfopar>size_t</td><td class=modinfopar>Lowest (finest) of the 3 center scales</td><td class=modinfopar>2</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) deltamin</td><td class=modinfopar>size_t</td><td class=modinfopar>Lowest (finest) of the 2 center-surround delta scales</td><td class=modinfopar>3</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) smscale</td><td class=modinfopar>size_t</td><td class=modinfopar>Scale of the saliency map</td><td class=modinfopar>4</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) mthresh</td><td class=modinfopar>byte</td><td class=modinfopar>Motion threshold</td><td class=modinfopar>0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) fthresh</td><td class=modinfopar>byte</td><td class=modinfopar>Flicker threshold</td><td class=modinfopar>0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) msflick</td><td class=modinfopar>bool</td><td class=modinfopar>Use multiscale flicker computation</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfocfg><tr><td class=modinfocfg><b>params.cfg file</b><hr><pre># Default parameters that are set upon loading the module
+goodpts = 4...15
+distthresh = 0.4
+</pre></td></tr></table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classSaliencySURF.html">SaliencySURF</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

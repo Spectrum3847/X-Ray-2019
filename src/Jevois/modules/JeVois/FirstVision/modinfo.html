@@ -1,0 +1,241 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module FirstVision">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/FirstVision/modinfo.html"><img src="/moddoc/FirstVision/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>First Vision</td></tr>
+<tr><td class=modinfosynopsis>Simple color-based detection of a U-shaped object for FIRST Robotics. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;176&nbsp;194&nbsp;120.0&nbsp;YUYV&nbsp;176&nbsp;144&nbsp;120.0&nbsp;JeVois&nbsp;FirstVision</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;352&nbsp;194&nbsp;120.0&nbsp;YUYV&nbsp;176&nbsp;144&nbsp;120.0&nbsp;JeVois&nbsp;FirstVision</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;290&nbsp;60.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;60.0&nbsp;JeVois&nbsp;FirstVision</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;290&nbsp;60.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;60.0&nbsp;JeVois&nbsp;FirstVision</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;60.0&nbsp;JeVois&nbsp;FirstVision</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0.0&nbsp;YUYV&nbsp;176&nbsp;144&nbsp;120.0&nbsp;JeVois&nbsp;FirstVision</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+<div class=galleryItem><a href="screenshot2.png"><img src="screenshot2.png"></a></div>
+<div class=galleryItem><a href="screenshot3.png"><img src="screenshot3.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This module isolates pixels within a given HSV range (hue, saturation, and value of color pixels), does some cleanups, and extracts object contours. It is looking for a rectangular U shape of a specific size (set by parameter <code>objsize</code>). See screenshots for an example of shape. It sends information about detected objects over serial.</p>
+<p>This module usually works best with the camera sensor set to manual exposure, manual gain, manual color balance, etc so that HSV color values are reliable. See the file <b>script.cfg</b> file in this module's directory for an example of how to set the camera settings each time this module is loaded.</p>
+<p>This code was loosely inspired by the JeVois <a href='/moddoc/ObjectTracker/modinfo.html'><strong class='jvmod'>ObjectTracker</strong></a> module. Also see <a href='/moddoc/FirstPython/modinfo.html'><strong class='jvmod'>FirstPython</strong></a> for a simplified version of this module, written in Python.</p>
+<p>This module is provided for inspiration. It has no pretension of actually solving the FIRST Robotics vision problem in a complete and reliable way. It is released in the hope that FRC teams will try it out and get inspired to develop something much better for their own robot.</p>
+<h2>General pipeline </h2>
+<p>The basic idea of this module is the classic FIRST robotics vision pipeline: first, select a range of pixels in HSV color pixel space likely to include the object. Then, detect contours of all blobs in range. Then apply some tests on the shape of the detected blobs, their size, fill ratio (ratio of object area compared to its convex hull's area), etc. Finally, estimate the location and pose of the object in the world.</p>
+<p>In this module, we run up to 4 pipelines in parallel, using different settings for the range of HSV pixels considered:</p>
+<ul>
+<li>Pipeline 0 uses the HSV values provided by user parameters;</li>
+<li>Pipeline 1 broadens that fixed range a bit;</li>
+<li>Pipelines 2-3 use a narrow and broader learned HSV window over time.</li>
+</ul>
+<p>Detections from all 4 pipelines are considered for overlap and quality (raggedness of their outlines), and only the cleanest of several overlapping detections is preserved. From those cleanest detections, pipelines 2-3 learn and adapt the HSV range for future video frames.</p>
+<h2>Using this module </h2>
+<p>Check out <a href="http://jevois.org/tutorials/UserFirstVision.html">this tutorial</a>.</p>
+<h2>Detection and quality control steps </h2>
+<p>The following messages appear for each of the 4 pipelines, at the bottom of the demo video, to help users figure out why their object may not be detected:</p>
+<ul>
+<li>T0 to T3: thread (pipeline) number</li>
+<li>H=..., S=..., V=...: HSV range considered by that thread</li>
+<li>N=...: number of raw blobs detected in that range</li>
+<li>Because N blobs are considered in each thread from this point on, information about only the one that progressed the farthest through a series of tests is shown. One letter is added each time a test is passed:<ul>
+<li>H: the convex hull of the blob is quadrilateral (4 vertices)</li>
+<li>A: hull area is within range specified by parameter <code>hullarea</code> </li>
+<li>F: object to hull fill ratio is below the limit set by parameter <code>hullfill</code> (i.e., object is not a solid, filled quadrilateral shape)</li>
+<li>S: the object has 8 vertices after shape smoothing to eliminate small shape defects (a U shape is indeed expected to have 8 vertices).</li>
+<li>E: The shape discrepency between the original shape and the smoothed shape is acceptable per parameter <code>ethresh</code>, i.e., the original contour did not have a lot of defects.</li>
+<li>M: the shape is not too close to the borders of the image, per parameter <code>margin</code>, i.e., it is unlikely to be truncated as the object partially exits the camera's field of view.</li>
+<li>V: Vectors describing the shape as it related to its convex hull are non-zero, i.e., the centroid of the shape is not exactly coincident with the centroid of its convex hull, as we would expect for a U shape.</li>
+<li>U: the shape is roughly upright; upside-down U shapes are rejected as likely spurious.</li>
+<li>OK: this thread detected at least one shape that passed all the tests.</li>
+</ul>
+</li>
+</ul>
+<p>The black and white picture at right shows the pixels in HSV range for the thread determined by parameter <code>showthread</code> (with value 0 by default).</p>
+<h2>Serial Messages </h2>
+<p>This module can send standardized serial messages as described in <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a>. One message is issued on every video frame for each detected and good object. The <code>id</code> field in the messages simply is <b>FIRST</b> for all messages.</p>
+<p>When <code>dopose</code> is turned on, 3D messages will be sent, otherwise 2D messages.</p>
+<p>2D messages when <code>dopose</code> is off:</p>
+<ul>
+<li>Serial message type: <b>2D</b> </li>
+<li><code>id</code>: always <code>FIRST</code></li>
+<li><code>x</code>, <code>y</code>, or vertices: standardized 2D coordinates of object center or corners</li>
+<li><code>w</code>, <code>h</code>: standardized marker size</li>
+<li><code>extra</code>: none (empty string)</li>
+</ul>
+<p>3D messages when <code>dopose</code> is on:</p>
+<ul>
+<li>Serial message type: <b>3D</b> </li>
+<li><code>id</code>: always <code>FIRST</code></li>
+<li><code>x</code>, <code>y</code>, <code>z</code>, or vertices: 3D coordinates in millimeters of object center, or corners</li>
+<li><code>w</code>, <code>h</code>, <code>d</code>: object size in millimeters, a depth of 1mm is always used</li>
+<li><code>extra</code>: none (empty string)</li>
+</ul>
+<p>NOTE: 3D pose estimation from low-resolution 176x144 images at 120fps can be quite noisy. Make sure you tune your HSV ranges very well if you want to operate at 120fps (see below). To operate more reliably at very low resolutions, one may want to improve this module by adding subpixel shape refinement and tracking across frames.</p>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+<h2>Trying it out </h2>
+<p>The default parameter settings (which are set in <b>script.cfg</b> explained below) attempt to detect yellow-green objects. Present an object to the JeVois camera and see whether it is detected. When detected and good enough according to a number of quality control tests, the outline of the object is drawn.</p>
+<p>For further use of this module, you may want to check out the following tutorials:</p>
+<ul>
+<li><a href="http://jevois.org/tutorials/UserFirstVision.html">Using the sample FIRST Robotics vision module</a></li>
+<li><a href="http://jevois.org/tutorials/UserColorTracking.html">Tuning the color-based object tracker using a python graphical interface</a></li>
+<li><a href="http://jevois.org/tutorials/UserPanTilt.html">Making a motorized pan-tilt head for JeVois and tracking objects</a></li>
+<li><a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/ArduinoTutorial.html">Tutorial on how to write Arduino code that interacts with JeVois</a></li>
+</ul>
+<h2>Tuning </h2>
+<p>You need to provide the exact width and height of your physical shape to parameter <code>objsize</code> for this module to work. It will look for a shape of that physical size (though at any distance and orientation from the camera). Be sure you edit <b>script.cfg</b> and set the parameter <code>objsize</code> in there to the true measured physical size of your shape.</p>
+<p>You should adjust parameters <code>hcue</code>, <code>scue</code>, and <code>vcue</code> to isolate the range of Hue, Saturation, and Value (respectively) that correspond to the objects you want to detect. Note that there is a <b>script.cfg</b> file in this module's directory that provides a range tuned to a light yellow-green object, as shown in the demo screenshot.</p>
+<p>Tuning the parameters is best done interactively by connecting to your JeVois camera while it is looking at some object of the desired color. Once you have achieved a tuning, you may want to set the hcue, scue, and vcue parameters in your <b>script.cfg</b> file for this module on the microSD card (see below).</p>
+<p>Typically, you would start by narrowing down on the hue, then the value, and finally the saturation. Make sure you also move your camera around and show it typical background clutter so check for false positives (detections of things which you are not interested, which can happen if your ranges are too wide).</p>
+<h2>Config file </h2>
+<p>JeVois allows you to store parameter settings and commands in a file named <b>script.cfg</b> stored in the directory of a module. The file <b>script.cfg</b> may contain any sequence of commands as you would type them interactively in the JeVois command-line interface. For the <a href='/moddoc/FirstVision/modinfo.html'><strong class='jvmod'>FirstVision</strong></a> module, a default script is provided that sets the camera to manual color, gain, and exposure mode (for more reliable color values), and other example parameter values.</p>
+<p>The <b>script.cfg</b> file for <a href='/moddoc/FirstVision/modinfo.html'><strong class='jvmod'>FirstVision</strong></a> is stored on your microSD at <b>JEVOIS:/modules/JeVois/FirstVision/script.cfg</b></p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) hcue</td><td class=modinfopar>unsigned char</td><td class=modinfopar>Initial cue for target hue (0=red/do not use because of wraparound, 30=yellow, 45=light green, 60=green, 75=green cyan, 90=cyan, 105=light blue, 120=blue, 135=purple, 150=pink)</td><td class=modinfopar>45</td><td class=modinfopar>jevois::Range&lt;unsigned char&gt;(0, 179)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) scue</td><td class=modinfopar>unsigned char</td><td class=modinfopar>Initial cue for target saturation lower bound</td><td class=modinfopar>50</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) vcue</td><td class=modinfopar>unsigned char</td><td class=modinfopar>Initial cue for target value (brightness) lower bound</td><td class=modinfopar>200</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) maxnumobj</td><td class=modinfopar>size_t</td><td class=modinfopar>Max number of objects to declare a clean image. If more blobs are detected in a frame, we skip that frame before we even try to analyze shapes of the blobs</td><td class=modinfopar>100</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) hullarea</td><td class=modinfopar>jevois::Range&lt;unsigned int&gt;</td><td class=modinfopar>Range of object area (in pixels) to track. Use this if you want to skip shape analysis of very large or very small blobs</td><td class=modinfopar>jevois::Range&lt;unsigned int&gt;(20*20, 300*300)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) hullfill</td><td class=modinfopar>int</td><td class=modinfopar>Max fill ratio of the convex hull (percent). Lower values mean your shape occupies a smaller fraction of its convex hull. This parameter sets an upper bound, fuller shapes will be rejected.</td><td class=modinfopar>50</td><td class=modinfopar>jevois::Range&lt;int&gt;(1, 100)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) erodesize</td><td class=modinfopar>size_t</td><td class=modinfopar>Erosion structuring element size (pixels), or 0 for no erosion</td><td class=modinfopar>2</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) dilatesize</td><td class=modinfopar>size_t</td><td class=modinfopar>Dilation structuring element size (pixels), or 0 for no dilation</td><td class=modinfopar>4</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) epsilon</td><td class=modinfopar>double</td><td class=modinfopar>Shape smoothing factor (higher for smoother). Shape smoothing is applied to remove small contour defects before the shape is analyzed.</td><td class=modinfopar>0.015</td><td class=modinfopar>jevois::Range&lt;double&gt;(0.001, 0.999)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) debug</td><td class=modinfopar>bool</td><td class=modinfopar>Show contours of all object candidates if true</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) threads</td><td class=modinfopar>size_t</td><td class=modinfopar>Number of parallel vision processing threads. Thread 0 uses the HSV values provided by user parameters; thread 1 broadens that fixed range a bit; threads 2-3 use a narrow and broader learned HSV window over time</td><td class=modinfopar>4</td><td class=modinfopar>jevois::Range&lt;size_t&gt;(2, 4)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) showthread</td><td class=modinfopar>size_t</td><td class=modinfopar>Thread number that is used to display HSV-thresholded image</td><td class=modinfopar>0</td><td class=modinfopar>jevois::Range&lt;size_t&gt;(0, 3)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) ethresh</td><td class=modinfopar>double</td><td class=modinfopar>Shape error threshold (lower is stricter for exact shape)</td><td class=modinfopar>900.0</td><td class=modinfopar>jevois::Range&lt;double&gt;(0.01, 1000.0)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) dopose</td><td class=modinfopar>bool</td><td class=modinfopar>Compute (and show) 6D object pose, requires a valid camera calibration. When dopose is true, 3D serial messages are sent out, otherwise 2D serial messages.</td><td class=modinfopar>true</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) camparams</td><td class=modinfopar>std::string</td><td class=modinfopar>File stem of camera parameters, or empty. Camera resolution will be appended, as well as a .yaml extension. For example, specifying &#39;calibration&#39; here and running the camera sensor at 320x240 will attempt to load calibration320x240.yaml from within directory  JEVOIS_SHARE_PATH /camera/</td><td class=modinfopar>calibration</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) iou</td><td class=modinfopar>double</td><td class=modinfopar>Intersection-over-union ratio over which duplicates are eliminated</td><td class=modinfopar>0.3</td><td class=modinfopar>jevois::Range&lt;double&gt;(0.01, 0.99)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) objsize</td><td class=modinfopar>cv::Size_&lt;float&gt;</td><td class=modinfopar>Object size (in meters)</td><td class=modinfopar>cv::Size_&lt;float&gt;(0.28F, 0.175F)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFirstVision.html">FirstVision</A>) margin</td><td class=modinfopar>size_t</td><td class=modinfopar>Margin from from frame borders (pixels). If any corner of a detected shape gets closer than the margin to the frame borders, the shape will be rejected. This is to avoid possibly bogus 6D pose estimation when the shape starts getting truncated as it partially exits the camera&#39;s field of view.</td><td class=modinfopar>5</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman1D.html">Kalman1D</A>) usevel</td><td class=modinfopar>bool</td><td class=modinfopar>Use velocity tracking, in addition to position</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman1D.html">Kalman1D</A>) procnoise</td><td class=modinfopar>float</td><td class=modinfopar>Process noise standard deviation</td><td class=modinfopar>0.003F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman1D.html">Kalman1D</A>) measnoise</td><td class=modinfopar>float</td><td class=modinfopar>Measurement noise standard deviation</td><td class=modinfopar>0.05F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman1D.html">Kalman1D</A>) postnoise</td><td class=modinfopar>float</td><td class=modinfopar>A posteriori error estimate standard deviation</td><td class=modinfopar>0.3F</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfocfg><tr><td class=modinfocfg><b>script.cfg file</b><hr><pre># Demo configuration script for FirstVision module.
+
+###################################################################################################################
+# Essential parameters:
+###################################################################################################################
+
+# Detect a light green target initially (will adapt over time):
+#
+# hcue: 0=red/do not use because of wraparound, 30=yellow, 45=light green, 60=green, 75=green cyan, 90=cyan, 105=light
+#        blue, 120=blue, 135=purple, 150=pink
+# scue: 0 for unsaturated (whitish discolored object) to 255 for fully saturated (solid color)
+# vcue: 0 for dark to 255 for maximally bright
+setpar hcue 45
+setpar scue 50
+setpar vcue 200
+
+# IMPORTANT: Set true width and height in meters of the U shaped-object we wish to detect:
+# THIS IS REQUIRED FOR THE 6D POSE ESTIMATION TO WORK.
+# In our lab, we had a U shape that is 28cm wide by 17.5cm high (outer convex hull dimensions)
+setpar objsize 0.280 0.175
+
+# Set camera to fixed color balance, gain, and exposure, so that we get more reliable colors than we would obtain under
+# automatic mode:
+setcam presetwb 0
+setcam autowb 0
+setcam autogain 0
+setcam autoexp 0
+setcam redbal 110
+setcam bluebal 170
+setcam gain 16
+setcam absexp 500
+
+# Send info log messages to None, Hard, or USB serial port - useful for debugging:
+#setpar serlog None
+#setpar serlog Hard
+#setpar serlog USB
+
+# Send serial strings with detected objects to None, Hard, or USB serial port:
+#setpar serout None
+#setpar serout Hard
+#setpar serout USB
+
+# Compute (and show) 6D object pose, requires a valid camera calibration. When dopose is true, 3D serial messages are
+# sent out, otherwise 2D serial messages:
+setpar dopose true
+
+# Get detailed target info in our serial messages:
+setpar serstyle Detail
+setpar serprec 3
+
+###################################################################################################################
+# Parameters you can play with to optimize operation:
+###################################################################################################################
+
+# Some tuning of our Kalman filters (used for learning over time):
+setpar procnoise 5.0
+setpar measnoise 20.0
+setpar postnoise 5.0
+setpar usevel false
+
+# Max number of blobs in the video frame. If more blobs are detected in a frame, we skip that frame before we even try
+# to analyze shapes of the blobs:
+setpar maxnumobj 100
+
+# Range of object area (in pixels) to track
+setpar hullarea 400 ... 90000
+
+# Max fill ratio of the convex hull (percent). Lower values mean your shape occupies a smaller fraction of its convex
+# hull. This parameter sets an upper bound, fuller shapes will be rejected:
+setpar hullfill 50
+
+# Erosion structuring element size (pixels), or 0 for no erosion:
+setpar erodesize 2
+
+# Dilation structuring element size (pixels), or 0 for no dilation:
+setpar dilatesize 4
+
+# Shape smoothing factor (higher for smoother). Shape smoothing is applied to remove small contour defects before the
+# shape is analyzed:
+setpar epsilon 0.015
+
+# Show contours of all object candidates if true:
+setpar debug false
+
+# Number of parallel vision processing threads. Thread 0 uses the HSV values provided by user parameters; thread 1
+# broadens that fixed range a bit; threads 2-3 use a narrow and broader learned HSV window over time:
+setpar threads 4
+
+# Thread number that is used to display HSV-thresholded image:
+setpar showthread 0
+
+# Shape error threshold (lower is stricter for exact shape):
+setpar ethresh 900
+
+# Intersection-over-union ratio over which duplicates are eliminated:
+setpar iou 0.3
+
+# Margin from from frame borders (pixels). If any corner of a detected shape gets closer than the margin to the frame
+# borders, the shape will be rejected. This is to avoid possibly bogus 6D pose estimation when the shape starts getting
+# truncated as it partially exits the camera's field of view:
+setpar margin 5
+</pre></td></tr></table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classFirstVision.html">FirstVision</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2017 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

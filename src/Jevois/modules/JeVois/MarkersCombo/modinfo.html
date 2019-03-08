@@ -1,0 +1,88 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module MarkersCombo">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/MarkersCombo/modinfo.html"><img src="/moddoc/MarkersCombo/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Markers Combo</td></tr>
+<tr><td class=modinfosynopsis>Simple demo of QRcode + ARtoolkit + ArUco markers detection and decoding. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;MarkersCombo</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;306&nbsp;50.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;50.0&nbsp;JeVois&nbsp;MarkersCombo</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;546&nbsp;20.0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;20.0&nbsp;JeVois&nbsp;MarkersCombo</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>Detect and decode 3 kinds of coded patterns which can be useful to a robot:</p>
+<ul>
+<li>QR-codes as in <a href='/moddoc/DemoQRcode/modinfo.html'><strong class='jvmod'>DemoQRcode</strong></a></li>
+<li>AR-toolkit markers as in <a href='/moddoc/DemoARtoolkit/modinfo.html'><strong class='jvmod'>DemoARtoolkit</strong></a></li>
+<li>ArUco markers as in <a href='/moddoc/DemoArUco/modinfo.html'><strong class='jvmod'>DemoArUco</strong></a></li>
+</ul>
+<p>The three algorithms run in parallel. You should be able to sustain 50 frames/s at 320x240 camera resolution, and 20 frames/s at 640x480 camera resolution.</p>
+<h2>Serial Messages </h2>
+<p>This module can send standardized serial messages as described in <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a>.</p>
+<p>When <code>dopose</code> is turned on, 3D messages will be sent, otherwise 2D messages.</p>
+<p>One message is issued for every detected marker, on every video frame.</p>
+<p>2D messages when <code>msg3d</code> and <code>dopose</code> are off:</p>
+<ul>
+<li>Serial message type: <b>2D</b> </li>
+<li><code>id</code>: decoded marker ID (with prefix 'U' for ArUco, or 'A' for ARtoolkit), or type of symbol (e.g., <b>QR-Code</b>, <b>ISBN13</b>, etc).</li>
+<li><code>x</code>, <code>y</code>, or vertices: standardized 2D coordinates of marker center or corners</li>
+<li><code>w</code>, <code>h</code>: standardized marker size</li>
+<li><code>extra</code>: none (empty string) for ArUco and ARtoolkit markers, otherwise decoded barcode or QRcode content.</li>
+</ul>
+<p>3D messages when <code>msg3d</code> and <code>dopose</code> are on:</p>
+<ul>
+<li>Serial message type: <b>3D</b> </li>
+<li><code>id</code>: decoded marker ID (with prefix 'U' for ArUco, or 'A' for ARtoolkit), or type of symbol (e.g., <b>QR-Code</b>, <b>ISBN13</b>, etc).</li>
+<li><code>x</code>, <code>y</code>, <code>z</code>, or vertices: 3D coordinates in millimeters of marker center or corners</li>
+<li><code>w</code>, <code>h</code>, <code>d</code>: marker size in millimeters, a depth of 1mm is always used</li>
+<li><code>extra</code>: none (empty string) for ArUco and ARtoolkit markers, otherwise decoded barcode or QRcode content.</li>
+</ul>
+<p>If you will use the quaternion data (Detail message style; see <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a>), you should probably set the <code>serprec</code> parameter to something non-zero to get enough accuracy in the quaternion values.</p>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) camparams</td><td class=modinfopar>std::string</td><td class=modinfopar>File stem of camera parameters, or empty. Camera resolution will be appended, as well as a .cfg extension. For example, specifying &#39;camera_para&#39; here and running the camera sensor at 320x240 will attempt to load camera_para320x240.dat from within the module&#39;s directory.</td><td class=modinfopar>camera_para</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) contpose</td><td class=modinfopar>bool</td><td class=modinfopar>Use continuous pose estimation in good quality video</td><td class=modinfopar>true</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) msg3d</td><td class=modinfopar>bool</td><td class=modinfopar>Send 3D serial messages if true, otherwise 2D</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) threshmode</td><td class=modinfopar>DictThreshMode</td><td class=modinfopar>Dictionary threshold mode to use, affects robustness to varying lighting conditions</td><td class=modinfopar>DictThreshMode::AR_LABELING_THRESH_MODE_AUTO_OTSU</td><td class=modinfopar>DictThreshMode_Values</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) dictionary</td><td class=modinfopar>Dict</td><td class=modinfopar>Symbol dictionary to use</td><td class=modinfopar>Dict::AR_MATRIX_CODE_3x3_PARITY65</td><td class=modinfopar>Dict_Values</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) confthresh</td><td class=modinfopar>double</td><td class=modinfopar>Minimum confidence threshold required for valid detections</td><td class=modinfopar>0.7</td><td class=modinfopar>jevois::Range&lt;double&gt;(0.0, 1.0)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) camparams</td><td class=modinfopar>std::string</td><td class=modinfopar>File stem of camera parameters, or empty. Camera resolution will be appended, as well as a .yaml extension. For example, specifying &#39;calibration&#39; here and running the camera sensor at 320x240 will attempt to load calibration320x240.yaml from within directory  JEVOIS_SHARE_PATH /camera/ - Note that this parameter cannot be changed at runtime (must be set in the module&#39;s params.cfg).</td><td class=modinfopar>calibration</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) detparams</td><td class=modinfopar>std::string</td><td class=modinfopar>Filename of detector parameters, or empty - Note that this parameter cannot be changed at runtime (must be set in the module&#39;s params.cfg).</td><td class=modinfopar></td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) dictionary</td><td class=modinfopar>Dict</td><td class=modinfopar>Symbol dictionary to use - Note that this parameter cannot be changed at runtime (must be set in the module&#39;s params.cfg).</td><td class=modinfopar>Dict::D4X4_50</td><td class=modinfopar>Dict_Values</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) dopose</td><td class=modinfopar>bool</td><td class=modinfopar>Compute (and show) pose vectors, requires a valid camera calibration</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) markerlen</td><td class=modinfopar>float</td><td class=modinfopar>Marker side length (millimeters), used only for pose estimation</td><td class=modinfopar>100.0F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classArUco.html">ArUco</A>) showcube</td><td class=modinfopar>bool</td><td class=modinfopar>Show a 3D cube on top of each detected marker, when dopose is also true</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classQRcode.html">QRcode</A>) symbol</td><td class=modinfopar>std::string</td><td class=modinfopar>Type(s) of QR code / barcode symbols searched for, multiple entries are possible and should be separated by / characters. Selecting many symbol types or ALL will slow down processing. Supported symbols are: QRCODE, EAN2, EAN5, EAN8, EAN13, UPCE, UPCA, ISBN10, ISBN13, COMPOSITE, I25, DATABAR, DATABAREXP, CODABAR, CODE39, PDF417, CODE93, and CODE128</td><td class=modinfopar>ALL</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classQRcode.html">QRcode</A>) xdensity</td><td class=modinfopar>int</td><td class=modinfopar>Scanner vertical scan density (pixel stride), or 0 to disable</td><td class=modinfopar>1</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classQRcode.html">QRcode</A>) ydensity</td><td class=modinfopar>int</td><td class=modinfopar>Scanner horizontal scan density (pixel stride), or 0 to disable</td><td class=modinfopar>1</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfocfg><tr><td class=modinfocfg><b>params.cfg file</b><hr><pre># Default parameters that are set upon loading the module
+
+# Only look for QR codes by default, faster than looking for any kind of barcode and qr-code:
+qrcode:symbol = QRCODE
+</pre></td></tr></table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classMarkersCombo.html">MarkersCombo</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

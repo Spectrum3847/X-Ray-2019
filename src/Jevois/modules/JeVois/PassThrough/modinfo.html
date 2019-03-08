@@ -1,0 +1,61 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module PassThrough">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/PassThrough/modinfo.html"><img src="/moddoc/PassThrough/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Pass Through</td></tr>
+<tr><td class=modinfosynopsis>Simple module that just passes the captured camera frames through to USB host. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;No&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;1280&nbsp;1024&nbsp;7.5&nbsp;YUYV&nbsp;1280&nbsp;1024&nbsp;7.5&nbsp;JeVois&nbsp;PassThrough</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;480&nbsp;30.0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;30.0&nbsp;JeVois&nbsp;PassThrough</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;480&nbsp;19.6&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;19.6&nbsp;JeVois&nbsp;PassThrough</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;480&nbsp;12.0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;12.0&nbsp;JeVois&nbsp;PassThrough</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;480&nbsp;8.3&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;8.3&nbsp;JeVois&nbsp;PassThrough</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;480&nbsp;7.5&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;7.5&nbsp;JeVois&nbsp;PassThrough</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;480&nbsp;5.5&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;5.5&nbsp;JeVois&nbsp;PassThrough</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This module makes your JeVois smart camera operate like a regular "dumb" camera. It is intended mainly for use in programming tutorials, and to allow you to debug new machine vision modules that you test on your host computer, using the JeVois camera in pass-through mode as input, to simulate what will happen when your code runs on the JeVois embedded processor.</p>
+<p>Any video mapping is possible here, as long as camera and USB pixel types match, and camera and USB image resolutions also match.</p>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/PixelFormats.html">Advanced topic: Image pixel formats</a> for information about pixel formats; with this module you can use the formats supported by the camera sensor: YUYV, BAYER, RGB565, and resolutions:</p>
+<ul>
+<li>SXGA (1280 x 1024): up to 15 fps</li>
+<li>VGA (640 x 480): up to 30 fps</li>
+<li>CIF (352 x 288): up to 60 fps</li>
+<li>QVGA (320 x 240): up to 60 fps</li>
+<li>QCIF (176 x 144): up to 120 fps</li>
+<li>QQVGA (160 x 120): up to 60 fps</li>
+<li>QQCIF (88 x 72): up to 120 fps</li>
+</ul>
+<h2>Things to try </h2>
+<p>Edit <b>JEVOIS:/config/videomappings.cfg</b> on your MicroSD card (see <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/VideoMapping.html">Advanced topic: Video mappings and configuring machine vision modes</a>) and try to add some new pass-through mappings. Not all of the possible pass-through mappings have been included in the card to avoid having too many of these simple "dumb camera" mappings in the base software distribution. For example, you can try</p>
+<pre class="fragment">YUYV 176 144 115.0 YUYV 176 144 115.0 JeVois PassThrough
+</pre><p>will grab YUYV frames on the sensor, with resolution 176x144 at 115 frames/s, and will directly send them to the host computer over the USB link. To test this mapping, select the corresponding resolution and framerate in your video viewing software (here, YUYV 176x144 @ 115fps). Although the sensor can capture at up to 120fps at this resolution, here we used 115fps to avoid a conflict with a mapping using YUYV 176x144 @ 120fps USB output and the  <a href='/moddoc/SaveVideo/modinfo.html'><strong class='jvmod'>SaveVideo</strong></a> module that is already in the default <b>videomappings.cfg</b> file.</p>
+<p>Note that this module may suffer from DMA coherency artifacts if the <code>camturbo</code> parameter of the <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/classjevois_1_1Engine.html">jevois::Engine</a> is turned on, which it is by default. The <code>camturbo</code> parameter relaxes some of the cache coherency constraints on the video buffers captured by the camera sensor, which allows the JeVois processor to access video pixel data from memory faster. But with modules that do not do much processing, sometimes this yields video artifacts, we presume because some of the video data from previous frames still is in the CPU cache and hence is not again fetched from main memory by the CPU. If you see short stripes of what appears to be wrong pixel colors in the video, try to disable <code>camturbo</code>, by editing <b>JEVOIS:/config/params.cfg</b> on your MicroSD card and in there turning <code>camturbo</code> to false.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr><td colspan=5>This module exposes no parameter</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classPassThrough.html">PassThrough</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

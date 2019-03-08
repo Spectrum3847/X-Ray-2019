@@ -1,0 +1,86 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module ObjectDetect">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/ObjectDetect/modinfo.html"><img src="/moddoc/ObjectDetect/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Object Detect</td></tr>
+<tr><td class=modinfosynopsis>Simple object detection using keypoint matching. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;252&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;ObjectDetect</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+<div class=galleryItem><a href="screenshot2.jpg"><img src="screenshot2.jpg"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This module finds objects by matching keypoint descriptors between the current image and a set of training images. Here we use SURF keypoints and descriptors as provided by OpenCV.</p>
+<p>The algorithm consists of 4 phases:</p><ul>
+<li>detect keypoint locations, typically corners or other distinctive texture elements or markings;</li>
+<li>compute keypoint descriptors, which are summary representations of the image neighborhood around each keypoint;</li>
+<li>match descriptors from current image to descriptors previously extracted from training images;</li>
+<li>if enough matches are found between the current image and a given training image, and they are of good enough quality, compute the homography (geometric transformation) between keypoint locations in that training image and locations of the matching keypoints in the current image. If it is well conditioned (i.e., a 3D viewpoint change could well explain how the keypoints moved between the training and current images), declare that a match was found, and draw a green rectangle around the detected object.</li>
+</ul>
+<p>The algorithm comes by default with one training image, for the Priority Mail logo of the U.S. Postal Service. Search for "USPS priority mail" on the web and point JeVois to a picture of the logo on your screen to recognize it. See the screenshots of this module for examples of how that logo looks.</p>
+<h2>Offline training </h2>
+<p>Simply add images of the objects you want to detect in <b>JEVOIS:/modules/JeVois/ObjectDetect/images/</b> on your JeVois microSD card. Those will be processed when the module starts. The names of recognized objects returned by this module are simply the file names of the pictures you have added in that directory. No additional training procedure is needed. Beware that the more images you add, the slower the algorithm will run, and the higher your chances of confusions among several of your objects.</p>
+<p>With <strong class='jvversion'>JeVois v1.1</strong> or later, you do not need to eject the microSD from JeVois, and you can instead add images live by exporting the microSD inside JeVois using the <code>usbsd</code> command. See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/MicroSD.html">MicroSD card organization and files</a> (last section) for details. When you are done adding new images or deleting unwanted ones, properly eject the virtual USB flash drive, and JeVois will restart and load the new training data.</p>
+<h2>Live training </h2>
+<p>With <strong class='jvversion'>JeVois v1.2</strong> and later you can train this algorithm live by telling JeVois to capture and save an image of an object, which can be used later to identify this object again.</p>
+<p>First, enable display of a training window using: </p><pre class="fragment">setpar showwin true
+</pre><p>You should now see a gray rectangle. You can adjust the window size and aspect ratio using the <code>win</code> parameter. By default, the algorithm will train new objects that occupy half the width and height of the camera image.</p>
+<p>Point your JeVois camera to a clean view of an object you want to learn (if possible, with a blank, featureless background, as this algorithm does not attempt to segment objects and would otherwise also learn features of the background as part of the object). Make sure the objects fits inside the gray rectangle and fills as much of it as possible. You should adjust the distance between the object and the camera, and the grey rectangle, to roughly match the distance at which you want to detect that object in the future. Then issue the command:</p>
+<pre class="fragment">save somename
+</pre><p>over a serial connection to JeVois, where <em>somename</em> is the name you want to give to this object. This will grab the current camera image, crop it using the gray rectangle, and save the crop as a new training image <b>somename.png</b> for immediate use. The algorithm will immediately re-train on all objects, including the new one. You should see the object being detected shortly after you send your save command. Note that we save the image as grayscale since this algorithm does not use color anyway.</p>
+<p>You can see the list of current images by using command:</p>
+<pre class="fragment">list
+</pre><p>Finally, you can delete an image using command:</p>
+<pre class="fragment">del somename
+</pre><p>where <em>somename</em> is the object name without extension, and a .png extension will be added. The image will immediately be deleted and that object will not be recognized anymore.</p>
+<p>For more information, see JeVois tutorial <a href="http://jevois.org/tutorials/UserObjectDetect.html">Live training of the Object Detection module</a> and the associated video:</p>
+<p> <div align='center'><iframe width='560' height='315' src='http://www.youtube.com/embed/qwJOcsbkZLE?rel=0&loop=1' frameborder='0' allowfullscreen align='middle'></iframe></div></p>
+<h2>Serial Messages </h2>
+<p>This module can send standardized serial messages as described in <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a>. One message is issued on every video frame for the best detected object (highest score).</p>
+<ul>
+<li>Serial message type: <b>2D</b> </li>
+<li><code>id</code>: filename of the recognized object</li>
+<li><code>x</code>, <code>y</code>: standardized 2D coordinates of the object center</li>
+<li><code>w</code>, <code>h</code>, or vertices: Standardized bounding box around the object</li>
+<li><code>extra</code>: none (empty string)</li>
+</ul>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+<h2>Programmer notes </h2>
+<p>This algorithm is quite slow. So, here, we alternate between computing keypoints and descriptors on one frame (or more, depending on how slow that gets), and doing the matching on the next frame. This module also provides an example of letting some computation happen even after we exit the <code><a class="el" href="classObjectDetect.html#aa8a81168bc25a9c631af158eb9f08f89" title="Processing function with no USB output. ">process()</a></code> function. Here, we keep detecting keypoints and computing descriptors even outside <code><a class="el" href="classObjectDetect.html#aa8a81168bc25a9c631af158eb9f08f89" title="Processing function with no USB output. ">process()</a></code>. The itsKPfut future is our handle to that thread, and we also use it to alternate between detection and matching on alternating frames.</p>
+</div></td></tr>
+<tr><td><table class=modulecommand><tr><th class=modulecommand>Custom module commands</th></tr>
+<tr><td class=modulecommand>list - show current list of training images</td></tr>
+<tr><td class=modulecommand>save somename - grab current frame and save as new training image somename.png</td></tr>
+<tr><td class=modulecommand>del somename - delete training image somename.png</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classObjectDetect.html">ObjectDetect</A>) win</td><td class=modinfopar>floatpair</td><td class=modinfopar>Width and height (in percent of image size, with valid percentages between 10.0 and 100.0) of the window used to interactively save objects</td><td class=modinfopar>floatpair(50.0F, 50.0F)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classObjectDetect.html">ObjectDetect</A>) showwin</td><td class=modinfopar>bool</td><td class=modinfopar>Show the interactive image capture window when true</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classObjectMatcher.html">ObjectMatcher</A>) hessian</td><td class=modinfopar>double</td><td class=modinfopar>Hessian threshold</td><td class=modinfopar>800.0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classObjectMatcher.html">ObjectMatcher</A>) traindir</td><td class=modinfopar>std::string</td><td class=modinfopar>Directory where training images are</td><td class=modinfopar>images</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classObjectMatcher.html">ObjectMatcher</A>) goodpts</td><td class=modinfopar>jevois::Range&lt;size_t&gt;</td><td class=modinfopar>Number range of good matches considered</td><td class=modinfopar>jevois::Range&lt;size_t&gt;(15, 100)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classObjectMatcher.html">ObjectMatcher</A>) distthresh</td><td class=modinfopar>double</td><td class=modinfopar>Maximum distance for a match to be considered good</td><td class=modinfopar>0.2</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classObjectDetect.html">ObjectDetect</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

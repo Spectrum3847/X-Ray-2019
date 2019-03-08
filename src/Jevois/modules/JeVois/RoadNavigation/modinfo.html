@@ -1,0 +1,72 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module RoadNavigation">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/RoadNavigation/modinfo.html"><img src="/moddoc/RoadNavigation/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Road Navigation</td></tr>
+<tr><td class=modinfosynopsis>Road finder demo. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;RoadNavigation</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0&nbsp;YUYV&nbsp;176&nbsp;144&nbsp;120.0&nbsp;JeVois&nbsp;RoadNavigation</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;256&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;RoadNavigation</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;176&nbsp;160&nbsp;120.0&nbsp;YUYV&nbsp;176&nbsp;144&nbsp;120.0&nbsp;JeVois&nbsp;RoadNavigation</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This algorithm detects road using a compination of edge detection and tracking, and texture analysis. The algorithm is an implementation of Chang, Siagian and Itti, IROS 2012, available at <a href="http://ilab.usc.edu/publications/doc/Chang_etal12iros.pdf">http://ilab.usc.edu/publications/doc/Chang_etal12iros.pdf</a></p>
+<p>The algorithms combines detection and tracking of line segments at the edges of the road or on the road (e.g., lane dividers), and texture analysis to distinguish the road region from its surroundings. One strength of this algorithm is that it requires no training. No need to drive your robot on many roads to learn about the appearance of roads. The flipside of this, of course, is that driving on roads which do not look like standard roads or trails may fail.</p>
+<p>The algorithm outputs the horizontal coordinate of the vanishing point of the road, which usually is a good indication of the road heading (except in very tight bends or corners).</p>
+<h2>Demo display outputs </h2>
+<p>Detected line segments are shown in black and white, while segments that have been reliably tracked over multiple frames are shown in thick purple. Estimated vanishing point location and confidence is shown as a big green disk on the horizon line.</p>
+<p>Note that the demo display runs much slower than the algorithm with no video output (which should be used on autonomous cars), simply because drawing all the detected line segments takes a lot of time.</p>
+<h2>Serial Messages </h2>
+<p>This module can send standardized serial messages as described in <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a>. One 1D message is issued on every video frame for the vanishing point's horizontal location.</p>
+<ul>
+<li>Serial message type: <b>1D</b> </li>
+<li><code>id</code>: always <b>vp</b> (shorthand for vanishing point)</li>
+<li><code>x</code>: standardized 2D horizontal coordinate of the vanishing point</li>
+<li><code>w</code>: always 0.</li>
+<li><code>extra</code>: none (empty string)</li>
+</ul>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+<h2>Trying it out </h2>
+<p>To casually try out this module, just search the web for pictures of roads and point the JeVois camera to one of them. Make sure that you align the horizon line of the algorithm (which has a number of purple and green disks) roughly with the horizon line in your picture. As you move the camera left and right, the location of the large green disk that marks the detected vanishing point should move left and right, and should point to the vanishing point of the road in your image.</p>
+<p>When using on a mobile robot in the real world, setting the proper horizon line is essential for good operation of the algorithm. This is determined by parameter <code>horizon</code>, which should be tuned according to the height and tilt angle of the JeVois camera on your vehicle.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classRoadNavigation.html">RoadNavigation</A>) vpconf</td><td class=modinfopar>float</td><td class=modinfopar>Minimum vanishing point confidence required to send a serial message. Note that currently, confidence values are binary (only 0 or 1), and quite conservative (many good detections may get a confidence of 0 if they are not very clean).</td><td class=modinfopar>0.0F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classRoadFinder.html">RoadFinder</A>) horizon</td><td class=modinfopar>int</td><td class=modinfopar>Estimated vertical (Y) position of the horizon (pixels, with 0 at the top of the frame). Adjust this depending on the tilt angle of your camera and video input resolution.</td><td class=modinfopar>70</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classRoadFinder.html">RoadFinder</A>) support</td><td class=modinfopar>int</td><td class=modinfopar>Offset (in pixels) between horizon line and horizon support line (positive values means support line is below horizon line.</td><td class=modinfopar>20</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classRoadFinder.html">RoadFinder</A>) spacing</td><td class=modinfopar>unsigned int</td><td class=modinfopar>Spacing between vanishing point candidates (pixels).</td><td class=modinfopar>20</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classRoadFinder.html">RoadFinder</A>) distthresh</td><td class=modinfopar>unsigned int</td><td class=modinfopar>Vanishing point distance threshold (pixels).</td><td class=modinfopar>40</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfocfg><tr><td class=modinfocfg><b>params.cfg file</b><hr><pre># Default paremeters that are set upon loading the module
+
+# y position of the horizon line, on our toy car and using 176x144 inputs:
+#horizon = 70
+
+# y position of the horizon line, on our toy car and using 320x240 inputs:
+horizon = 110
+</pre></td></tr></table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classRoadNavigation.html">RoadNavigation</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

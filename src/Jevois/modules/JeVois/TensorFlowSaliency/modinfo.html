@@ -1,0 +1,206 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module TensorFlowSaliency">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/TensorFlowSaliency/modinfo.html"><img src="/moddoc/TensorFlowSaliency/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>TensorFlow Saliency</td></tr>
+<tr><td class=modinfosynopsis>Detect salient objects and identify them using TensorFlow deep neural network. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;15.0&nbsp;JeVois&nbsp;TensorFlowSaliency</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;448&nbsp;240&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;TensorFlowSaliency<em>&nbsp;#&nbsp;recommended&nbsp;network&nbsp;size&nbsp;128x128</em></tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;512&nbsp;240&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;TensorFlowSaliency<em>&nbsp;#&nbsp;recommended&nbsp;network&nbsp;size&nbsp;192x192</em></tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;544&nbsp;240&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;TensorFlowSaliency<em>&nbsp;#&nbsp;recommended&nbsp;network&nbsp;size&nbsp;224x224</em></tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;544&nbsp;240&nbsp;30.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;30.0&nbsp;JeVois&nbsp;TensorFlowSaliency</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+<div class=galleryItem><a href="screenshot2.png"><img src="screenshot2.png"></a></div>
+<div class=galleryItem><a href="screenshot3.png"><img src="screenshot3.png"></a></div>
+<div class=galleryItem><a href="screenshot4.png"><img src="screenshot4.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>TensorFlow is a popular neural network framework. This module first finds the most conspicuous (salient) object in the scene, then identifies it using a deep neural network. It returns the top scoring candidates.</p>
+<p>See <a href="http://ilab.usc.edu/bu/">http://ilab.usc.edu/bu/</a> for more information about saliency detection, and <a href="https://www.tensorflow.org">https://www.tensorflow.org</a> for more information about the TensorFlow deep neural network framework.</p>
+<p> <div align='center'><iframe width='560' height='315' src='http://www.youtube.com/embed/TRk8rCuUVEE?rel=0&loop=1' frameborder='0' allowfullscreen align='middle'></iframe></div></p>
+<p>This module runs a TensorFlow network on an image window around the most salient point and shows the top-scoring results. We alternate, on every other frame, between updating the salient window crop location, and predicting what is in it. Actual network inference speed (time taken to compute the predictions on one image crop) is shown at the bottom right. See below for how to trade-off speed and accuracy.</p>
+<p>Note that by default this module runs fast variant of MobileNets trained on the ImageNet dataset. There are 1000 different kinds of objects (object classes) that this network can recognize (too long to list here). It is possible to use bigger and more complex networks, but it will likely slow down the framerate.</p>
+<p>For more information about MobileNets, see <a href="https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.md">https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.md</a></p>
+<p>For more information about the ImageNet dataset used for training, see <a href="http://www.image-net.org/challenges/LSVRC/2012/">http://www.image-net.org/challenges/LSVRC/2012/</a></p>
+<p>Sometimes this module will make mistakes! The performance of mobilenets is about 40% to 70% correct (mean average precision) on the test set, depending on network size (bigger networks are more accurate but slower).</p>
+<h2>Neural network size and speed </h2>
+<p>This module provides a parameter, <code>foa</code>, which determines the size of a region of interest that is cropped around the most salient location. This region will then be rescaled, if needed, to the neural network's expected input size. To avoid wasting time rescaling, it is hence best to select an <code>foa</code> size that is equal to the network's input size.</p>
+<p>The network actual input size varies depending on which network is used; for example, mobilenet_v1_0.25_128_quant expects 128x128 input images, while mobilenet_v1_1.0_224 expects 224x224. We automatically rescale the cropped window to the network's desired input size. Note that there is a cost to rescaling, so, for best performance, you should match <code>foa</code> size to the network input size.</p>
+<p>For example:</p>
+<ul>
+<li>mobilenet_v1_0.25_128_quant (network size 128x128), runs at about 12ms/prediction (83.3 frames/s).</li>
+<li>mobilenet_v1_0.5_128_quant (network size 128x128), runs at about 26ms/prediction (38.5 frames/s).</li>
+<li>mobilenet_v1_0.25_224_quant (network size 224x224), runs at about 35ms/prediction (28.5 frames/s).</li>
+<li>mobilenet_v1_1.0_224_quant (network size 224x224), runs at about 185ms/prediction (5.4 frames/s).</li>
+</ul>
+<p>When using video mappings with USB output, irrespective of <code>foa</code>, the crop around the most salient image region (with size given by <code>foa</code>) will always also be rescaled so that, when placed to the right of the input image, it fills the desired USB output dims. For example, if camera mode is 320x240 and USB output size is 544x240, then the attended and recognized object will be rescaled to 224x224 (since 224 = 544-320) for display purposes only. This is so that one does not need to change USB video resolution while playing with different values of <code>foa</code> live.</p>
+<h2>Serial messages </h2>
+<p>On every frame where detection results were obtained that are above <code>thresh</code>, this module sends a standardized 2D message as specified in UserSerialStyle:</p><ul>
+<li>Serial message type: <b>2D</b> </li>
+<li><code>id</code>: top-scoring category name of the recognized object, followed by ':' and the confidence score in percent</li>
+<li><code>x</code>, <code>y</code>, or vertices: standardized 2D coordinates of object center or corners</li>
+<li><code>w</code>, <code>h</code>: standardized object size</li>
+<li><code>extra</code>: any number of additional category:score pairs which had an above-threshold score, in order of decreasing score where <em>category</em> is the category name (from <code>namefile</code>) and <em>score</em> is the confidence score from 0.0 to 100.0</li>
+</ul>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+<h2>Using your own network </h2>
+<p>For a step-by-step tutorial, see <a href="http://jevois.org/tutorials/UserTensorFlowTraining.html">Training custom TensorFlow networks for JeVois</a>.</p>
+<p>This module supports RGB or grayscale inputs, byte or float32. You should create and train your network using fast GPUs, and then follow the instruction here to convert your trained network to TFLite format:</p>
+<p><a href="https://www.tensorflow.org/mobile/tflite/">https://www.tensorflow.org/mobile/tflite/</a></p>
+<p>Then you just need to create a directory under <b>JEVOIS:/share/tensorflow/</b> with the name of your network, and, in there, two files, <b>labels.txt</b> with the category labels, and <b>model.tflite</b> with your model converted to TensorFlow Lite (flatbuffer format). Finally, edit <b>JEVOIS:/modules/JeVois/TensorFlowEasy/params.cfg</b> to select your new network when the module is launched.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classTensorFlowSaliency.html">TensorFlowSaliency</A>) foa</td><td class=modinfopar>cv::Size</td><td class=modinfopar>Width and height (in pixels) of the focus of attention. This is the size of the image crop that is taken around the most salient location in each frame. The foa size must fit within the camera input frame size. To avoid rescaling, it is best to use here the size that the deep network expects as input.</td><td class=modinfopar>cv::Size(128, 128)</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) cweight</td><td class=modinfopar>byte</td><td class=modinfopar>Color channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) iweight</td><td class=modinfopar>byte</td><td class=modinfopar>Intensity channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) oweight</td><td class=modinfopar>byte</td><td class=modinfopar>Orientation channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) fweight</td><td class=modinfopar>byte</td><td class=modinfopar>Flicker channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) mweight</td><td class=modinfopar>byte</td><td class=modinfopar>Motion channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) centermin</td><td class=modinfopar>size_t</td><td class=modinfopar>Lowest (finest) of the 3 center scales</td><td class=modinfopar>2</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) deltamin</td><td class=modinfopar>size_t</td><td class=modinfopar>Lowest (finest) of the 2 center-surround delta scales</td><td class=modinfopar>3</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) smscale</td><td class=modinfopar>size_t</td><td class=modinfopar>Scale of the saliency map</td><td class=modinfopar>4</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) mthresh</td><td class=modinfopar>byte</td><td class=modinfopar>Motion threshold</td><td class=modinfopar>0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) fthresh</td><td class=modinfopar>byte</td><td class=modinfopar>Flicker threshold</td><td class=modinfopar>0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) msflick</td><td class=modinfopar>bool</td><td class=modinfopar>Use multiscale flicker computation</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classTensorFlow.html">TensorFlow</A>) netdir</td><td class=modinfopar>std::string</td><td class=modinfopar>Network to load. This should be the name of a directory within JEVOIS:/share/tensorflow/ which should contain two files: model.tflite and labels.txt</td><td class=modinfopar>mobilenet_v1_224_android_quant_2017_11_08</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classTensorFlow.html">TensorFlow</A>) dataroot</td><td class=modinfopar>std::string</td><td class=modinfopar>Root path for data, config, and weight files. If empty, use the module&#39;s path.</td><td class=modinfopar>JEVOIS_SHARE_PATH /tensorflow</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classTensorFlow.html">TensorFlow</A>) top</td><td class=modinfopar>unsigned int</td><td class=modinfopar>Max number of top-scoring predictions that score above thresh to return</td><td class=modinfopar>5</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classTensorFlow.html">TensorFlow</A>) thresh</td><td class=modinfopar>float</td><td class=modinfopar>Threshold (in percent confidence) above which predictions will be reported</td><td class=modinfopar>20.0F</td><td class=modinfopar>jevois::Range&lt;float&gt;(0.0F, 100.0F)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classTensorFlow.html">TensorFlow</A>) threads</td><td class=modinfopar>int</td><td class=modinfopar>Number of parallel computation threads, or 0 for auto</td><td class=modinfopar>4</td><td class=modinfopar>jevois::Range&lt;int&gt;(0, 1024)</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classTensorFlow.html">TensorFlow</A>) scorescale</td><td class=modinfopar>float</td><td class=modinfopar>Scaling factors applied to recognition scores, useful for InceptionV3</td><td class=modinfopar>1.0F</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfocfg><tr><td class=modinfocfg><b>params.cfg file</b><hr><pre># Config for TensorFlowSaliency. Just uncomment the network you want to use:
+
+# The default network provided with TensorFlow Lite:
+#netdir=mobilenet_v1_224_android_quant_2017_11_08
+#foa=224 224
+
+# All mobilenets with different input sizes, compression levels, and quantization. See
+# https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet_v1.md
+# for some info on how to pick one.
+
+#netdir=mobilenet_v1_0.25_128
+#foa=128 128
+
+#netdir=mobilenet_v1_0.25_128_quant
+#foa=128 128
+
+#netdir=mobilenet_v1_0.25_16
+#foa=160 160
+
+#netdir=mobilenet_v1_0.25_160_quant
+#foa=160 160
+
+#netdir=mobilenet_v1_0.25_192
+#foa=192 192
+
+#netdir=mobilenet_v1_0.25_192_quant
+#foa=192 192
+
+#netdir=mobilenet_v1_0.25_224
+#foa=224 224
+
+#netdir=mobilenet_v1_0.25_224_quant
+#foa=224 224
+
+#netdir=mobilenet_v1_0.5_128
+#foa=128 128
+
+netdir=mobilenet_v1_0.5_128_quant
+foa=128 128
+
+#netdir=mobilenet_v1_0.5_160
+#foa=160 160
+
+#netdir=mobilenet_v1_0.5_160_quant
+#foa=160 160
+
+#netdir=mobilenet_v1_0.5_192
+#foa=192 192
+
+#netdir=mobilenet_v1_0.5_192_quant
+#foa=192 192
+
+#netdir=mobilenet_v1_0.5_224
+#foa=224 224
+
+#netdir=mobilenet_v1_0.5_224_quant
+#foa=224 224
+
+#netdir=mobilenet_v1_0.75_128
+#foa=128 128
+
+#netdir=mobilenet_v1_0.75_128_quant
+#foa=128 128
+
+#netdir=mobilenet_v1_0.75_160
+#foa=160 160
+
+#netdir=mobilenet_v1_0.75_160_quant
+#foa=160 160
+
+#netdir=mobilenet_v1_0.75_192
+#foa=192 192
+
+#netdir=mobilenet_v1_0.75_192_quant
+#foa=192 192
+
+#netdir=mobilenet_v1_0.75_224
+#foa=224 224
+
+#netdir=mobilenet_v1_0.75_224_quant
+#foa=224 224
+
+#netdir=mobilenet_v1_1.0_128
+#foa=128 128
+
+#netdir=mobilenet_v1_1.0_128_quant
+#foa=128 128
+
+#netdir=mobilenet_v1_1.0_160
+#foa=160 160
+
+#netdir=mobilenet_v1_1.0_160_quant
+#foa=160 160
+
+#netdir=mobilenet_v1_1.0_192
+#foa=192 192
+
+#netdir=mobilenet_v1_1.0_192_quant
+#foa=192 192
+
+#netdir=mobilenet_v1_1.0_224
+#foa=224 224
+
+#netdir=mobilenet_v1_1.0_224_quant
+#foa=224 224
+
+# Quite slow but accurate, about 4s/prediction, and scores seem out of scale somehow:
+#netdir=inception_v3_slim_2016_android_2017_11_10
+#scorescale=0.07843
+#foa=299 299
+</pre></td></tr></table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classTensorFlowSaliency.html">TensorFlowSaliency</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2018 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

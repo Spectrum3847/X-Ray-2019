@@ -1,0 +1,75 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module DemoARtoolkit">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/DemoARtoolkit/modinfo.html"><img src="/moddoc/DemoARtoolkit/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Demo ARtoolkit</td></tr>
+<tr><td class=modinfosynopsis>Augmented reality markers using ARtoolkit. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Shixian Wen</td><td align=center>shixianw@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;Yes&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;60.0&nbsp;JeVois&nbsp;DemoARtoolkit</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;30.0&nbsp;JeVois&nbsp;DemoARtoolkit</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>NONE&nbsp;0&nbsp;0&nbsp;0&nbsp;YUYV&nbsp;1280&nbsp;1024&nbsp;15.0&nbsp;JeVois&nbsp;DemoARtoolkit</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;320&nbsp;258&nbsp;60.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;60.0&nbsp;JeVois&nbsp;DemoARtoolkit</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;498&nbsp;30.0&nbsp;YUYV&nbsp;640&nbsp;480&nbsp;30.0&nbsp;JeVois&nbsp;DemoARtoolkit</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+<div class=galleryItem><a href="screenshot2.png"><img src="screenshot2.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>Detect and decode patterns known as ARtoolkit markers, which are small 2D barcodes often used in augmented reality and robotics. See <a href="https://archive.artoolkit.org/">https://archive.artoolkit.org/</a> - This module uses version 5.x for now.</p>
+<p>This algorithm is very fast. It runs at 400+ frames/s at 320x240 and can easily sustain the maximum 15 frames/s of the JeVois camera sensor chip at 1280x1024. It may be interesting to combine it with other algorithms running on the quad-core JeVois processor (see for example the <a href='/moddoc/MarkersCombo/modinfo.html'><strong class='jvmod'>MarkersCombo</strong></a> module).</p>
+<h2>Sample patterns </h2>
+<p>This module uses by default the dictionary of 3x3 patterns with parity (32 different patterns). You can download them from <a href="http://jevois.org/data/ARtoolkit3x3par.zip">http://jevois.org/data/ARtoolkit3x3par.zip</a></p>
+<p>Also see the files in <b>jevoisbase/Contrib/ARToolKit5arm/doc/patterns/</b> for more.</p>
+<h2>Serial Messages </h2>
+<p>This module can send standardized serial messages as described in <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a>.</p>
+<p>When <code>msg3d</code> is turned on, 3D messages will be sent, otherwise 2D messages.</p>
+<p>One message is issued for every detected marker, on every video frame.</p>
+<p>2D messages when <code>msg3d</code> is off:</p>
+<ul>
+<li>Serial message type: <b>2D</b> </li>
+<li><code>id</code>: decoded ARtoolkit marker ID, with a prefix 'A'</li>
+<li><code>x</code>, <code>y</code>, or vertices: standardized 2D coordinates of marker center or corners</li>
+<li><code>w</code>, <code>h</code>: standardized marker size</li>
+<li><code>extra</code>: none (empty string)</li>
+</ul>
+<p>3D messages when <code>msg3d</code> is on:</p>
+<ul>
+<li>Serial message type: <b>3D</b> </li>
+<li><code>id</code>: decoded ARtoolkit marker ID, with a prefix 'A'</li>
+<li><code>x</code>, <code>y</code>, <code>z</code>, or vertices: 3D coordinates in millimeters of marker center or corners</li>
+<li><code>w</code>, <code>h</code>, <code>d</code>: marker size in millimeters, a depth of 1mm is always used</li>
+<li><code>extra</code>: none (empty string)</li>
+</ul>
+<p>If you will use the quaternion data (Detail message style; see <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a>), you should probably set the <code>serprec</code> parameter to something non-zero to get enough accuracy in the quaternion values.</p>
+<p>See <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/UserSerialStyle.html">Standardized serial messages formatting</a> for more on standardized serial messages, and <a class="elRef" doxygen="/lab/itti/jevois/software/jevois/doc/jevois.tag:/doc/" href="/doc/group__coordhelpers.html">Helper functions to convert coordinates from camera resolution to standardized</a> for more info on standardized coordinates.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) camparams</td><td class=modinfopar>std::string</td><td class=modinfopar>File stem of camera parameters, or empty. Camera resolution will be appended, as well as a .cfg extension. For example, specifying &#39;camera_para&#39; here and running the camera sensor at 320x240 will attempt to load camera_para320x240.dat from within the module&#39;s directory.</td><td class=modinfopar>camera_para</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) contpose</td><td class=modinfopar>bool</td><td class=modinfopar>Use continuous pose estimation in good quality video</td><td class=modinfopar>true</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) msg3d</td><td class=modinfopar>bool</td><td class=modinfopar>Send 3D serial messages if true, otherwise 2D</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) threshmode</td><td class=modinfopar>DictThreshMode</td><td class=modinfopar>Dictionary threshold mode to use, affects robustness to varying lighting conditions</td><td class=modinfopar>DictThreshMode::AR_LABELING_THRESH_MODE_AUTO_OTSU</td><td class=modinfopar>DictThreshMode_Values</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) dictionary</td><td class=modinfopar>Dict</td><td class=modinfopar>Symbol dictionary to use</td><td class=modinfopar>Dict::AR_MATRIX_CODE_3x3_PARITY65</td><td class=modinfopar>Dict_Values</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classARtoolkit.html">ARtoolkit</A>) confthresh</td><td class=modinfopar>double</td><td class=modinfopar>Minimum confidence threshold required for valid detections</td><td class=modinfopar>0.7</td><td class=modinfopar>jevois::Range&lt;double&gt;(0.0, 1.0)</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classDemoARtoolkit.html">DemoARtoolkit</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2017 by Shixian Wen, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-10A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

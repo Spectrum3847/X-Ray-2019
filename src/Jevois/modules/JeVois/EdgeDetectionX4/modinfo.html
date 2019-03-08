@@ -1,0 +1,46 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module EdgeDetectionX4">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/EdgeDetectionX4/modinfo.html"><img src="/moddoc/EdgeDetectionX4/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>Edge Detection X4</td></tr>
+<tr><td class=modinfosynopsis>Simple module to detect edges, running 4 filters in parallel with 4 different settings. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;No&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>GREY&nbsp;320&nbsp;960&nbsp;45.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;45.0&nbsp;JeVois&nbsp;EdgeDetectionX4</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>Compute 4 Canny edge detection filters with 4 different settings, in parallel.</p>
+<p>This module is useful as a pre-processor, feeding edge maps at 4 different levels of details to further processing that may happen on a host computer. The 4 different levels of detail can be leveraged to first detect the gross outlines of objects, and then focus on finer textures within these objects.</p>
+<p>This algorithm should easily run at 45 frames/s on the JeVois smart camera.</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classEdgeDetectionX4.html">EdgeDetectionX4</A>) thresh1</td><td class=modinfopar>double</td><td class=modinfopar>First threshold for hysteresis</td><td class=modinfopar>20.0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classEdgeDetectionX4.html">EdgeDetectionX4</A>) thresh2</td><td class=modinfopar>double</td><td class=modinfopar>Second threshold for hysteresis</td><td class=modinfopar>60.0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classEdgeDetectionX4.html">EdgeDetectionX4</A>) aperture</td><td class=modinfopar>int</td><td class=modinfopar>Aperture size for the Sobel operator</td><td class=modinfopar>3</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classEdgeDetectionX4.html">EdgeDetectionX4</A>) l2grad</td><td class=modinfopar>bool</td><td class=modinfopar>Use more accurate L2 gradient norm if true, L1 if false</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classEdgeDetectionX4.html">EdgeDetectionX4</A>) thresh1delta</td><td class=modinfopar>double</td><td class=modinfopar>First threshold delta over threads</td><td class=modinfopar>50.0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classEdgeDetectionX4.html">EdgeDetectionX4</A>) thresh2delta</td><td class=modinfopar>double</td><td class=modinfopar>Second threshold delta over threads</td><td class=modinfopar>50.0</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classEdgeDetectionX4.html">EdgeDetectionX4</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>

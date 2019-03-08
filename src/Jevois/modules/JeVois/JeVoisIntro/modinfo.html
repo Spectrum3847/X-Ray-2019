@@ -1,0 +1,58 @@
+<html><head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-US"><META NAME="robots" CONTENT="index, follow">
+<META NAME="rating" CONTENT="General"><META NAME="distribution" CONTENT="Global">
+<META NAME="revisit-after" CONTENT="15 days"><META NAME="author" CONTENT="Laurent Itti, JeVois">
+<META NAME="description" CONTENT="JeVois Smart Embedded Machine Vision Toolkit - module JeVoisIntro">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+<link rel="stylesheet" type="text/css" href="/modstyle.css">
+</head> <body>
+<table class=modinfo><tr><td>
+<table class=modinfotop><tr><td><a href="/moddoc/JeVoisIntro/modinfo.html"><img src="/moddoc/JeVoisIntro/icon.png" width=48></a></td>
+<td valign=middle><table><tr><td class=modinfoname>JeVois Intro</td></tr>
+<tr><td class=modinfosynopsis>Simple introduction to JeVois and demo that combines saliency, gist, face detection, and object recognition. </td></tr></table></td></tr></table></td></tr>
+<tr><td width=100%><table class=modinfoauth width=100%><tr><td>By Laurent Itti</td><td align=center>itti@usc.edu</td><td align=center>http://jevois.org</td><td align=right>GPL v3</td></tr></table></td></tr>
+<tr><td><table class=videomapping><tr><td class=videomapping>
+<table class=moduledata><tr><td class=moduledata>&nbsp;Language:&nbsp;C++</td><td class=moduledata align=center>Supports mappings with USB output:&nbsp;Yes</td><td class=moduledata align=right>Supports mappings with NO USB output:&nbsp;No&nbsp;</td></tr></table>
+</td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;360&nbsp;50.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;50.0&nbsp;JeVois&nbsp;JeVoisIntro</tt></td></tr>
+<tr><td class=videomapping><small><b>&nbsp;Video Mapping: &nbsp; </b></small><tt>YUYV&nbsp;640&nbsp;480&nbsp;50.0&nbsp;YUYV&nbsp;320&nbsp;240&nbsp;50.0&nbsp;JeVois&nbsp;JeVoisIntro</tt></td></tr>
+</table></td></tr>
+<tr><td><div class=container>
+<div class=galleryItem><a href="screenshot1.png"><img src="screenshot1.png"></a></div>
+</div></td></tr><tr><td class=modinfodesc><h2>Module Documentation</h2><div class="textblock"><p>This module plays an introduction movie, and then launches the equivalent of the <a href='/moddoc/DemoSalGistFaceObj/modinfo.html'><strong class='jvmod'>DemoSalGistFaceObj</strong></a> module, but with some added text messages that explain what is going on, on the screen.</p>
+<p>Try it and follow the instructions on screen!</p>
+</div></td></tr>
+<tr><td><table class=modinfopar><tr><th class=modinfopar>Parameter</th><th class=modinfopar>Type</th><th class=modinfopar>Description</th><th class=modinfopar>Default</th><th class=modinfopar>Valid&nbsp;Values</th></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman2D.html">Kalman2D</A>) usevel</td><td class=modinfopar>bool</td><td class=modinfopar>Use velocity tracking, in addition to position</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman2D.html">Kalman2D</A>) procnoise</td><td class=modinfopar>float</td><td class=modinfopar>Process noise standard deviation</td><td class=modinfopar>0.003F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman2D.html">Kalman2D</A>) measnoise</td><td class=modinfopar>float</td><td class=modinfopar>Measurement noise standard deviation</td><td class=modinfopar>0.05F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classKalman2D.html">Kalman2D</A>) postnoise</td><td class=modinfopar>float</td><td class=modinfopar>A posteriori error estimate standard deviation</td><td class=modinfopar>0.3F</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classBufferedVideoReader.html">BufferedVideoReader</A>) filename</td><td class=modinfopar>std::string</td><td class=modinfopar>Filename of video to read (if not absolute, will be assumed to be relative to Component path)</td><td class=modinfopar>movie.mpg</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) cweight</td><td class=modinfopar>byte</td><td class=modinfopar>Color channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) iweight</td><td class=modinfopar>byte</td><td class=modinfopar>Intensity channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) oweight</td><td class=modinfopar>byte</td><td class=modinfopar>Orientation channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) fweight</td><td class=modinfopar>byte</td><td class=modinfopar>Flicker channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) mweight</td><td class=modinfopar>byte</td><td class=modinfopar>Motion channel weight</td><td class=modinfopar>255</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) centermin</td><td class=modinfopar>size_t</td><td class=modinfopar>Lowest (finest) of the 3 center scales</td><td class=modinfopar>2</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) deltamin</td><td class=modinfopar>size_t</td><td class=modinfopar>Lowest (finest) of the 2 center-surround delta scales</td><td class=modinfopar>3</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) smscale</td><td class=modinfopar>size_t</td><td class=modinfopar>Scale of the saliency map</td><td class=modinfopar>4</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) mthresh</td><td class=modinfopar>byte</td><td class=modinfopar>Motion threshold</td><td class=modinfopar>0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) fthresh</td><td class=modinfopar>byte</td><td class=modinfopar>Flicker threshold</td><td class=modinfopar>0</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classSaliency.html">Saliency</A>) msflick</td><td class=modinfopar>bool</td><td class=modinfopar>Use multiscale flicker computation</td><td class=modinfopar>false</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFaceDetector.html">FaceDetector</A>) face_cascade</td><td class=modinfopar>std::string</td><td class=modinfopar>File name of the face cascade</td><td class=modinfopar>JEVOIS_SHARE_PATH /facedetector/haarcascade_frontalface_alt.xml</td><td class=modinfopar>-</td></tr>
+<tr class=modinfopar><td class=modinfopar>(<A HREF="/basedoc/classFaceDetector.html">FaceDetector</A>) eye_cascade</td><td class=modinfopar>std::string</td><td class=modinfopar>File name of the eye cascade, or empty to not detect eyes</td><td class=modinfopar>JEVOIS_SHARE_PATH /facedetector/haarcascade_eye_tree_eyeglasses.xml</td><td class=modinfopar>-</td></tr>
+</table></td></tr>
+<tr><td><table class=modinfomisc>
+<tr class=modinfomisc><th class=modinfomisc>Detailed docs:</th><td class=modinfomisc><A HREF="/basedoc/classJeVoisIntro.html">JeVoisIntro</A></td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Copyright:</th><td class=modinfomisc>Copyright (C) 2016 by Laurent Itti, iLab and the University of Southern California</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>License:</th><td class=modinfomisc>GPL v3</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Distribution:</th><td class=modinfomisc>Unrestricted</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Restrictions:</th><td class=modinfomisc>None</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Support URL:</th><td class=modinfomisc>http://jevois.org/doc</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Other URL:</th><td class=modinfomisc>http://iLab.usc.edu</td></tr>
+<tr class=modinfomisc><th class=modinfomisc>Address:</th><td class=modinfomisc>University of Southern California, HNB-07A, 3641 Watt Way, Los Angeles, CA 90089-2520, USA</td></tr>
+</table></td></tr>
+</table>
+</body></html>
