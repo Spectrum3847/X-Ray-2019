@@ -39,7 +39,7 @@ public class Vision extends PIDSubsystem{
 
     //Runs everytime the robot is enabled
     public void teleopInit(){
-        setPDF(Robot.prefs.getNumber("V: P", 0.012), Robot.prefs.getNumber("V: D", 1.2), Robot.prefs.getNumber("V: F", 0.1));
+        setPDF(Robot.prefs.getNumber("V: P", 0.02), Robot.prefs.getNumber("V: D", 1.2), Robot.prefs.getNumber("V: F", 0.1));
         setPercentTolerance(5);
         setSetpoint(0.0);
         enable();

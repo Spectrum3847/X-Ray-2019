@@ -27,10 +27,11 @@ public class HatchFire extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
     addParallel(new TiltDown());
-    addSequential(new WaitCommand(.03));
+    addSequential(new WaitCommand(.01));
     addParallel(new HatchRelease());
-    addSequential(new WaitCommand(.03));
+    addSequential(new WaitCommand(.02));
     addParallel(new HatchEject());
+    addParallel(new IntakeDown());
   }
 
   public void initialize(){

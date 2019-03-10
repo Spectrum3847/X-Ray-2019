@@ -62,6 +62,8 @@ public class OI {
     leftTriggerButton = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.LEFT_TRIGGER, .5, ThresholdType.GREATER_THAN);
     new SpectrumAndNotButton(leftTriggerButton, operatorController.Dpad.Left).whileHeld(new FireCargo());
 
+    new SpectrumAndNotButton(operatorController.leftBumper, operatorController.Dpad.Left).whenPressed(new MotionMagicElevator((int)Robot.prefs.getNumber("C: ElevatorHeight", 2000)));
+
     SpectrumOrButton leftDpad = new SpectrumOrButton(operatorController.Dpad.Left, new SpectrumOrButton(operatorController.Dpad.UpLeft, operatorController.Dpad.DownLeft));
     new SpectrumTwoButton(leftDpad, operatorController.rightBumper).whileHeld(new TiltDown());
     new SpectrumTwoButton(leftDpad, leftTriggerButton).whileHeld(new HatchFire());

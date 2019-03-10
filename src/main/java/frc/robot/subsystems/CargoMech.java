@@ -37,7 +37,7 @@ public class CargoMech extends Subsystem {
 		cargoTopSRX.setInverted(true);
 		cargoBottomSRX.setInverted(true);
 		cargoTopSRX.configVoltageCompSaturation(12.0);
-		cargoTopSRX.enableVoltageCompensation(true);
+		cargoTopSRX.enableVoltageCompensation(false);
 		cargoBottomSRX.configVoltageCompSaturation(11.5);
 		cargoBottomSRX.enableVoltageCompensation(true);
 	}
