@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.OI;
@@ -27,7 +27,7 @@ public class Drive extends Command {
     //If we are in single side steering, drive normally or by vision
     if (Math.abs(OI.driverController.rightStick.getX()) < .2){
       //If we are in vision mode use it to steer, if not drive normally
-      if (OI.driverController.aButton.get() && Robot.vision.getLimelightHasValidTarget()){
+      if (OI.driverController.aButton.get() && Robot.visionLL.getLimelightHasValidTarget()){
         Robot.drive.print("VISION TURNING!!!");
         Robot.drive.visionDrive(throttle);
       } else {      

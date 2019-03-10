@@ -3,6 +3,8 @@ package frc.robot.commands.cargo;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+import frc.lib.drivers.Photon.Animation;
+import frc.lib.drivers.Photon.Color;
 import frc.robot.Robot;
 
 public class FireCargo extends CommandGroup {
@@ -34,5 +36,9 @@ public class FireCargo extends CommandGroup {
     addParallel(new RollerBottomOn(-1.0));
     addSequential(new WaitCommand(.1));
     addParallel(new RollerTopOn(-1.0));
+  }
+
+  void intialize(){
+    Robot.photon.addAnimation("FireCargo", Animation.SOLID, Color.ORANGE, Color.WHITE, 100, 20);
   }
 }

@@ -130,8 +130,20 @@ public class Util {
     	return max;
     }
     
+    public static double deadband(double input, double band){
+        if (Math.abs(input) < band){
+            return 0;
+        }
+        else{
+            return input;
+        }
+    }
     public static double powKeepSign(double v, double p) {
     	return Math.signum(v)*Math.abs(Math.pow(v, p));
     }
+
+    public static double clamp(double value, double low, double high) {
+        return Math.max(low, Math.min(value, high));
+      }
 
 }

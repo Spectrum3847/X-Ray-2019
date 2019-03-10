@@ -19,6 +19,8 @@ import frc.robot.commands.BrakeMode;
 import frc.robot.commands.Climb;
 import frc.robot.commands.ClimberKicker;
 import frc.robot.commands.cargo.*;
+import frc.robot.commands.drive.AutoTurn;
+import frc.robot.commands.drive.LLDrive;
 import frc.robot.commands.elevator.ElevatorZero;
 import frc.robot.commands.elevator.ManualElevator;
 import frc.robot.commands.elevator.MotionMagicElevator;
@@ -33,77 +35,87 @@ import frc.robot.subsystems.Elevator;
 public class OI {
 
 	public static SpectrumXboxController driverController;
-  public static SpectrumXboxController operatorController;
+  public static SpectrumXboxController opController;
   public static SpectrumAxisButton leftTriggerButton;
   public static SpectrumAxisButton rightTriggerButton;
   //public static SpectrumAxisButton rightTriggerCanelIntake;
   public static SpectrumAxisButton leftStickIn;
   public static SpectrumAxisButton leftStickCargoShip;
+  public SpectrumOrButton DriverLeftDpad;
+  public SpectrumOrButton DriverRightDpad ;
 
   public OI() {
 		driverController = new SpectrumXboxController(0, .17, .05);
-    operatorController = new SpectrumXboxController(1, .15, .15);
+    opController = new SpectrumXboxController(1, .15, .15);
 
     //Driver Buttons
     //A button is aim with camera inside drive() command
     driverController.yButton.whileHeld(new Climb());
     driverController.selectButton.whileHeld(new ClimberKicker());
     driverController.bButton.whileHeld(new BrakeMode());
+    driverController.rightBumper.whileHeld(new BrakeMode());
+    driverController.leftBumper.whileHeld(new BrakeMode());
+    driverController.xButton.whileHeld(new LLDrive());
     new SpectrumAxisButton(OI.driverController, XboxAxis.RIGHT_X, .3, ThresholdType.DEADBAND).whileHeld(new BrakeMode());
 
+    DriverLeftDpad = new SpectrumOrButton(driverController.Dpad.Left, new SpectrumOrButton(driverController.Dpad.UpLeft, driverController.Dpad.DownLeft));
+    DriverRightDpad = new SpectrumOrButton(driverController.Dpad.Right, new SpectrumOrButton(driverController.Dpad.UpRight, driverController.Dpad.DownRight));
+    DriverLeftDpad.whenPressed(new AutoTurn(90, DriverLeftDpad));
+    DriverRightDpad.whenPressed(new AutoTurn(-90, DriverRightDpad));
 
     //Operator Buttons
 
     //Cargo and Hatch Controls
     IntakeCargo in = new IntakeCargo();
-    rightTriggerButton = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.RIGHT_TRIGGER, .5, ThresholdType.GREATER_THAN);
-    new SpectrumAndNotButton(rightTriggerButton, operatorController.Dpad.Left).whileHeld(in);
+    rightTriggerButton = new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.RIGHT_TRIGGER, .5, ThresholdType.GREATER_THAN);
+    new SpectrumAndNotButton(rightTriggerButton, opController.Dpad.Left).whileHeld(in);
 
-    leftTriggerButton = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.LEFT_TRIGGER, .5, ThresholdType.GREATER_THAN);
-    new SpectrumAndNotButton(leftTriggerButton, operatorController.Dpad.Left).whileHeld(new FireCargo());
+    leftTriggerButton = new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.LEFT_TRIGGER, .5, ThresholdType.GREATER_THAN);
+    new SpectrumAndNotButton(leftTriggerButton, opController.Dpad.Left).whileHeld(new FireCargo());
 
-    new SpectrumAndNotButton(operatorController.leftBumper, operatorController.Dpad.Left).whenPressed(new MotionMagicElevator((int)Robot.prefs.getNumber("C: ElevatorHeight", 2000)));
+    new SpectrumAndNotButton(opController.leftBumper, opController.Dpad.Left).whenPressed(new MotionMagicElevator((int)Robot.prefs.getNumber("C: ElevatorHeight", 2000)));
 
-    SpectrumOrButton leftDpad = new SpectrumOrButton(operatorController.Dpad.Left, new SpectrumOrButton(operatorController.Dpad.UpLeft, operatorController.Dpad.DownLeft));
-    new SpectrumTwoButton(leftDpad, operatorController.rightBumper).whileHeld(new TiltDown());
+    SpectrumOrButton leftDpad = new SpectrumOrButton(opController.Dpad.Left, new SpectrumOrButton(opController.Dpad.UpLeft, opController.Dpad.DownLeft));
+    new SpectrumTwoButton(leftDpad, opController.rightBumper).whileHeld(new TiltDown());
+    new SpectrumTwoButton(leftDpad, opController.leftBumper).whileHeld(new HatchRelease());
     new SpectrumTwoButton(leftDpad, leftTriggerButton).whileHeld(new HatchFire());
     new SpectrumTwoButton(leftDpad, rightTriggerButton).whileHeld(new HatchReady());
 
-    leftStickIn = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.LEFT_Y, -.25, ThresholdType.LESS_THAN);
+    leftStickIn = new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.LEFT_Y, -.25, ThresholdType.LESS_THAN);
     leftStickIn.whileHeld(new RollerBottomOn(1.0));
     leftStickIn.whileHeld(new RollerTopOn(1.0));
 
-    leftStickCargoShip = new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.LEFT_Y, .25, ThresholdType.GREATER_THAN);
+    leftStickCargoShip = new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.LEFT_Y, .25, ThresholdType.GREATER_THAN);
     leftStickCargoShip.whileHeld(new CargoShipDrop());
 
     //Elevator Controls
-    operatorController.startButton.whileHeld(new ElevatorZero());
+    opController.startButton.whileHeld(new ElevatorZero());
     SpectrumIOButton cargoButton = new SpectrumIOButton(Robot.cargoMech.CargoSW);
-    SpectrumOrButton rightDpad =  new SpectrumOrButton(operatorController.Dpad.Right, new SpectrumOrButton(operatorController.Dpad.UpRight, operatorController.Dpad.DownRight));
+    SpectrumOrButton rightDpad =  new SpectrumOrButton(opController.Dpad.Right, new SpectrumOrButton(opController.Dpad.UpRight, opController.Dpad.DownRight));
     SpectrumOrButton  cargoOverRideable = new SpectrumOrButton(cargoButton, rightDpad);
-    new SpectrumTwoButton(operatorController.aButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoL1));
-    new SpectrumTwoButton(operatorController.xButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoL2));
-    new SpectrumTwoButton(operatorController.yButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoL3));
-    new SpectrumTwoButton(operatorController.bButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoShip));
-    new SpectrumAndNotButton(operatorController.aButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posDownLimit));
-    new SpectrumAndNotButton(operatorController.bButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posHatchL2));
-    new SpectrumAndNotButton(operatorController.xButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posHatchL2));
-    new SpectrumAndNotButton(operatorController.yButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posHatchL3));
+    new SpectrumTwoButton(opController.aButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoL1));
+    new SpectrumTwoButton(opController.xButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoL2));
+    new SpectrumTwoButton(opController.yButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoL3));
+    new SpectrumTwoButton(opController.bButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoShip));
+    new SpectrumAndNotButton(opController.aButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posDownLimit));
+    new SpectrumAndNotButton(opController.bButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posHatchL2));
+    new SpectrumAndNotButton(opController.xButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posHatchL2));
+    new SpectrumAndNotButton(opController.yButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posHatchL3));
 
-    new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.RIGHT_Y, -.15, ThresholdType.LESS_THAN).whileHeld(new ManualElevator());
-    new SpectrumAxisButton(OI.operatorController, SpectrumXboxController.XboxAxis.RIGHT_Y, .15, ThresholdType.GREATER_THAN).whileHeld(new ManualElevator());
+    new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.RIGHT_Y, -.15, ThresholdType.LESS_THAN).whileHeld(new ManualElevator());
+    new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.RIGHT_Y, .15, ThresholdType.GREATER_THAN).whileHeld(new ManualElevator());
 
   }
 
   public boolean isOperatorButtonPushed(){
-    if (operatorController.aButton.get() 
-        || operatorController.bButton.get() 
-        || operatorController.xButton.get()
-        || operatorController.yButton.get()
-        || operatorController.rightBumper.get()
-        || operatorController.leftBumper.get()
-        || operatorController.startButton.get()
-        || operatorController.selectButton.get()){
+    if (opController.aButton.get() 
+        || opController.bButton.get() 
+        || opController.xButton.get()
+        || opController.yButton.get()
+        || opController.rightBumper.get()
+        || opController.leftBumper.get()
+        || opController.startButton.get()
+        || opController.selectButton.get()){
           return true;
         }
     else{

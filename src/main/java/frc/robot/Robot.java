@@ -18,7 +18,8 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Hatch;
 import frc.robot.subsystems.PhotonLEDs;
 import frc.robot.subsystems.Pneumatics;
-import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.VisionJevois;
+import frc.robot.subsystems.VisionLL;
 import frc.lib.util.Debugger;
 import frc.lib.util.SpectrumLogger;
 import frc.lib.util.SpectrumPreferences;
@@ -56,7 +57,8 @@ public class Robot extends TimedRobot {
 	public static Climber climber;
 	public static Elevator elevator;
 	public static Hatch hatch;
-	public static Vision vision;
+	public static VisionLL visionLL;
+	public static VisionJevois visionJevois;
 	public static PhotonLEDs photon;
 	
 	public static void setupSubsystems(){
@@ -67,8 +69,10 @@ public class Robot extends TimedRobot {
 		climber = new Climber();
 		elevator = new Elevator();
 		hatch = new Hatch();
-		vision = new Vision();
+		visionLL = new VisionLL();
+		visionJevois = new VisionJevois();
 		photon = new PhotonLEDs();
+		pigeon = new PigeonIMU(cargoMech.cargoBottomSRX);
     }
 	
 	//Used to keep track of the robot current state easily
@@ -98,6 +102,7 @@ public class Robot extends TimedRobot {
     	setupSubsystems(); //This has to be before the OI is created on the next line
 		HW.oi = new OI();
 		Dashboard.intializeDashboard();
+        Robot.visionLL.initialize();
 		SpectrumLogger.getInstance().finalize();  //Finalize the logging items
 	}
 

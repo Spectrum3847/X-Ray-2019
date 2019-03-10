@@ -52,9 +52,9 @@ public class CargoMech extends Subsystem {
 		 //Rumble operator controller when intake is on
 		    if (cargoTopSRX.getMotorOutputPercent() != 0) {
 		    	printDebug("Rumbling Operator because Intake On");
-		    	OI.operatorController.setRumble(.6, .6);
+		    	OI.opController.setRumble(.6, .6);
 		    } else {
-		    	OI.operatorController.setRumble(0, 0);
+		    	OI.opController.setRumble(0, 0);
 		    }
 	 }
 	
@@ -112,7 +112,7 @@ public class CargoMech extends Subsystem {
 	
 	//check if the intake is complete, right now just the intakeSW but might need more logic in the future
 	public boolean isIntakeComplete() {
-		intakeComplete = getIntakeSW() && !OI.operatorController.Dpad.Right.get();
+		intakeComplete = getIntakeSW() && !OI.opController.Dpad.Right.get();
 		return intakeComplete;
 	}
 	

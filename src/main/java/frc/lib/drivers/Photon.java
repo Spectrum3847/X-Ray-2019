@@ -60,11 +60,15 @@ public class Photon {
     }
 
     public Photon(){
-        try{
-            usb = new SerialPort(115200, Port.kUSB);
-        } catch(Exception e){
-            Robot.printWarning("PHOTON NOT FOUND: NO LEDs :(");
-            usb = null;
+		int retry_counter = 0;
+        while(usb == null && retry_counter++ < 10){
+            try{
+                usb = new SerialPort(115200, Port.kUSB);
+                Robot.printWarning("PHOTON FOUND: LEDs ARE GO :)");
+            } catch(Exception e){
+                Robot.printWarning("PHOTON NOT FOUND: NO LEDs :(");
+                usb = null;
+            }
         }
     }
 

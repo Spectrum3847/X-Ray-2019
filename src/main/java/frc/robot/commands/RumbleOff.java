@@ -16,7 +16,7 @@ public class RumbleOff extends Command {
   // Called just before this Command runs the first time
   protected void initialize() {
     OI.driverController.setRumble(0, 0);
-    OI.operatorController.setRumble(0, 0);
+    OI.opController.setRumble(0, 0);
   }
 
   // Called repeatedly when this Command is scheduled to run

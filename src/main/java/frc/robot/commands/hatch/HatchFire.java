@@ -2,6 +2,9 @@ package frc.robot.commands.hatch;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+import frc.lib.drivers.Photon;
+import frc.lib.drivers.Photon.Animation;
+import frc.lib.drivers.Photon.Color;
 import frc.robot.Robot;
 import frc.robot.commands.cargo.*;
 
@@ -36,6 +39,6 @@ public class HatchFire extends CommandGroup {
 
   public void initialize(){
     Robot.hatch.logEvent("HATCH READY");
-    //this.setTimeout(2);
+    Robot.photon.addAnimation("FireHatch", Animation.SOLID, Color.YELLOW, Color.WHITE, 100, 20);
   }
 }

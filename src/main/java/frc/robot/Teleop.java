@@ -12,9 +12,9 @@ public class Teleop {
 	
     public static void init() {
         Scheduler.getInstance().removeAll();
-        Robot.vision.teleopInit();
         new MotionMagicElevator().start(); //Force a new hold position at the begining of telop, should keep it at the right position.
-        
+        Robot.visionLL.initialize();
+
         //Do things if connected to FMS only, so when telop starts during a match but not during testing
         if (DriverStation.getInstance().isFMSAttached()){
         }

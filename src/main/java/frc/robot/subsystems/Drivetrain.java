@@ -14,7 +14,7 @@ import frc.lib.util.SpectrumLogger;
 import frc.robot.HW;
 import frc.robot.OI;
 import frc.robot.Robot;
-import frc.robot.commands.Drive;
+import frc.robot.commands.drive.LLDrive;
 
 /**
  * An example subsystem.  You can replace me with your own Subsystem.
@@ -107,7 +107,7 @@ public class Drivetrain extends Subsystem {
 	
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new Drive());
+    setDefaultCommand(new LLDrive());
   }
 
   public void periodic(){
@@ -232,8 +232,8 @@ public class Drivetrain extends Subsystem {
 
   public void visionDrive(double speed){
     double steerAdjust = 0;
-    if (OI.driverController.aButton.get() && Robot.vision.getLimelightHasValidTarget()){
-      steerAdjust = Robot.vision.getLimelightSteerCommand();
+    if (OI.driverController.aButton.get() && Robot.visionLL.getLimelightHasValidTarget()){
+      steerAdjust = Robot.visionLL.getLimelightSteerCommand();
     }
     arcadeDrive(speed, steerAdjust);
   }

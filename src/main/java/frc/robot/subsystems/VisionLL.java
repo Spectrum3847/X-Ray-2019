@@ -11,7 +11,7 @@ import frc.lib.drivers.LimeLightControlModes.LedMode;
 import frc.robot.Robot;
 import frc.robot.Robot.RobotState;
 
-public class Vision extends PIDSubsystem{
+public class VisionLL extends PIDSubsystem{
     //Use this for limelight code and Jevois code
     
     public final LimeLight limelight;
@@ -22,13 +22,13 @@ public class Vision extends PIDSubsystem{
     
 	//public final SpectrumJeVois jevoisCam;
 
-    public Vision(){
+    public VisionLL(){
         super(0.0,0.0,0.0);
         limelight = new LimeLight();
         //jevoisCam = new SpectrumJeVois();
         //jevoisCam.setSerOutEnable(true);
         setInputRange(-27, 27);
-        setOutputRange(-.3, .3 );
+        this.getPIDController().setOutputRange(0, .7);
         setSetpoint(0.0);
     }
 
@@ -38,9 +38,9 @@ public class Vision extends PIDSubsystem{
     }
 
     //Runs everytime the robot is enabled
-    public void teleopInit(){
-        setPDF(Robot.prefs.getNumber("V: P", 0.02), Robot.prefs.getNumber("V: D", 1.2), Robot.prefs.getNumber("V: F", 0.1));
-        setPercentTolerance(5);
+    public void initialize(){
+        setPDF(Robot.prefs.getNumber("V: P", 0.17), Robot.prefs.getNumber("V: D", 0.2), Robot.prefs.getNumber("V: F", 0.0));
+        setPercentTolerance(2);
         setSetpoint(0.0);
         enable();
     }
@@ -107,63 +107,14 @@ public class Vision extends PIDSubsystem{
         return limelight.getIsTargetFound();
     }
 
+    //50 to -50, on our robot 10-45 is about as much as you get, 45 being very close to target 10 being far away, after 45 it will go back down.
+    public double getLLDegVertical(){
+        return limelight.getdegVerticalToTarget();
+    }
+
     public double getLimelightSteerCommand(){
         return m_LimelightSteerCommand;
     }
-
-    /**
-   * This function implements a simple method of generating driving and steering commands
-   * based on the tracking data from a limelight camera.
-   */
-  public void Update_Limelight_Tracking()
-  {
-        // These numbers must be tuned for your Robot!  Be careful!
-        final double STEER_K = Robot.prefs.getNumber("V: STEER K", 0.02);//0.01;                    // how hard to turn toward the target
-        final double DRIVE_K = 0.26;                    // how hard to drive fwd toward the target
-        final double DESIRED_TARGET_AREA = 13.0;        // Area of the target when the robot reaches the wall
-        final double MAX_DRIVE = 0.7;                   // Simple speed limit so we don't drive too fast
-        final double MIN_STEER = Robot.prefs.getNumber("V: MIN_STEER", .025);//.02;                   // Minimum amount to adjust steering
-
-        double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
-        double tx = limelight.getdegRotationToTarget(); //.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-        //double ty = limelight.getdegVerticalToTarget(); //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
-        //double ta = limelight.getTargetArea();//NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0);
-
-        if (tv < 1.0)
-        {
-          m_LimelightHasValidTarget = false;
-          m_LimelightDriveCommand = 0.0;
-          m_LimelightSteerCommand = 0.0;
-          return;
-        }
-
-        m_LimelightHasValidTarget = true;
-
-        // Start with proportional steering
-        double steering_adjust = 0;
-        if (tx > 0.5)
-        {
-                steering_adjust = STEER_K*tx + MIN_STEER;
-        }
-        else if (tx < -0.5)
-        {
-                steering_adjust = STEER_K*tx - MIN_STEER;
-        }
-
-        m_LimelightSteerCommand = steering_adjust;
-
-        /* UNCOMMENT IF WE NEED TO USE DRIVE COMMAND
-        // try to drive forward until the target area reaches our desired area
-        double drive_cmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
-
-        // don't let the robot drive too fast into the goal
-        if (drive_cmd > MAX_DRIVE)
-        {
-          drive_cmd = MAX_DRIVE;
-        }
-        m_LimelightDriveCommand = drive_cmd;
-        */
-  }
 
     //Put values you want to show up on the dashboard here
     public void dashboard(){

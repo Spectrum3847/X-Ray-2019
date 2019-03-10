@@ -1,6 +1,8 @@
 package frc.robot.commands.cargo;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import frc.lib.drivers.Photon.Animation;
+import frc.lib.drivers.Photon.Color;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.commands.elevator.ElevatorCargoIntakeControl;
@@ -39,6 +41,10 @@ public class IntakeCargo extends CommandGroup {
     Robot.cargoMech.logEvent("Intaking Cargo");
   }
   protected boolean isFinished() {
-    return Robot.cargoMech.isIntakeComplete();
+    if (Robot.cargoMech.isIntakeComplete()){
+      Robot.photon.addAnimation("IntakeCargoFinished", Animation.BLINK_DUAL, Color.ORANGE, Color.WHITE, 75, 20);
+      return true;
+    }
+    return false;
   }
 }

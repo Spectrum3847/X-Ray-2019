@@ -39,7 +39,7 @@ public class Dashboard {
         Robot.climber.dashboard();
         Robot.hatch.dashboard();
         Robot.cargoMech.dashboard();
-        Robot.vision.dashboard();
+        Robot.visionLL.dashboard();
         SmartDashboard.putBoolean("OperatorButtonPushed", HW.oi.isOperatorButtonPushed());
         SmartDashboard.putBoolean("DriverButtonPushed", HW.oi.isDriverButtonPushed());
     }
@@ -49,7 +49,7 @@ public class Dashboard {
     	SmartDashboard.putBoolean("Compressor On?", Robot.pneumatics.compressor.enabled());
 		
 		//Can change to show a different message than "Yes" and "No"
-		SmartDashboard.putBoolean("Change Battery", Util.changeBattery() ? true : false);
+		SmartDashboard.putBoolean("Change Battery", Util.changeBattery());
     }
 
     public static void updateDashboard() {

@@ -91,25 +91,13 @@ public class SpectrumJeVois {
 		while(visionPort == null && retry_counter++ < 10){
 			try {
 				System.out.print("Creating JeVois SerialPort...");
-				visionPort = new SerialPort(BAUD_RATE,SerialPort.Port.kUSB);
+				visionPort = new SerialPort(BAUD_RATE,SerialPort.Port.kUSB1);
 				System.out.println("SUCCESS!!");
 			} catch (Exception e) {
-				try {
-					System.out.print("Creating JeVois SerialPort...");
-					visionPort = new SerialPort(BAUD_RATE,SerialPort.Port.kUSB1);
-					System.out.println("SUCCESS!!");
-				} catch (Exception f) {
-					try {
-						System.out.print("Creating JeVois SerialPort...");
-						visionPort = new SerialPort(BAUD_RATE,SerialPort.Port.kUSB2);
-						System.out.println("SUCCESS!!");
-					} catch (Exception g) {
 						System.out.println("FAILED!!");
 						System.out.println("Failed to connect to JeVois on any port!");
 			            sleep(500);
 			            System.out.println("Retry " + Integer.toString(retry_counter));
-					}
-				}
 			}
 		}
 	}

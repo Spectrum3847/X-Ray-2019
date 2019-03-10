@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.PressureTransducer;
+import frc.lib.drivers.Photon.Animation;
+import frc.lib.drivers.Photon.Color;
 import frc.robot.Robot;
 
 /**
@@ -28,7 +30,11 @@ public class Pneumatics extends Subsystem {
 			Robot.pneumatics.compressor.start();
 		} else {
 			Robot.pneumatics.compressor.stop();
-		}
+        }
+        
+        if (compressor.enabled()){
+            Robot.photon.addAnimation("Compressor", Animation.BOUNCE_BAR_DUAL, Color.PURPLE, Color.WHITE, 1, 20);
+        }
     }
     
     public boolean getIntakeSW(){
