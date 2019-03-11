@@ -52,6 +52,7 @@ public class AutoTurn extends PIDCommand {
     this.setPDF(p, d, f);
     setSetpoint(target);
     getPIDController().enable();
+    this.getPIDController().setOutputRange(-.8, .8);
     setTimeout(2);
     Robot.drive.brakeMode();
   }
@@ -72,6 +73,9 @@ public class AutoTurn extends PIDCommand {
   protected boolean isFinished() {
     if (Math.abs(target) < Math.abs(returnPIDInput())){
       return true;  //If we over shot, just stop
+    }
+    if (isTimedOut()){
+      return true;
     }
     return getPIDController().onTarget();
   }

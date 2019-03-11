@@ -28,7 +28,7 @@ public class VisionLL extends PIDSubsystem{
         //jevoisCam = new SpectrumJeVois();
         //jevoisCam.setSerOutEnable(true);
         setInputRange(-27, 27);
-        this.getPIDController().setOutputRange(0, .7);
+        this.getPIDController().setOutputRange(-.3, .3);
         setSetpoint(0.0);
     }
 

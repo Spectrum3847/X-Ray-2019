@@ -28,6 +28,7 @@ public class LLDrive extends PIDCommand {
     double f = Robot.prefs.getNumber("V: Throttle F", 0.0);
     this.setPDF(p, d, f);
     setInputRange(m_MinValue, m_MaxValue);
+    this.getPIDController().setOutputRange(0, .75);
     setSetpoint(m_MaxValue);
     getPIDController().setAbsoluteTolerance(1);
     getPIDController().enable();

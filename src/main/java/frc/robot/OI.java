@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.buttons.Button;
 import frc.lib.controllers.SpectrumAndNotButton;
 import frc.lib.controllers.SpectrumAxisButton;
 import frc.lib.controllers.SpectrumIOButton;
@@ -66,9 +67,10 @@ public class OI {
     //Operator Buttons
 
     //Cargo and Hatch Controls
-    IntakeCargo in = new IntakeCargo();
     rightTriggerButton = new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.RIGHT_TRIGGER, .5, ThresholdType.GREATER_THAN);
-    new SpectrumAndNotButton(rightTriggerButton, opController.Dpad.Left).whileHeld(in);
+    Button intakeBtn = new SpectrumAndNotButton(rightTriggerButton, opController.Dpad.Left);
+    IntakeCargo in = new IntakeCargo(intakeBtn);
+    intakeBtn.whenPressed(in);
 
     leftTriggerButton = new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.LEFT_TRIGGER, .5, ThresholdType.GREATER_THAN);
     new SpectrumAndNotButton(leftTriggerButton, opController.Dpad.Left).whileHeld(new FireCargo());

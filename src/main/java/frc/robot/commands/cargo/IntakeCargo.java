@@ -1,5 +1,6 @@
 package frc.robot.commands.cargo;
 
+import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.lib.drivers.Photon.Animation;
 import frc.lib.drivers.Photon.Color;
@@ -13,7 +14,10 @@ public class IntakeCargo extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public IntakeCargo() {
+
+   int buttonDebounce;
+   Button intakeButton;
+  public IntakeCargo(Button btn) {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -36,15 +40,46 @@ public class IntakeCargo extends CommandGroup {
     addParallel(new RollerBottomOn(1.0));
     addParallel(new RollerTopOn(1.0));
     addParallel(new ElevatorCargoIntakeControl());
+    this.intakeButton = btn;
   }
   protected void intialize(){
     Robot.cargoMech.logEvent("Intaking Cargo");
-  }
-  protected boolean isFinished() {
+    buttonDebounce = -1;
     if (Robot.cargoMech.isIntakeComplete()){
+      this.cancel();
+    }
+  }
+
+  protected boolean isFinished() {
+    //If no longer holding intake button stop intaking
+    if (!intakeButton.get()){
+      return true;
+    }
+    
+    if (buttonDebounce == -1){
+      if (Robot.cargoMech.isIntakeComplete()){
+        return true;
+      }
+      buttonDebounce = 0;
+    } 
+    //Super easy button debounce / moving avaerage
+    if (Robot.cargoMech.isIntakeComplete()){
+      buttonDebounce++;
+    } else if (buttonDebounce > 0){ //only decrement if greater than 0
+      buttonDebounce--;
+    }
+
+    if (buttonDebounce > 10){ //Only autostop the command if the button has been pressed for 10 cycles
       Robot.photon.addAnimation("IntakeCargoFinished", Animation.BLINK_DUAL, Color.ORANGE, Color.WHITE, 75, 20);
       return true;
     }
+    // if (Robot.cargoMech.isIntakeComplete()){
+    //   return true;
+    // }
     return false;
+  }
+
+  protected void end(){
+    new MotionMagicElevator(Elevator.posDownLimit).start();
   }
 }

@@ -141,6 +141,13 @@ public class Elevator extends Subsystem {
     }
   }
 
+  public boolean blockingVision(){
+    if (getPosition() >  this.posCargoL1 && getPosition() < this.posHatchL2){
+      return true;
+    }
+    return false;
+  }
+
   public void MotionMagicControl(){
     srx.set(ControlMode.MotionMagic, targetPosition);
   }

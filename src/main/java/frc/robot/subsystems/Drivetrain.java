@@ -14,6 +14,7 @@ import frc.lib.util.SpectrumLogger;
 import frc.robot.HW;
 import frc.robot.OI;
 import frc.robot.Robot;
+import frc.robot.commands.drive.Drive;
 import frc.robot.commands.drive.LLDrive;
 
 /**
@@ -107,7 +108,7 @@ public class Drivetrain extends Subsystem {
 	
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new LLDrive());
+    setDefaultCommand(new Drive());
   }
 
   public void periodic(){
