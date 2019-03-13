@@ -10,24 +10,29 @@ import frc.robot.Robot;
  */
 public class LLDrive extends PIDCommand {
   double m_driveValue;
-  double m_MaxValue = 45;
+  double m_MaxValue = 40;
   double m_MinValue = 0;
+  int   m_lostTargetCtn = 0;
+  int btnCtn = 0;
+
   public LLDrive(){
     // Use requires() here to declare subsystem dependencies
     super(0,0,0); // Intialize with no P, I, D, values
     requires(Robot.drive);
     m_driveValue = 0;
+    setInputRange(m_MinValue, m_MaxValue);
   }
 
   // Called just before this Command runs the first time
   protected void initialize() {
+    btnCtn = 0;
+    this.m_lostTargetCtn = 0;
     Robot.drive.logEvent("LimeLight - DRIVE");
     //Get PDF values on inditalize
-    double p = Robot.prefs.getNumber("V: Throttle P", 0.1);
-    double d = Robot.prefs.getNumber("V: Throttle D", 0.0);
+    double p = Robot.prefs.getNumber("V: Throttle P", 0.009);
+    double d = Robot.prefs.getNumber("V: Throttle D", 0.08);
     double f = Robot.prefs.getNumber("V: Throttle F", 0.0);
     this.setPDF(p, d, f);
-    setInputRange(m_MinValue, m_MaxValue);
     this.getPIDController().setOutputRange(0, .75);
     setSetpoint(m_MaxValue);
     getPIDController().setAbsoluteTolerance(1);
@@ -41,14 +46,25 @@ public class LLDrive extends PIDCommand {
     //If we are in vision mode use it to steer and drive, if not drive normally
     if (Robot.visionLL.getLimelightHasValidTarget()){
       Robot.drive.visionDrive(m_driveValue);
+      if (m_lostTargetCtn >0){
+        this.m_lostTargetCtn--;
+      }
     } else {      
       Robot.drive.DriverArcadeDrive(throttle, turn); // Stop if we don't have a target, let driver find target
+      this.m_lostTargetCtn++;
     } 
   }
 
   // Make this return true when this Command no longer needs to run execute()
   protected boolean isFinished() {
-    return getPIDController().onTarget() || returnPIDInput() > m_MaxValue;
+    //If we aren't holding and the hatch switch is hit stop driving forward.
+    if (!Robot.hatch.holding & Robot.hatch.getHatchSW()){
+      btnCtn++;
+      if (btnCtn > 10){
+        return true;
+      }
+    }
+    return getPIDController().onTarget() || returnPIDInput() > m_MaxValue || m_lostTargetCtn > 10;
   }
 
   // Called once after isFinished returns true

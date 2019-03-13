@@ -16,15 +16,18 @@ import frc.lib.controllers.SpectrumTwoButton;
 import frc.lib.controllers.SpectrumXboxController;
 import frc.lib.controllers.SpectrumAxisButton.ThresholdType;
 import frc.lib.controllers.SpectrumXboxController.XboxAxis;
-import frc.robot.commands.BrakeMode;
 import frc.robot.commands.Climb;
 import frc.robot.commands.ClimberKicker;
+import frc.robot.commands.auto.LvlOneTwoRocketLeft;
+import frc.robot.commands.auto.LvlOneTwoRocketRight;
 import frc.robot.commands.cargo.*;
+import frc.robot.commands.drive.AutoHatchIntake;
 import frc.robot.commands.drive.AutoTurn;
+import frc.robot.commands.drive.BrakeMode;
 import frc.robot.commands.drive.LLDrive;
 import frc.robot.commands.elevator.ElevatorZero;
 import frc.robot.commands.elevator.ManualElevator;
-import frc.robot.commands.elevator.MotionMagicElevator;
+import frc.robot.commands.elevator.MMElevator;
 import frc.robot.commands.elevator.SimpleElevatorGoToPos;
 import frc.robot.commands.hatch.*;
 import frc.robot.subsystems.Elevator;
@@ -52,17 +55,18 @@ public class OI {
     //Driver Buttons
     //A button is aim with camera inside drive() command
     driverController.yButton.whileHeld(new Climb());
-    driverController.selectButton.whileHeld(new ClimberKicker());
-    driverController.bButton.whileHeld(new BrakeMode());
+    driverController.selectButton.whenPressed(new ClimberKicker());
+    driverController.bButton.whileHeld(new AutoHatchIntake());
     driverController.rightBumper.whileHeld(new BrakeMode());
     driverController.leftBumper.whileHeld(new BrakeMode());
     driverController.xButton.whileHeld(new LLDrive());
-    new SpectrumAxisButton(OI.driverController, XboxAxis.RIGHT_X, .3, ThresholdType.DEADBAND).whileHeld(new BrakeMode());
+    new SpectrumAxisButton(OI.driverController, XboxAxis.RIGHT_X, .3, ThresholdType.DEADBAND).whileHeld(new BrakeMode());//Go to brake mode when doing one side turn thing
 
+    driverController.startButton.whenPressed(new LvlOneTwoRocketRight());
     DriverLeftDpad = new SpectrumOrButton(driverController.Dpad.Left, new SpectrumOrButton(driverController.Dpad.UpLeft, driverController.Dpad.DownLeft));
     DriverRightDpad = new SpectrumOrButton(driverController.Dpad.Right, new SpectrumOrButton(driverController.Dpad.UpRight, driverController.Dpad.DownRight));
-    DriverLeftDpad.whenPressed(new AutoTurn(90, DriverLeftDpad));
-    DriverRightDpad.whenPressed(new AutoTurn(-90, DriverRightDpad));
+    DriverLeftDpad.whenPressed(new AutoTurn(70, DriverLeftDpad));
+    DriverRightDpad.whenPressed(new AutoTurn(-70, DriverRightDpad));
 
     //Operator Buttons
 
@@ -75,7 +79,7 @@ public class OI {
     leftTriggerButton = new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.LEFT_TRIGGER, .5, ThresholdType.GREATER_THAN);
     new SpectrumAndNotButton(leftTriggerButton, opController.Dpad.Left).whileHeld(new FireCargo());
 
-    new SpectrumAndNotButton(opController.leftBumper, opController.Dpad.Left).whenPressed(new MotionMagicElevator((int)Robot.prefs.getNumber("C: ElevatorHeight", 2000)));
+    new SpectrumAndNotButton(opController.leftBumper, opController.Dpad.Left).whenPressed(new MMElevator((int)Robot.prefs.getNumber("C: ElevatorHeight", 2000)));
 
     SpectrumOrButton leftDpad = new SpectrumOrButton(opController.Dpad.Left, new SpectrumOrButton(opController.Dpad.UpLeft, opController.Dpad.DownLeft));
     new SpectrumTwoButton(leftDpad, opController.rightBumper).whileHeld(new TiltDown());
@@ -95,14 +99,14 @@ public class OI {
     SpectrumIOButton cargoButton = new SpectrumIOButton(Robot.cargoMech.CargoSW);
     SpectrumOrButton rightDpad =  new SpectrumOrButton(opController.Dpad.Right, new SpectrumOrButton(opController.Dpad.UpRight, opController.Dpad.DownRight));
     SpectrumOrButton  cargoOverRideable = new SpectrumOrButton(cargoButton, rightDpad);
-    new SpectrumTwoButton(opController.aButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoL1));
-    new SpectrumTwoButton(opController.xButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoL2));
-    new SpectrumTwoButton(opController.yButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoL3));
-    new SpectrumTwoButton(opController.bButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posCargoShip));
-    new SpectrumAndNotButton(opController.aButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posDownLimit));
-    new SpectrumAndNotButton(opController.bButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posHatchL2));
-    new SpectrumAndNotButton(opController.xButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posHatchL2));
-    new SpectrumAndNotButton(opController.yButton, cargoOverRideable).whenPressed(new MotionMagicElevator(Elevator.posHatchL3));
+    new SpectrumTwoButton(opController.aButton, cargoOverRideable).whenPressed(new MMElevator(Elevator.posCargoL1));
+    new SpectrumTwoButton(opController.xButton, cargoOverRideable).whenPressed(new MMElevator(Elevator.posCargoL2));
+    new SpectrumTwoButton(opController.yButton, cargoOverRideable).whenPressed(new MMElevator(Elevator.posCargoL3));
+    new SpectrumTwoButton(opController.bButton, cargoOverRideable).whenPressed(new MMElevator(Elevator.posCargoShip));
+    new SpectrumAndNotButton(opController.aButton, cargoOverRideable).whenPressed(new MMElevator(Elevator.posDownLimit));
+    new SpectrumAndNotButton(opController.bButton, cargoOverRideable).whenPressed(new MMElevator(Elevator.posHatchL2));
+    new SpectrumAndNotButton(opController.xButton, cargoOverRideable).whenPressed(new MMElevator(Elevator.posHatchL2));
+    new SpectrumAndNotButton(opController.yButton, cargoOverRideable).whenPressed(new MMElevator(Elevator.posHatchL3));
 
     new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.RIGHT_Y, -.15, ThresholdType.LESS_THAN).whileHeld(new ManualElevator());
     new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.RIGHT_Y, .15, ThresholdType.GREATER_THAN).whileHeld(new ManualElevator());

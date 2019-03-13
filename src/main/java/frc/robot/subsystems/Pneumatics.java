@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.PressureTransducer;
@@ -17,6 +18,8 @@ public class Pneumatics extends Subsystem {
     public PressureTransducer pressure;
     public Compressor compressor;
     public Compressor intakeSW;
+    private boolean compressorDisable = false;
+    private boolean enabled = true;
 
 	public Pneumatics() {
         pressure = new PressureTransducer(0);
@@ -25,15 +28,26 @@ public class Pneumatics extends Subsystem {
     }
     
 	public void periodic() {
+        enabled = compressor.enabled();
+        if (!compressorDisable){
+            if (Robot.brownOutCtn > 3){
+                Robot.pneumatics.compressor.stop();
+                SmartDashboard.putBoolean("Compressor ENABLE", false);
+                compressorDisable = true;
+            }
+        } 
+
         //Turn compressor off if the Smartdashboard check box is checked
-        if (SmartDashboard.getBoolean("Compressor ENABLE", true)) {
-			Robot.pneumatics.compressor.start();
-		} else {
-			Robot.pneumatics.compressor.stop();
+        if(enabled && !SmartDashboard.getBoolean("Compressor ENABLE", false)){
+            Robot.pneumatics.compressor.stop();
         }
+
+        if (!enabled && SmartDashboard.getBoolean("Compressor ENABLE", true) && compressorDisable == false){
+			Robot.pneumatics.compressor.start();
+		} 
         
-        if (compressor.enabled()){
-            Robot.photon.addAnimation("Compressor", Animation.BOUNCE_BAR_DUAL, Color.PURPLE, Color.WHITE, 1, 20);
+        if (enabled){
+            Robot.photon.addAnimation("Compressor", Animation.FADE_ALTERNATE, Color.PURPLE, Color.WHITE, 1, 10);
         }
     }
     
@@ -57,7 +71,12 @@ public class Pneumatics extends Subsystem {
 	public boolean checkSystem() {
         //Write something to check that the pressure transducer isn't unplugged
         //Write something to check that the PCMs don't have faults
-		return true;
+        return compressor.getCompressorCurrentTooHighFault() ||
+        compressor.getCompressorShortedFault() ||
+        compressor.getCompressorNotConnectedFault() ||
+        compressor.getCompressorShortedStickyFault() ||
+        compressor.getCompressorCurrentTooHighStickyFault() ||
+        compressor.getCompressorNotConnectedStickyFault();
 		
 		/** Example checkSystem from 254's 2017 Robot
 		 System.out.println("Testing HOPPER.--------------------------------------");

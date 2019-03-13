@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANDigitalInput;
+import com.revrobotics.CANDigitalInput.LimitSwitch;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.SpectrumSolenoid;
@@ -14,13 +18,26 @@ public class Hatch extends Subsystem {
     public boolean ejecting = false;
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
-    public SpectrumSolenoid hatchEjectSol = new SpectrumSolenoid(HW.HATCH_EJECT_SOL);
-    public SpectrumSolenoid hatchHoldSol = new SpectrumSolenoid(HW.HATCH_HOLD_SOL);
+    public SpectrumSolenoid hatchEjectSol;
+    public SpectrumSolenoid hatchHoldSol;
+    public CANDigitalInput hatchSW;
+
+    public Hatch(){
+        hatchEjectSol = new SpectrumSolenoid(HW.HATCH_EJECT_SOL);
+        hatchHoldSol = new SpectrumSolenoid(HW.HATCH_HOLD_SOL);
+        if (Robot.cargoMech != null){
+            hatchSW = new CANDigitalInput(Robot.cargoMech.cargoTopMAX, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
+        }
+    }
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
-	}
+    }
+    
+    public boolean getHatchSW(){
+        return hatchSW.get();
+    }
     
     //Extend the eject cylinders
 	public void hatchEject() {
@@ -48,6 +65,7 @@ public class Hatch extends Subsystem {
 	public void dashboard() {
         //SmartDashboard.putBoolean("Hatch/Holding", holding);
         //SmartDashboard.putBoolean("Hatch/Ejecting", ejecting);
+        SmartDashboard.putBoolean("Hatch SW", getHatchSW());
     }
 
     public static void printDebug(String msg){

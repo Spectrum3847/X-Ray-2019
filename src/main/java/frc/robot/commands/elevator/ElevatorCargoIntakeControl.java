@@ -20,9 +20,9 @@ public class ElevatorCargoIntakeControl extends Command {
     
   }
   protected boolean isFinished() {
-    if (Robot.cargoMech.cargoTopSRX.getOutputCurrent() > Robot.prefs.getNumber("C: InAmpsThreshold", 29) &&
+    if (Robot.cargoMech.cargoTopMAX.getOutputCurrent() > Robot.prefs.getNumber("C: InAmpsThreshold", 29) &&
     this.timeSinceInitialized() > 2){
-      new MotionMagicElevator((int)Robot.prefs.getNumber("C: ElevatorHeight", 2000)).start();
+      new MMElevator((int)Robot.prefs.getNumber("C: ElevatorHeight", 2000)).start();
       
       return true;
     }else{

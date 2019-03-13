@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
@@ -10,6 +10,7 @@ public class BrakeMode extends Command {
   public BrakeMode() {
     // Use requires() here to declare subsystem dependencies
     //requires(Robot.m_subsystem);
+    this.setRunWhenDisabled(true);
   }
 
   // Called just before this Command runs the first time

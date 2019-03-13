@@ -17,7 +17,7 @@ import frc.lib.util.Util;
 import frc.robot.HW;
 import frc.robot.Robot;
 import frc.robot.commands.elevator.ManualElevator;
-import frc.robot.commands.elevator.MotionMagicElevator;
+import frc.robot.commands.elevator.MMElevator;
 
 /**
  * An example subsystem. You can replace me with your own Subsystem.
@@ -28,10 +28,10 @@ public class Elevator extends Subsystem {
 
   // needs to be determined manually
   public final static int posDownLimit = 0;
-  public final static int posCargoL1 = 5000;
+  public final static int posCargoL1 = 4500;
   public final static int posCargoShip = 10500;
   public final static int posHatchL2 = 14000;
-  public final static int posCargoL2 = 18250;
+  public final static int posCargoL2 = 18000;
   public final static int posHatchL3 = 29000;
   public final static int posCargoL3 = 32800;
   public final static int posUpLimit = 32800;
@@ -40,12 +40,12 @@ public class Elevator extends Subsystem {
   private int epsilon = 1000;
 
   private int kMaxSensorVelocity = 3500;
-  private int kCruiseVelocity = 2800;
-  private int kAcceleration = kCruiseVelocity * 2; //Set accerlaeration to happen in half a second
+  private int kCruiseVelocity = 3500;
+  private int kAcceleration = kCruiseVelocity * 3; //Set accerlaeration to happen in half a second
   private double kF = 0.292;
   private double kP = 0.7;
   private double kI = 0.0;
-  private double kD = 40.0;
+  private double kD = 80.0;
 
   private final SpectrumVictorSPX spx;
   public final LeaderTalonSRX srx;
@@ -88,7 +88,7 @@ public class Elevator extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new MotionMagicElevator());
+    setDefaultCommand(new MMElevator());
   }
 
   public void softLimitsOn(boolean v){

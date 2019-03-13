@@ -8,6 +8,9 @@
 package frc.robot;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -50,7 +53,6 @@ public class Robot extends TimedRobot {
 	public static SpectrumLogger logger;
 	public static SpectrumPreferences prefs;
 	
-	public static PigeonIMU pigeon;
 	public static Pneumatics pneumatics;
 	public static CargoMech cargoMech;
 	public static Drivetrain drive;
@@ -60,19 +62,19 @@ public class Robot extends TimedRobot {
 	public static VisionLL visionLL;
 	public static VisionJevois visionJevois;
 	public static PhotonLEDs photon;
+	public static int brownOutCtn = 0;
 	
 	public static void setupSubsystems(){
 		prefs = SpectrumPreferences.getInstance();
 		pneumatics = new Pneumatics();
-		cargoMech = new CargoMech();
+		cargoMech = new CargoMech(); //CargoMech has to be before Drivetrain for pigeon and before hatch for limitswitch
 		drive = new Drivetrain();
 		climber = new Climber();
 		elevator = new Elevator();
 		hatch = new Hatch();
 		visionLL = new VisionLL();
-		visionJevois = new VisionJevois();
+		//visionJevois = new VisionJevois();
 		photon = new PhotonLEDs();
-		pigeon = new PigeonIMU(cargoMech.cargoBottomSRX);
     }
 	
 	//Used to keep track of the robot current state easily
@@ -96,6 +98,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+		LiveWindow.setEnabled(false);
+		LiveWindow.disableAllTelemetry();
 		initDebugger(); //Init Debugger
 		SpectrumLogger.getInstance().intialize();  //setup files for logging
 		printInfo("Start robotInit()");
@@ -108,6 +112,9 @@ public class Robot extends TimedRobot {
 
 	//Add any code that needs to run in all states
 	public void robotPeriodic() {
+		if (RobotController.isBrownedOut()){
+			brownOutCtn++;
+		}
 	}
 	
 	 /**
@@ -115,6 +122,8 @@ public class Robot extends TimedRobot {
      * You can use it to reset subsystems before shutting down.
      */
     public void disabledInit(){
+		LiveWindow.setEnabled(false);
+		LiveWindow.disableAllTelemetry();
         setState(RobotState.DISABLED);
         printInfo("Start disabledInit()");
         Disabled.init();
@@ -129,6 +138,8 @@ public class Robot extends TimedRobot {
 
 
     public void autonomousInit() {
+		LiveWindow.setEnabled(false);
+		LiveWindow.disableAllTelemetry();
     	setState(RobotState.AUTONOMOUS);
 		printInfo("Start autonomousInit()");
 		Autonomous.init();
@@ -143,6 +154,8 @@ public class Robot extends TimedRobot {
     }
 
     public void teleopInit() {
+		LiveWindow.setEnabled(false);
+		LiveWindow.disableAllTelemetry();
     	setState(RobotState.TELEOP);
     	printInfo("Start teleopInit()");
 		Teleop.init();
@@ -193,7 +206,7 @@ public class Robot extends TimedRobot {
 	}
 	
     private static void initDebugger(){
-    	Debugger.setLevel(Debugger.debug2); //Set the initial Debugger Level
+    	Debugger.setLevel(Debugger.info3); //Set the initial Debugger Level
     	Debugger.flagOn(_general); //Set all the flags on, comment out ones you want off
     	Debugger.flagOn(_controls);
     	Debugger.flagOn(_auton);

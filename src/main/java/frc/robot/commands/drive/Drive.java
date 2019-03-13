@@ -28,9 +28,10 @@ public class Drive extends Command {
     if (Math.abs(OI.driverController.rightStick.getX()) < .2){
       //If we are in vision mode use it to steer, if not drive normally, also check that elevator isn't blocking vision
       if (OI.driverController.aButton.get() && Robot.visionLL.getLimelightHasValidTarget() && !Robot.elevator.blockingVision()){
-        Robot.drive.print("VISION TURNING!!!");
         Robot.drive.visionDrive(throttle);
-      } else {      
+      } else if(Math.abs(turn) < 0.05 && Math.abs(throttle) > 0.05) {
+        Robot.drive.driveStraight(throttle);
+      }  else {      
         Robot.drive.DriverArcadeDrive(throttle, turn);
       } 
     }

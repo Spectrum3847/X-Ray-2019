@@ -1,12 +1,12 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.wpilibj.MotorSafety;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.SpectrumSparkMax;
 import frc.lib.util.Debugger;
@@ -14,8 +14,8 @@ import frc.lib.util.SpectrumLogger;
 import frc.robot.HW;
 import frc.robot.OI;
 import frc.robot.Robot;
+import frc.robot.commands.drive.CoastMode;
 import frc.robot.commands.drive.Drive;
-import frc.robot.commands.drive.LLDrive;
 
 /**
  * An example subsystem.  You can replace me with your own Subsystem.
@@ -32,6 +32,11 @@ public class Drivetrain extends Subsystem {
   public final CANEncoder rightEncoder;
   public final CANPIDController leftPID;
   public final CANPIDController rightPID;
+  public final PigeonIMU pigeon;
+  public double[] xyz_dps = new double[3];
+  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAccel, allowedErr;
+  private int slotID = 0;
+  private Command coastCmd;
 
   //set this up after we setup the cargo mechanism with the pigeon on it
   //public PigeonIMU imu = new PigeonIMU(1);
@@ -92,10 +97,10 @@ public class Drivetrain extends Subsystem {
     leftFrontMotor.setOpenLoopRampRate(rampRate);
     rightFrontMotor.setOpenLoopRampRate(rampRate);
 
-    leftEncoder = new CANEncoder(leftFrontMotor);
-    rightEncoder = new CANEncoder(rightFrontMotor);
-    leftPID = new CANPIDController(leftFrontMotor);
-    rightPID = new CANPIDController(rightFrontMotor);
+    leftEncoder = leftFrontMotor.getEncoder();
+    rightEncoder = rightFrontMotor.getEncoder();
+    leftPID = leftFrontMotor.getPIDController();
+    rightPID = rightFrontMotor.getPIDController();
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
 
@@ -104,6 +109,33 @@ public class Drivetrain extends Subsystem {
     leftRearMotor.follow(leftFrontMotor);
     rightMiddleMotor.follow(rightFrontMotor);
     rightRearMotor.follow(rightFrontMotor);
+
+    //Setup Motion Magic
+    // PID coefficients
+    kP = 5e-5; 
+    kI = 0;
+    kD = 0; 
+    kIz = 0; 
+    kFF = 0.000156; 
+    kMaxOutput = .75; 
+    kMinOutput = -.75;
+    maxRPM = 5700;
+
+    // Smart Motion Coefficients
+    maxVel = 3000; // rpm
+    maxAccel = 2000;
+
+    //Put values into the controllers
+    setPIDF(kP, kI, kD, kFF);
+    setMotionMagicParams(maxVel, maxAccel);
+
+    if(Robot.cargoMech != null){
+      pigeon = new PigeonIMU(Robot.cargoMech.cargoBottomSRX);
+    } else{
+      pigeon = null;
+    }
+    
+    coastCmd = new CoastMode();
   }
 	
   public void initDefaultCommand() {
@@ -112,6 +144,43 @@ public class Drivetrain extends Subsystem {
   }
 
   public void periodic(){
+    //Get updated yaw rates
+    Robot.drive.pigeon.getRawGyro(Robot.drive.xyz_dps);
+
+    if (Robot.elevator.getPosition() > Elevator.posCargoL2){ //If elevator above cargo2, move to coast
+      if (isBrake){ //only start it if we are in brakeMode.
+        coastCmd.start();
+      }
+    } else if (coastCmd.isRunning()){//If elevator below and coastCmd is running, stop it.
+      coastCmd.cancel();
+    }
+  }
+
+  public void setMotionMagicParams(double maxVel, double maxAccel){
+    this.maxVel = maxVel;
+    this.maxAccel = maxAccel;
+    leftPID.setSmartMotionMaxVelocity(maxVel, slotID);
+    leftPID.setSmartMotionMaxAccel(maxAccel, slotID);
+
+    rightPID.setSmartMotionMaxVelocity(maxVel, slotID);
+    rightPID.setSmartMotionMaxAccel(maxAccel, slotID);
+  }
+
+  public void setPIDF(double kP, double kI, double kD, double kFF){
+    this.kP = kP;
+    this.kI = kI;
+    this.kD = kD;
+    this.kFF = kFF;
+
+    leftPID.setP(this.kP);
+    leftPID.setI(this.kI);
+    leftPID.setD(this.kD);
+    leftPID.setFF(this.kFF);
+
+    rightPID.setP(this.kP);
+    rightPID.setI(this.kI);
+    rightPID.setD(this.kD);
+    rightPID.setFF(this.kFF);
   }
 
   public void brakeMode(){
@@ -124,14 +193,18 @@ public class Drivetrain extends Subsystem {
     rightRearMotor.setIdleMode(IdleMode.kBrake);
   }
 
-  public void defaultIdleMode(){
+  public void coastMode(){
     isBrake = false;
-    leftFrontMotor.setIdleMode(IdleMode.kBrake);
+    leftFrontMotor.setIdleMode(IdleMode.kCoast);
     leftMiddleMotor.setIdleMode(IdleMode.kCoast);
     leftRearMotor.setIdleMode(IdleMode.kCoast);
-    rightFrontMotor.setIdleMode(IdleMode.kBrake);
+    rightFrontMotor.setIdleMode(IdleMode.kCoast);
     rightMiddleMotor.setIdleMode(IdleMode.kCoast);
     rightRearMotor.setIdleMode(IdleMode.kCoast);
+  }
+
+  public void defaultIdleMode(){
+    brakeMode();
   }
 
   public boolean getIsBrake(){
@@ -233,8 +306,16 @@ public class Drivetrain extends Subsystem {
 
   public void visionDrive(double speed){
     double steerAdjust = 0;
-    if (OI.driverController.aButton.get() && Robot.visionLL.getLimelightHasValidTarget()){
+    if (Robot.visionLL.getLimelightHasValidTarget()){
       steerAdjust = Robot.visionLL.getLimelightSteerCommand();
+    }
+    arcadeDrive(speed, steerAdjust);
+  }
+
+  public void driveStraight(double speed){
+    double steerAdjust = 0;
+    if (pigeon != null){
+      steerAdjust = xyz_dps[2] * Robot.prefs.getNumber("D: Straight P", 0.05);
     }
     arcadeDrive(speed, steerAdjust);
   }

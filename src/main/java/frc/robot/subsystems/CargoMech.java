@@ -1,11 +1,14 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.revrobotics.CANDigitalInput;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.SpectrumDigitalInput;
 import frc.lib.drivers.SpectrumSolenoid;
+import frc.lib.drivers.SpectrumSparkMax;
 import frc.lib.drivers.SpectrumTalonSRX;
 import frc.lib.util.Debugger;
 import frc.lib.util.SpectrumLogger;
@@ -22,7 +25,8 @@ public class CargoMech extends Subsystem {
 	//Cargo Front is the stationary roller on the bottom
 	//Cargo Rear is the moving roller on the top
 	public SpectrumTalonSRX cargoBottomSRX = new SpectrumTalonSRX(HW.CARGO_BOTTOM);
-	public SpectrumTalonSRX cargoTopSRX = new SpectrumTalonSRX(HW.CARGO_TOP);
+	//public SpectrumTalonSRX cargoTopSRX = new SpectrumTalonSRX(HW.CARGO_TOP);
+	public SpectrumSparkMax cargoTopMAX = new SpectrumSparkMax(50);
 	
 	public SpectrumSolenoid intakeSol = new SpectrumSolenoid(HW.CARGO_INTAKE_SOL);
 	public SpectrumSolenoid tiltSol = new SpectrumSolenoid(HW.CARGO_TILT_SOL);
@@ -34,10 +38,17 @@ public class CargoMech extends Subsystem {
 	private static boolean tiltUp;
 	private static boolean intakeDown;
 	 public CargoMech() {
-		cargoTopSRX.setInverted(true);
+		//cargoTopSRX.setInverted(true);
+		cargoTopMAX.setInverted(true);
 		cargoBottomSRX.setInverted(true);
-		cargoTopSRX.configVoltageCompSaturation(12.0);
-		cargoTopSRX.enableVoltageCompensation(false);
+		//cargoTopSRX.configVoltageCompSaturation(12.0);
+		//cargoTopSRX.enableVoltageCompensation(false);
+		cargoTopMAX.disableVoltageCompensation();
+		cargoTopMAX.setSecondaryCurrentLimit(40);
+		cargoTopMAX.setSmartCurrentLimit(32,32,2000);
+		cargoTopMAX.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyOpen).enableLimitSwitch(false);
+		cargoTopMAX.getReverseLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyOpen).enableLimitSwitch(false);
+		cargoTopMAX.setIdleMode(IdleMode.kBrake);
 		cargoBottomSRX.configVoltageCompSaturation(11.5);
 		cargoBottomSRX.enableVoltageCompensation(true);
 	}
@@ -50,7 +61,8 @@ public class CargoMech extends Subsystem {
 	
 	public void periodic() {
 		 //Rumble operator controller when intake is on
-		    if (cargoTopSRX.getMotorOutputPercent() != 0) {
+		    //if (cargoTopSRX.getMotorOutputPercent() != 0) {
+		    if (cargoTopMAX.getAppliedOutput() != 0) {
 		    	printDebug("Rumbling Operator because Intake On");
 		    	OI.opController.setRumble(.6, .6);
 		    } else {
@@ -63,8 +75,9 @@ public class CargoMech extends Subsystem {
 	}
 	
 	public void setTop(double value) {
-		cargoTopSRX.set(ControlMode.PercentOutput, value);
-		printDebug("Cargo Top Set To" + cargoTopSRX.getMotorOutputPercent());
+		//cargoTopSRX.set(ControlMode.PercentOutput, value);
+		cargoTopMAX.set(value);
+		//printDebug("Cargo Top Set To" + cargoTopSRX.getMotorOutputPercent());
 	}
 
 	public void setBottom(double value){
@@ -107,7 +120,7 @@ public class CargoMech extends Subsystem {
 	
 	//returns the current from one of the SRXs 
 	public double getCurrent() {
-		return (cargoBottomSRX.getOutputCurrent() + cargoTopSRX.getOutputCurrent());
+		return (cargoBottomSRX.getOutputCurrent() + cargoTopMAX.getOutputCurrent());//cargoTopSRX.getOutputCurrent());
 	}
 	
 	//check if the intake is complete, right now just the intakeSW but might need more logic in the future
@@ -119,9 +132,13 @@ public class CargoMech extends Subsystem {
 	//Add the dashboard values for this subsystem
 	public void dashboard() {
 		SmartDashboard.putNumber("Cargo/Bottom Output", cargoBottomSRX.getMotorOutputPercent());
-		SmartDashboard.putNumber("Cargo/Top Output", cargoTopSRX.getMotorOutputPercent());
+		SmartDashboard.putNumber("Cargo/Top Output", cargoTopMAX.getAppliedOutput());//cargoTopSRX.getMotorOutputPercent());
 		SmartDashboard.putNumber("Cargo/Bottom Current", cargoBottomSRX.getOutputCurrent());
-		SmartDashboard.putNumber("Cargo/Top Current", cargoTopSRX.getOutputCurrent());
+		SmartDashboard.putNumber("Cargo/Top Current", cargoTopMAX.getOutputCurrent());//cargoTopSRX.getOutputCurrent());
+		SmartDashboard.putNumber("Cargo/Top In Voltage", cargoTopMAX.getBusVoltage());
+		SmartDashboard.putNumber("Cargo/Top Temp", cargoTopMAX.getMotorTemperature());
+		SmartDashboard.putNumber("Cargo/Top PDP Current", HW.PDP.getCurrent(10));
+		SmartDashboard.putNumber("Cargo/Top RPM", cargoTopMAX.getEncoder().getVelocity());
 		//SmartDashboard.putBoolean("Cargo/Mech On?", cargoTopSRX.getMotorOutputPercent() != 0 && 
 													//cargoBottomSRX.getMotorOutputPercent() != 0);
 		SmartDashboard.putBoolean("Cargo/TiltUp", tiltUp);

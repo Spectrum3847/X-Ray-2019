@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -48,7 +49,7 @@ public class VisionLL extends PIDSubsystem{
     //Tasks that need to be run at all times
     public void periodic() {
         //If disabled and LED-Toggle is false, than leave lights off, else they should be on
-        if(Robot.s_robot_state == RobotState.DISABLED && !SmartDashboard.getBoolean("Limelight-LED Toggle", false)){
+        if(Robot.s_robot_state == RobotState.DISABLED && !SmartDashboard.getBoolean("Limelight-LED Toggle", false) && !DriverStation.getInstance().isFMSAttached()){
             if (LEDstate == true){
                 limeLightLEDOff();
                 LEDstate = false;

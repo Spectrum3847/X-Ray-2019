@@ -7,7 +7,7 @@ import frc.lib.drivers.Photon.Color;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.commands.elevator.ElevatorCargoIntakeControl;
-import frc.robot.commands.elevator.MotionMagicElevator;
+import frc.robot.commands.elevator.MMElevator;
 import frc.robot.subsystems.Elevator;
 
 public class IntakeCargo extends CommandGroup {
@@ -70,7 +70,7 @@ public class IntakeCargo extends CommandGroup {
     }
 
     if (buttonDebounce > 10){ //Only autostop the command if the button has been pressed for 10 cycles
-      Robot.photon.addAnimation("IntakeCargoFinished", Animation.BLINK_DUAL, Color.ORANGE, Color.WHITE, 75, 20);
+      Robot.photon.addAnimation("IntakeCargoFinished", Animation.BLINK_DUAL, Color.ORANGE, Color.WHITE, 75, 10);
       return true;
     }
     // if (Robot.cargoMech.isIntakeComplete()){
@@ -80,6 +80,9 @@ public class IntakeCargo extends CommandGroup {
   }
 
   protected void end(){
-    new MotionMagicElevator(Elevator.posDownLimit).start();
+    new MMElevator(Elevator.posDownLimit).start();
+    if (buttonDebounce < 10){
+      new FinsihIntake().start();
+    }
   }
 }

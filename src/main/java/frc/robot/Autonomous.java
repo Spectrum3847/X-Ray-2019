@@ -3,14 +3,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.lib.util.Debugger;
 import frc.lib.util.SpectrumLogger;
-import frc.robot.commands.elevator.MotionMagicElevator;
+import frc.robot.commands.elevator.MMElevator;
 
 public class Autonomous {
 
 	public static void init() {
         Scheduler.getInstance().removeAll();
 		Scheduler.getInstance().enable();
-		new MotionMagicElevator().start(); //Force a new hold position at the begining of telop, should keep it at the right position.
+		new MMElevator().start(); //Force a new hold position at the begining of telop, should keep it at the right position.
         Robot.visionLL.initialize();
 		Debugger.println("Auto Init");
 		SpectrumLogger.getInstance().addEvent("System", "Auto Init Complete");

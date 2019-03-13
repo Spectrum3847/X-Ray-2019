@@ -21,8 +21,8 @@ public class PhotonLEDs extends Subsystem {
 
   public PhotonLEDs(){
 		photon = new Photon(192,255);
-		photon.SetNumberOfLEDs(1, 27); //55 on comp bot
-		photon.SetNumberOfLEDs(2, 27);
+		photon.SetNumberOfLEDs(1, 55); //55 on comp bot
+		photon.SetNumberOfLEDs(2, 55);
     defaultAnimations();
     
     System.out.println("Starting Photon Controller Thread");

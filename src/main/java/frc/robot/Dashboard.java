@@ -20,6 +20,7 @@ public class Dashboard {
     
     static double shortOldTime = 0.0;
     static double longOldTime = 0.0;
+    
 
 
     //Put values that you want to use as use inputs here and set their default state
@@ -42,6 +43,10 @@ public class Dashboard {
         Robot.visionLL.dashboard();
         SmartDashboard.putBoolean("OperatorButtonPushed", HW.oi.isOperatorButtonPushed());
         SmartDashboard.putBoolean("DriverButtonPushed", HW.oi.isDriverButtonPushed());
+
+        SmartDashboard.putNumber("Pigeon Heading", Robot.drive.pigeon.getFusedHeading());
+        SmartDashboard.putNumber("Piegeon Yaw Rate", Robot.drive.xyz_dps[2]);
+
     }
 
     //Things that don't need to be sent out each cycle
@@ -49,7 +54,9 @@ public class Dashboard {
     	SmartDashboard.putBoolean("Compressor On?", Robot.pneumatics.compressor.enabled());
 		
 		//Can change to show a different message than "Yes" and "No"
-		SmartDashboard.putBoolean("Change Battery", Util.changeBattery());
+        SmartDashboard.putBoolean("Change Battery", Util.changeBattery());
+        
+        SmartDashboard.putNumber("Brownout Count", Robot.brownOutCtn);  //PutBrownout count on the dashboard
     }
 
     public static void updateDashboard() {

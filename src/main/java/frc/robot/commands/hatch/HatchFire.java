@@ -38,7 +38,7 @@ public class HatchFire extends CommandGroup {
   }
 
   public void initialize(){
-    Robot.hatch.logEvent("HATCH READY");
-    Robot.photon.addAnimation("FireHatch", Animation.SOLID, Color.YELLOW, Color.WHITE, 100, 20);
+    Robot.hatch.logEvent("HATCH FIRE");
+    Robot.photon.addAnimation("FireHatch", Animation.SOLID, Color.YELLOW, Color.WHITE, 100, 10);
   }
 }
