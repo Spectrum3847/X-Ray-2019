@@ -4,6 +4,7 @@ import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANDigitalInput.LimitSwitch;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.SpectrumSolenoid;
@@ -93,53 +94,30 @@ public class Hatch extends Subsystem {
 	  Based on 254-2017 Code
 	*/
 	public boolean checkSystem() {
-		return true;
-		
-		/** Example checkSystem from 254's 2017 Robot
-		 System.out.println("Testing HOPPER.--------------------------------------");
-        final double kCurrentThres = 0.5;
 
-        mMasterTalon.changeControlMode(CANTalon.TalonControlMode.Voltage);
-        mSlaveTalon.changeControlMode(CANTalon.TalonControlMode.Voltage);
-
-        mMasterTalon.set(0.0);
-        mSlaveTalon.set(0.0);
-
-        mMasterTalon.set(-6.0f);
-        Timer.delay(4.0);
-        final double currentMaster = mMasterTalon.getOutputCurrent();
-        mMasterTalon.set(0.0);
-
-        Timer.delay(2.0);
-
-        mSlaveTalon.set(6.0f);
-        Timer.delay(4.0);
-        final double currentSlave = mSlaveTalon.getOutputCurrent();
-        mSlaveTalon.set(0.0);
-
-        mMasterTalon.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-        mSlaveTalon.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-
-        System.out.println("Hopper Master Current: " + currentMaster + " Slave current: " + currentSlave);
-
+        print("Testing HATCH MECH.--------------------------------------------------");
+        
         boolean failure = false;
+        
+        this.hatchRelease();
+		print("PRESS HATCH BUTTON within 10 secs");
+		double startTimeR = Timer.getFPGATimestamp();
+		boolean buttonPressed = false;
+		while(Timer.getFPGATimestamp() - startTimeR < 10){
+			if(this.getHatchSW()){
+				buttonPressed = true;
+				print("Thank You");
+				break;
+			}
+		}
 
-        if (currentMaster < kCurrentThres) {
-            failure = true;
-            System.out.println("!!!!!!!!!!!!!!!!! Hopper Master Current Low !!!!!!!!!!!!!!!!!");
-        }
+		if (!buttonPressed) {
+			failure = true;
+			print("!!!!!!!!!!!!!!!! CARGO BUTTON RIGHT NOT PRESSED !!!!!!!!!!!!!!!!!!!");
+		}
 
-        if (currentSlave < kCurrentThres) {
-            failure = true;
-            System.out.println("!!!!!!!!!!!!!!!! Hooper Slave Current Low !!!!!!!!!!!!!!!!!!!");
-        }
-
-        if (!Util.allCloseTo(Arrays.asList(currentMaster, currentSlave), currentMaster, 5.0)) {
-            failure = true;
-            System.out.println("!!!!!!!!!!!!!!!! Hopper Currents Different !!!!!!!!!!!!!!!!!");
-        }
-
-        return !failure;
-		 */
+        print("WRITE TEST FOR HATCH PNEUMATICS");
+        this.hatchHold();
+		return failure;	
 	}
 }

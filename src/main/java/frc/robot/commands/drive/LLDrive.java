@@ -1,6 +1,8 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import frc.lib.drivers.Photon.Animation;
+import frc.lib.drivers.Photon.Color;
 import frc.lib.util.Util;
 import frc.robot.OI;
 import frc.robot.Robot;
@@ -43,6 +45,8 @@ public class LLDrive extends PIDCommand {
   protected void execute() {
     double turn = OI.driverController.leftStick.getX();
     double throttle = OI.driverController.triggers.getTwist();
+    Robot.photon.addAnimation("LLDrive", Animation.PULSE_TO_WHITE, Color.GREEN, Color.WHITE, 50, 2);
+    
     //If we are in vision mode use it to steer and drive, if not drive normally
     if (Robot.visionLL.getLimelightHasValidTarget()){
       Robot.drive.visionDrive(m_driveValue);

@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.SpectrumDigitalInput;
@@ -170,7 +171,76 @@ public class CargoMech extends Subsystem {
 	  Based on 254-2017 Code
 	*/
 	public boolean checkSystem() {
-		return true;
+		print("Testing CARGO MECH.--------------------------------------------------");
+		final double kCurrentThres = 2;
+
+		//Zero Both Motors
+		cargoTopMAX.set(0.0);
+		cargoBottomSRX.set(ControlMode.PercentOutput, 0.0);
+
+		// test cargoMech Top Roller
+		cargoTopMAX.set(1);
+		Timer.delay(1.0);
+		final double currentTop = cargoTopMAX.getOutputCurrent();;
+		cargoTopMAX.set(0);
+		Timer.delay(0.25);
+
+		// test cargoMech Bottom Roller
+		cargoBottomSRX.set(ControlMode.PercentOutput, 1.0);
+		Timer.delay(1.0);
+		final double currentBottom = cargoBottomSRX.getOutputCurrent();
+		cargoBottomSRX.set(ControlMode.PercentOutput, 0.0);
+		Timer.delay(0.25);
+
+		print("CARGO TOP CURRENT: " + currentTop + " BOTTOM CURRENT: " + currentBottom);
+
+		boolean failure = false;
+
+		if (currentTop < kCurrentThres) {
+		failure = true;
+		print("!!!!!!!!!!!!!!!!! CARGO TOP Current Low !!!!!!!!!!!!!!!!!");
+		}
+
+		if (currentBottom < kCurrentThres) {
+		failure = true;
+		print("!!!!!!!!!!!!!!!! CARGO BOTTOM Current Low !!!!!!!!!!!!!!!!!!!");
+		}
+
+		print("PRESS CARGO BUTTON LEFT within 10 secs");
+		double startTime = Timer.getFPGATimestamp();
+		boolean leftButtonPressed = false;
+		while(Timer.getFPGATimestamp() - startTime < 10){
+			if(this.getIntakeSW()){
+				leftButtonPressed = true;
+				print("Thank You");
+				break;
+			}
+		}
+
+		if (!leftButtonPressed) {
+			failure = true;
+			print("!!!!!!!!!!!!!!!! CARGO BUTTON LEFT NOT PRESSED !!!!!!!!!!!!!!!!!!!");
+		}
+
+		print("PRESS CARGO BUTTON RIGHT within 10 secs");
+		double startTimeR = Timer.getFPGATimestamp();
+		boolean rightButtonPressed = false;
+		while(Timer.getFPGATimestamp() - startTimeR < 10){
+			if(this.getIntakeSW()){
+				rightButtonPressed = true;
+				print("Thank You");
+				break;
+			}
+		}
+
+		if (!rightButtonPressed) {
+			failure = true;
+			print("!!!!!!!!!!!!!!!! CARGO BUTTON RIGHT NOT PRESSED !!!!!!!!!!!!!!!!!!!");
+		}
+
+		print("WRITE TEST FOR CARGO PNEUMATICS");
+
+		return failure;
 		/*
 		//Example checkSystem from 254's 2017 Robot
 		System.out.println("Testing INTAKE.--------------------------------------");

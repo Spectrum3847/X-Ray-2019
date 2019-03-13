@@ -16,7 +16,7 @@ public class AutoHatchIntake extends CommandGroup {
     boolean hasTarget = false;
 
     public AutoHatchIntake() {
-        this.addParallel(new MMElevator(Robot.elevator.posDownLimit));
+        this.addParallel(new MMElevator(Elevator.posDownLimit));
         this.addParallel(new HatchReady());
         this.addSequential(new LLDrive());
         this.addParallel(new RumbleController(OI.driverController, .75));

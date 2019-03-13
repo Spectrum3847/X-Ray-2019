@@ -3,6 +3,8 @@ package frc.robot.commands.drive;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import frc.lib.drivers.Photon.Animation;
+import frc.lib.drivers.Photon.Color;
 import frc.lib.util.Util;
 import frc.robot.HW;
 import frc.robot.Robot;
@@ -59,6 +61,7 @@ public class AutoTurn extends PIDCommand {
     Robot.drive.brakeMode();
     gyroIsReset = true;
     getPIDController().enable();
+    Robot.photon.addAnimation("AutoTurn", Animation.BLINK_DUAL, Color.WHITE, Color.PURPLE, 50, 5);
   }
 
   // Called repeatedly when this Command is scheduled to run

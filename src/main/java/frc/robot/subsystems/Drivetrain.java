@@ -1,16 +1,20 @@
 package frc.robot.subsystems;
 
+import java.util.Arrays;
+
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.SpectrumSparkMax;
 import frc.lib.util.Debugger;
 import frc.lib.util.SpectrumLogger;
+import frc.lib.util.Util;
 import frc.robot.HW;
 import frc.robot.OI;
 import frc.robot.Robot;
@@ -314,6 +318,7 @@ public class Drivetrain extends Subsystem {
 
   public void driveStraight(double speed){
     double steerAdjust = 0;
+    //Super easy drive straight code based on the Z yaw rate of the pigeon, just a P loop
     if (pigeon != null){
       steerAdjust = xyz_dps[2] * Robot.prefs.getNumber("D: Straight P", 0.05);
     }
@@ -360,8 +365,159 @@ public class Drivetrain extends Subsystem {
 
   public void logEvent(String event){
 		SpectrumLogger.getInstance().addEvent(Robot._drive, event);
-	}
-	public boolean checkSystem() {
-    return true;
   }
+  
+  //Check if velocities and currents are working on each motor
+	public boolean checkSystem() {
+    print("Testing CARGO MECH.--------------------------------------------------");
+    final double kCurrentThres = 3;
+    final double kVelocityThres = 50;
+    
+		//Zero All Motors, turn off followers
+    this.leftFrontMotor.set(0.0);
+    this.rightFrontMotor.set(0.0);
+    this.leftMiddleMotor.set(0.0);
+    this.rightMiddleMotor.set(0.0);
+    this.leftRearMotor.set(0.0);
+    this.rightMiddleMotor.set(0.0);
+
+    double testSpeed = 0.2;
+    double testTime = 0.5;
+		// test Drive left front
+		leftFrontMotor.set(testSpeed);
+		Timer.delay(testTime);
+    final double currentLF = leftFrontMotor.getOutputCurrent();
+    final double velocityLF = leftFrontMotor.getEncoder().getVelocity();
+		leftFrontMotor.set(0);
+    Timer.delay(0.25);
+    
+		// test Drive right front
+		rightFrontMotor.set(testSpeed);
+		Timer.delay(testTime);
+		final double currentRF = rightFrontMotor.getOutputCurrent();
+    final double velocityRF = rightFrontMotor.getEncoder().getVelocity();
+		rightFrontMotor.set(0);
+    Timer.delay(0.25);
+    
+    // test Drive leftMiddle
+		leftMiddleMotor.set(testSpeed);
+		Timer.delay(testTime);
+		final double currentLM = leftMiddleMotor.getOutputCurrent();
+    final double velocityLM = leftMiddleMotor.getEncoder().getVelocity();
+		leftMiddleMotor.set(0);
+    Timer.delay(0.25);
+    
+    // test Drive rightMiddle
+		rightMiddleMotor.set(testSpeed);
+		Timer.delay(testTime);
+		final double currentRM = rightMiddleMotor.getOutputCurrent();
+    final double velocityRM = rightMiddleMotor.getEncoder().getVelocity();
+		rightMiddleMotor.set(0);
+    Timer.delay(0.25);
+    
+    // test Drive leftRear
+		leftRearMotor.set(testSpeed);
+		Timer.delay(testTime);
+		final double currentLR = leftRearMotor.getOutputCurrent();
+    final double velocityLR = leftRearMotor.getEncoder().getVelocity();
+		leftRearMotor.set(0);
+    Timer.delay(0.25);
+
+    // test Drive leftRear
+    rightRearMotor.set(testSpeed);
+    Timer.delay(testTime);
+    final double currentRR = rightRearMotor.getOutputCurrent();
+    final double velocityRR = rightRearMotor.getEncoder().getVelocity();
+    rightRearMotor.set(0);
+    Timer.delay(0.25);
+
+    
+    print("CURRENT LF: " + currentLF + " LM: " + currentLM + " LR: " + currentLR + " RF: " + currentRF + " RM: " + currentRM + " RR: " + currentRR);
+    print("VELOCITY LF: " + velocityLF + " LM: " + velocityLM + " LR: " + velocityLR + " RF: " + velocityRF + " RM: " + velocityRM + " RR: " + velocityRR);
+
+		boolean failure = false;
+
+		if (currentLF < kCurrentThres) {
+		failure = true;
+		print("!!!!!!!!!!!!!!!!! DRIVE LEFT FRONT Current Low !!!!!!!!!!!!!!!!!");
+    }
+		if (velocityLF < kVelocityThres) {
+		failure = true;
+		print("!!!!!!!!!!!!!!!!! DRIVE LEFT FRONT VELOCITY Low !!!!!!!!!!!!!!!!!");
+    }
+    if (currentRF < kCurrentThres) {
+      failure = true;
+      print("!!!!!!!!!!!!!!!!! DRIVE RIGHT FRONT Current Low !!!!!!!!!!!!!!!!!");
+    }
+		if (velocityRF < kVelocityThres) {
+		failure = true;
+		print("!!!!!!!!!!!!!!!!! DRIVE RIGHT FRONT VELOCITY Low !!!!!!!!!!!!!!!!!");
+    }
+    if (currentLM < kCurrentThres) {
+      failure = true;
+      print("!!!!!!!!!!!!!!!!! DRIVE LEFT MIDDLE Current Low !!!!!!!!!!!!!!!!!");
+    }
+		if (velocityLM < kVelocityThres) {
+		failure = true;
+		print("!!!!!!!!!!!!!!!!! DRIVE LEFT MIDDLE VELOCITY Low !!!!!!!!!!!!!!!!!");
+    }
+
+		if (currentRM < kCurrentThres) {
+		failure = true;
+		print("!!!!!!!!!!!!!!!!DRIVE RIGHT MIDDLE Current Low !!!!!!!!!!!!!!!!!!!");
+    }
+		if (velocityRM < kVelocityThres) {
+		failure = true;
+		print("!!!!!!!!!!!!!!!!! DRIVE RIGHT MIDDLE VELOCITY Low !!!!!!!!!!!!!!!!!");
+    }
+    
+    if (currentLR < kCurrentThres) {
+      failure = true;
+      print("!!!!!!!!!!!!!!!!DRIVE LEFT REAR Current Low !!!!!!!!!!!!!!!!!!!");
+    }
+		if (velocityLR < kVelocityThres) {
+		failure = true;
+		print("!!!!!!!!!!!!!!!!! DRIVE LEFT REAR VELOCITY Low !!!!!!!!!!!!!!!!!");
+    }
+
+    if (currentRR < kCurrentThres) {
+        failure = true;
+        print("!!!!!!!!!!!!!!!!DRIVE RIGHT REAR Current Low !!!!!!!!!!!!!!!!!!!");
+    }
+		if (velocityRR < kVelocityThres) {
+		failure = true;
+		print("!!!!!!!!!!!!!!!!! DRIVE RIGHT REAR VELOCITY Low !!!!!!!!!!!!!!!!!");
+    }
+
+    if (!Util.allCloseTo(Arrays.asList(currentLF, currentLM, currentLR), currentLF, 5.0)) {
+      failure = true;
+      print("!!!!!!!!!!!!!!!! LEFT DRIVE Currents Different !!!!!!!!!!!!!!!!!");
+    }
+
+    if (!Util.allCloseTo(Arrays.asList(velocityLF, velocityLM, velocityLR), velocityLF, 5.0)) {
+      failure = true;
+      print("!!!!!!!!!!!!!!!! LEFT DRIVE Velocities Different !!!!!!!!!!!!!!!!!");
+    }
+
+    if (!Util.allCloseTo(Arrays.asList(currentRF, currentRM, currentRR), currentLF, 5.0)) {
+      failure = true;
+      print("!!!!!!!!!!!!!!!! RIGHT DRIVE Currents Different !!!!!!!!!!!!!!!!!");
+    }
+
+    
+    if (!Util.allCloseTo(Arrays.asList(velocityRF, velocityRM, velocityRR), velocityRF, 5.0)) {
+      failure = true;
+      print("!!!!!!!!!!!!!!!! RIGHT DRIVE Velocities Different !!!!!!!!!!!!!!!!!");
+    }
+
+    //Turn back on followers
+    //Follow Motors
+    leftMiddleMotor.follow(leftFrontMotor);
+    leftRearMotor.follow(leftFrontMotor);
+    rightMiddleMotor.follow(rightFrontMotor);
+    rightRearMotor.follow(rightFrontMotor);
+
+    return failure;
+  }
+
 }

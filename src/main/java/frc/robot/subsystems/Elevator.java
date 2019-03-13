@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Arrays;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
@@ -7,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.LeaderTalonSRX;
@@ -198,7 +201,72 @@ public class Elevator extends Subsystem {
 
   // Modify to run a system check for the robot
   public boolean checkSystem() {
-    return true;
+    print("Testing ELEVATOR.--------------------------------------------------");
+    final double kCurrentThres = 0.5;
+
+    spx.set(ControlMode.PercentOutput, 0.0);
+    srx.set(ControlMode.PercentOutput, 0.0);
+
+    // test climber srx
+    final double SRXintialEncoderPos = srx.getSensorCollection().getQuadraturePosition();
+    srx.set(ControlMode.PercentOutput, 0.3);
+    Timer.delay(0.5);
+    final double currentSRX = HW.PDP.getCurrent(HW.CLIMBER_SRX_PDP);
+    final double positionSRX = srx.getSensorCollection().getQuadraturePosition();
+    srx.set(ControlMode.PercentOutput, -0.2);
+    Timer.delay(0.4);
+    srx.set(ControlMode.PercentOutput, 0.0);
+    final double SRXendEncoderPos = srx.getSensorCollection().getQuadraturePosition();
+
+    Timer.delay(1.0);
+
+    // Test climber spx
+    final double SPXintialEncoderPos = srx.getSensorCollection().getQuadraturePosition();
+    spx.set(ControlMode.PercentOutput, 0.3);
+    Timer.delay(0.5);
+    final double currentSPX = HW.PDP.getCurrent(HW.CLIMBER_SRX_PDP);
+    final double positionSPX = srx.getSensorCollection().getQuadraturePosition();
+    spx.set(ControlMode.PercentOutput, -0.2);
+    Timer.delay(0.4);
+    srx.set(ControlMode.PercentOutput, 0.0);
+    // reset spx to follow srx
+    spx.follow(srx);
+    final double SPXendEncoderPos = srx.getSensorCollection().getQuadraturePosition();
+
+    print("ELEVATOR SRX CURRENT: " + currentSRX + " SPX CURRENT: " + currentSPX);
+    print("ELEVATOR SRX ENCODER INIT POS: " + SRXintialEncoderPos + " END POS: " + SRXendEncoderPos);
+    print("ELEVATOR SPX ENCODER INIT POS: " + SRXintialEncoderPos + " END POS: " + SRXendEncoderPos);
+
+    boolean failure = false;
+
+    print("!%!%#$!%@ - WRITE A TEST FOR THE ELEVATOR LIMIT SWITCHES!!!!!!!!!");
+
+    if (currentSRX < kCurrentThres) {
+      failure = true;
+      print("!!!!!!!!!!!!!!!!! ELEVATOR SRX Current Low !!!!!!!!!!!!!!!!!");
+    }
+
+    if (currentSPX < kCurrentThres) {
+      failure = true;
+      print("!!!!!!!!!!!!!!!! ELEVATOR SPX Current Low !!!!!!!!!!!!!!!!!!!");
+    }
+
+    if (!Util.allCloseTo(Arrays.asList(currentSRX, currentSPX), currentSRX, 5.0)) {
+      failure = true;
+      print("!!!!!!!!!!!!!!!! ELEVATOR Currents Different !!!!!!!!!!!!!!!!!");
+    }
+
+    if (Math.abs(SRXendEncoderPos - SRXintialEncoderPos) > 0){
+      failure = true;
+      print("!!!!!!!!!!!! ELEVATOR Encoder didn't change position SRX !!!!!!!!!!!!!");
+    }
+
+    if (Math.abs(SPXendEncoderPos - SPXintialEncoderPos) > 0){
+      failure = true;
+      print("!!!!!!!!!!!! ELEVATOR Encoder didn't change position SPX !!!!!!!!!!!!!");
+    }
+
+    return failure;
   }
 
   public void dashboard() {
