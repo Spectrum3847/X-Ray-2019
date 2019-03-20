@@ -26,6 +26,7 @@ public class Disabled {
 
     //Periodic method called roughly once every 20ms
     public static void periodic() {
+        Dashboard.dashboardFlash(); //Only flash when disabled, one less thing to send during telop
         Scheduler.getInstance().run();
         if (HW.oi.isDriverButtonPushed()){
             Robot.photon.addAnimation("DriverButton", Animation.CYLON, Photon.Color.BLUE, Color.WHITE, 50, 5);

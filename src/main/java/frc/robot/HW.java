@@ -38,8 +38,8 @@ public class HW {
 	public static final int RIGHT_DRIVE_MIDDLE_PDP = 21;
 	public static final int RIGHT_DRIVE_REAR_PDP = 22;
 	
-	public static final int ELEVATOR_SRX_PDP= 30;
-	public static final int ELEVATOR_SPX_PDP = 31;
+	public static final int ELEVATOR_SRX_PDP = 5;
+	public static final int ELEVATOR_SPX_PDP = 4;
 	public static final int CLIMBER_SRX_PDP= 40;
 	public static final int CLIMBER_SPX_PDP = 41;
 	

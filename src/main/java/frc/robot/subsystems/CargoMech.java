@@ -50,6 +50,7 @@ public class CargoMech extends Subsystem {
 		cargoTopMAX.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyOpen).enableLimitSwitch(false);
 		cargoTopMAX.getReverseLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyOpen).enableLimitSwitch(false);
 		cargoTopMAX.setIdleMode(IdleMode.kBrake);
+		//cargoTopMAX.burnFlash();
 		cargoBottomSRX.configVoltageCompSaturation(11.5);
 		cargoBottomSRX.enableVoltageCompensation(true);
 	}
@@ -73,6 +74,14 @@ public class CargoMech extends Subsystem {
 	
 	public boolean getIntakeSW(){
 		return !CargoSW.get();
+	}
+
+	public void brakeMode(){
+		cargoTopMAX.setIdleMode(IdleMode.kBrake);
+	}
+
+	public void coastMode(){
+		cargoTopMAX.setIdleMode(IdleMode.kCoast);
 	}
 	
 	public void setTop(double value) {
@@ -172,7 +181,7 @@ public class CargoMech extends Subsystem {
 	*/
 	public boolean checkSystem() {
 		print("Testing CARGO MECH.--------------------------------------------------");
-		final double kCurrentThres = 2;
+		final double kCurrentThres = 3;
 
 		//Zero Both Motors
 		cargoTopMAX.set(0.0);
@@ -221,7 +230,7 @@ public class CargoMech extends Subsystem {
 			failure = true;
 			print("!!!!!!!!!!!!!!!! CARGO BUTTON LEFT NOT PRESSED !!!!!!!!!!!!!!!!!!!");
 		}
-
+		Timer.delay(2);
 		print("PRESS CARGO BUTTON RIGHT within 10 secs");
 		double startTimeR = Timer.getFPGATimestamp();
 		boolean rightButtonPressed = false;
@@ -240,6 +249,7 @@ public class CargoMech extends Subsystem {
 
 		print("WRITE TEST FOR CARGO PNEUMATICS");
 
+		print("CARGOMECH TEST COMPLETE");
 		return failure;
 		/*
 		//Example checkSystem from 254's 2017 Robot

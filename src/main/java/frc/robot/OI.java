@@ -25,6 +25,7 @@ import frc.robot.commands.drive.AutoHatchIntake;
 import frc.robot.commands.drive.AutoTurn;
 import frc.robot.commands.drive.BrakeMode;
 import frc.robot.commands.drive.LLDrive;
+import frc.robot.commands.elevator.CheckIfZero;
 import frc.robot.commands.elevator.ElevatorZero;
 import frc.robot.commands.elevator.ManualElevator;
 import frc.robot.commands.elevator.MMElevator;
@@ -54,15 +55,15 @@ public class OI {
 
     //Driver Buttons
     //A button is aim with camera inside drive() command
-    driverController.yButton.whileHeld(new Climb());
-    driverController.selectButton.whenPressed(new ClimberKicker());
+    //driverController.yButton.whileHeld(new Climb());
+    //driverController.selectButton.whenPressed(new ClimberKicker());
     driverController.bButton.whileHeld(new AutoHatchIntake());
-    driverController.rightBumper.whileHeld(new BrakeMode());
-    driverController.leftBumper.whileHeld(new BrakeMode());
     driverController.xButton.whileHeld(new LLDrive());
     new SpectrumAxisButton(OI.driverController, XboxAxis.RIGHT_X, .3, ThresholdType.DEADBAND).whileHeld(new BrakeMode());//Go to brake mode when doing one side turn thing
 
     driverController.startButton.whenPressed(new LvlOneTwoRocketRight());
+
+    
     DriverLeftDpad = new SpectrumOrButton(driverController.Dpad.Left, new SpectrumOrButton(driverController.Dpad.UpLeft, driverController.Dpad.DownLeft));
     DriverRightDpad = new SpectrumOrButton(driverController.Dpad.Right, new SpectrumOrButton(driverController.Dpad.UpRight, driverController.Dpad.DownRight));
     DriverLeftDpad.whenPressed(new AutoTurn(70, DriverLeftDpad));
@@ -94,11 +95,14 @@ public class OI {
     leftStickCargoShip = new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.LEFT_Y, .25, ThresholdType.GREATER_THAN);
     leftStickCargoShip.whileHeld(new CargoShipDrop());
 
+    new SpectrumAxisButton(OI.opController, SpectrumXboxController.XboxAxis.RIGHT_X, -.5, ThresholdType.LESS_THAN).whileHeld(new BullDozer());
+
     //Elevator Controls
     opController.startButton.whileHeld(new ElevatorZero());
     SpectrumIOButton cargoButton = new SpectrumIOButton(Robot.cargoMech.CargoSW);
     SpectrumOrButton rightDpad =  new SpectrumOrButton(opController.Dpad.Right, new SpectrumOrButton(opController.Dpad.UpRight, opController.Dpad.DownRight));
     SpectrumOrButton  cargoOverRideable = new SpectrumOrButton(cargoButton, rightDpad);
+    opController.aButton.whenPressed(new CheckIfZero());
     new SpectrumTwoButton(opController.aButton, cargoOverRideable).whenPressed(new MMElevator(Elevator.posCargoL1));
     new SpectrumTwoButton(opController.xButton, cargoOverRideable).whenPressed(new MMElevator(Elevator.posCargoL2));
     new SpectrumTwoButton(opController.yButton, cargoOverRideable).whenPressed(new MMElevator(Elevator.posCargoL3));

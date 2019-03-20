@@ -96,10 +96,13 @@ public class Hatch extends Subsystem {
 	public boolean checkSystem() {
 
         print("Testing HATCH MECH.--------------------------------------------------");
+        print("HATCH RELEASE--------------------------------------------------");
         
         boolean failure = false;
         
+        Timer.delay(2);
         this.hatchRelease();
+        Timer.delay(1);
 		print("PRESS HATCH BUTTON within 10 secs");
 		double startTimeR = Timer.getFPGATimestamp();
 		boolean buttonPressed = false;
@@ -109,7 +112,8 @@ public class Hatch extends Subsystem {
 				print("Thank You");
 				break;
 			}
-		}
+        }
+        Timer.delay(2);
 
 		if (!buttonPressed) {
 			failure = true;

@@ -11,6 +11,7 @@ import frc.robot.commands.cargo.TiltUp;
 import frc.robot.commands.elevator.MMElevator;
 import frc.robot.commands.hatch.HatchHold;
 import frc.robot.commands.hatch.HatchReady;
+import frc.robot.subsystems.Elevator;
 
 public class AutoHatchIntake extends CommandGroup {
     boolean hasTarget = false;

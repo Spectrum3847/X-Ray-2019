@@ -5,8 +5,10 @@ import java.util.Arrays;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -22,7 +24,9 @@ import frc.robot.commands.drive.CoastMode;
 import frc.robot.commands.drive.Drive;
 
 /**
- * An example subsystem.  You can replace me with your own Subsystem.
+ * Drivetrain
+ * The PIDF in this code is for Spark SmartMotion
+ * PIDF for path fallowing is in PathFollower Subsystem.
  */
 public class Drivetrain extends Subsystem {
 
@@ -101,6 +105,15 @@ public class Drivetrain extends Subsystem {
     leftFrontMotor.setOpenLoopRampRate(rampRate);
     rightFrontMotor.setOpenLoopRampRate(rampRate);
 
+    /*
+    leftFrontMotor.burnFlash();
+    leftMiddleMotor.burnFlash();
+    leftRearMotor.burnFlash();
+    rightFrontMotor.burnFlash();
+    rightMiddleMotor.burnFlash();
+    rightRearMotor.burnFlash();\
+    */
+
     leftEncoder = leftFrontMotor.getEncoder();
     rightEncoder = rightFrontMotor.getEncoder();
     leftPID = leftFrontMotor.getPIDController();
@@ -117,21 +130,26 @@ public class Drivetrain extends Subsystem {
     //Setup Motion Magic
     // PID coefficients
     kP = 5e-5; 
-    kI = 0;
+    kI = 1e-6;
     kD = 0; 
     kIz = 0; 
     kFF = 0.000156; 
-    kMaxOutput = .75; 
-    kMinOutput = -.75;
+    kMaxOutput = .9; 
+    kMinOutput = -.9;
     maxRPM = 5700;
 
     // Smart Motion Coefficients
-    maxVel = 3000; // rpm
-    maxAccel = 2000;
+    maxVel = 5000; // rpm
+    maxAccel = 4000;
+    minVel = 100;
 
     //Put values into the controllers
     setPIDF(kP, kI, kD, kFF);
     setMotionMagicParams(maxVel, maxAccel);
+    setSmartMotionMinOutputVelocity(minVel);
+    setSmartMotionAllowedClosedLoopError(allowedErr);
+    rightPID.setOutputRange(kMinOutput, kMaxOutput);
+    leftPID.setOutputRange(kMinOutput, kMaxOutput);
 
     if(Robot.cargoMech != null){
       pigeon = new PigeonIMU(Robot.cargoMech.cargoBottomSRX);
@@ -187,6 +205,26 @@ public class Drivetrain extends Subsystem {
     rightPID.setFF(this.kFF);
   }
 
+  public void setSmartMotionMinOutputVelocity(double minVel){
+    leftPID.setSmartMotionMinOutputVelocity(minVel, slotID);
+    rightPID.setSmartMotionMinOutputVelocity(minVel, slotID);
+  }
+
+  public void setSmartMotionAllowedClosedLoopError(double allowedErr){
+    leftPID.setSmartMotionAllowedClosedLoopError(allowedErr, slotID);
+    rightPID.setSmartMotionAllowedClosedLoopError(allowedErr, slotID);
+  }
+
+  public void setSmartMotion(double value){
+    leftPID.setReference(value, ControlType.kSmartMotion);
+    rightPID.setReference(value, ControlType.kSmartMotion);
+  }
+
+  public void setSmartVelocty(double value){
+    leftPID.setReference(value, ControlType.kVelocity);
+    rightPID.setReference(value, ControlType.kVelocity);
+  }
+
   public void brakeMode(){
     isBrake = true;
     leftFrontMotor.setIdleMode(IdleMode.kBrake);
@@ -216,10 +254,14 @@ public class Drivetrain extends Subsystem {
   }
 
   public void zeroSensors() {
+    resetEncoders();
+    pigeon.setFusedHeading(0);
+    pigeon.setYaw(0);
+  }
+
+  public void resetEncoders(){
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
-
-    /*NEED TO ZERO PIGEON HERE*/
   }
 
     /**
@@ -259,6 +301,7 @@ public class Drivetrain extends Subsystem {
     steer = limit(steer) * maxTurnRate;
     arcadeDrive(throttle, steer);
   }
+
   public void arcadeDrive(double xSpeed, double zRotation) {
     xSpeed = limit(xSpeed);
 
@@ -333,18 +376,22 @@ public class Drivetrain extends Subsystem {
   public void dashboard(){
     //Add values that need to be updated on the dashboard.
     SmartDashboard.putNumber("Drive/left-output", leftFrontMotor.getAppliedOutput());
-    //SmartDashboard.putNumber("Drive/leftM-output", leftMiddleMotor.getAppliedOutput());
-    //SmartDashboard.putNumber("Drive/leftR-output", leftRearMotor.getAppliedOutput());
     SmartDashboard.putNumber("Drive/left-pos", leftEncoder.getPosition());
     SmartDashboard.putNumber("Drive/left-velocity", leftEncoder.getVelocity());
     SmartDashboard.putNumber("Drive/right-output", rightFrontMotor.getAppliedOutput());
-    //SmartDashboard.putNumber("Drive/rightM-output", rightMiddleMotor.getAppliedOutput());
-    //SmartDashboard.putNumber("Drive/rightR-output", rightRearMotor.getAppliedOutput());
     SmartDashboard.putNumber("Drive/right-pos", rightEncoder.getPosition());
     SmartDashboard.putNumber("Drive/right-velocity", rightEncoder.getVelocity());
     SmartDashboard.putNumber("Drive/SteerStick", OI.driverController.leftStick.getX());
     SmartDashboard.putNumber("Drive/left-Current", leftFrontMotor.getOutputCurrent());
     SmartDashboard.putNumber("Drive/right-Current", rightFrontMotor.getOutputCurrent());
+    //Put values here that we don't need during matches
+
+    if(!Robot.DS.isFMSAttached()){
+      SmartDashboard.putNumber("Drive/leftM-output", leftMiddleMotor.getAppliedOutput());
+      SmartDashboard.putNumber("Drive/leftR-output", leftRearMotor.getAppliedOutput());
+      SmartDashboard.putNumber("Drive/rightM-output", rightMiddleMotor.getAppliedOutput());
+      SmartDashboard.putNumber("Drive/rightR-output", rightRearMotor.getAppliedOutput());
+    }
   }
 
   public void printDebug(String msg){
@@ -369,7 +416,7 @@ public class Drivetrain extends Subsystem {
   
   //Check if velocities and currents are working on each motor
 	public boolean checkSystem() {
-    print("Testing CARGO MECH.--------------------------------------------------");
+    print("Testing DRIVETRAIN.--------------------------------------------------");
     final double kCurrentThres = 3;
     final double kVelocityThres = 50;
     
@@ -380,6 +427,8 @@ public class Drivetrain extends Subsystem {
     this.rightMiddleMotor.set(0.0);
     this.leftRearMotor.set(0.0);
     this.rightMiddleMotor.set(0.0);
+    this.leftMiddleMotor.follow(leftMiddleMotor);
+    this.rightMiddleMotor.follow(rightMiddleMotor);
 
     double testSpeed = 0.2;
     double testTime = 0.5;

@@ -60,7 +60,6 @@ public class Dashboard {
     }
 
     public static void updateDashboard() {
-        dashboardFlash();
         double time = Timer.getFPGATimestamp();
     	if (ENABLE_DASHBOARD) {
             if ((time - shortOldTime) > SHORT_DELAY) {

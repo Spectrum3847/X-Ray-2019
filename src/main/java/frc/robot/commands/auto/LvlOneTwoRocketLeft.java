@@ -45,8 +45,9 @@ public class LvlOneTwoRocketLeft extends CommandGroup {
     addParallel(new TiltDown());
     addSequential(new LLDrive());
     addParallel(new HatchFire(),1);
-    addSequential(new DriveSpeed(-.3),.3);
-    addSequential(new TimedCommand(.5));
+    //addSequential(new DriveSpeed(-.3),.3);
+    //addSequential(new TimedCommand(.5));
+    addSequential(new FollowPath("BackToFeederLeftpath.left", "BackToFeederLeftpath.right`", true));
     addSequential(new AutoTurn(108));
     addParallel(new HatchReady());
     addSequential(new DriveSpeed(.4), 1.6);

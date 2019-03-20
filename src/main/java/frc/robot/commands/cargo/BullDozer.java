@@ -1,17 +1,23 @@
-package frc.robot.commands.hatch;
+package frc.robot.commands.cargo;
 
+import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 import frc.lib.drivers.Photon.Animation;
 import frc.lib.drivers.Photon.Color;
+import frc.robot.OI;
 import frc.robot.Robot;
-import frc.robot.commands.cargo.*;
+import frc.robot.commands.elevator.ElevatorCargoIntakeControl;
+import frc.robot.commands.elevator.MMElevator;
+import frc.robot.subsystems.Elevator;
 
-public class HatchFire extends CommandGroup {
+public class BullDozer extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public HatchFire() {
+
+   int buttonDebounce;
+   Button intakeButton;
+  public BullDozer() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -28,17 +34,24 @@ public class HatchFire extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addParallel(new TiltDown());
-    addParallel(new CargoCoastMode());
-    addSequential(new WaitCommand(.01));
-    addParallel(new HatchRelease());
-    addSequential(new WaitCommand(.02));
-    addParallel(new HatchEject());
+    requires(Robot.cargoMech);
     addParallel(new IntakeDown());
+    //addParallel(new RollerBottomOn(-1.0));
+    //addParallel(new RollerTopOn(-1.0));
+  }
+  protected void intialize(){
+    Robot.cargoMech.logEvent("Intaking Cargo");
+    buttonDebounce = -1;
+    if (Robot.cargoMech.isIntakeComplete()){
+      this.cancel();
+    }
   }
 
-  public void initialize(){
-    Robot.hatch.logEvent("HATCH FIRE");
-    Robot.photon.addAnimation("FireHatch", Animation.SOLID, Color.YELLOW, Color.WHITE, 100, 10);
+  protected boolean isFinished() {
+    return false;
+  }
+
+  protected void end(){
+
   }
 }

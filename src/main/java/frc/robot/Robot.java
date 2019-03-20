@@ -13,12 +13,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.robot.subsystems.CargoMech;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Hatch;
+import frc.robot.subsystems.PathFollower;
 import frc.robot.subsystems.PhotonLEDs;
 import frc.robot.subsystems.Pneumatics;
 import frc.robot.subsystems.VisionJevois;
@@ -63,12 +65,15 @@ public class Robot extends TimedRobot {
 	public static VisionJevois visionJevois;
 	public static PhotonLEDs photon;
 	public static int brownOutCtn = 0;
+	public static DriverStation DS;
+	public static PathFollower pathFollower;
 	
 	public static void setupSubsystems(){
 		prefs = SpectrumPreferences.getInstance();
 		pneumatics = new Pneumatics();
 		cargoMech = new CargoMech(); //CargoMech has to be before Drivetrain for pigeon and before hatch for limitswitch
 		drive = new Drivetrain();
+		pathFollower = new PathFollower();
 		climber = new Climber();
 		elevator = new Elevator();
 		hatch = new Hatch();
@@ -100,6 +105,7 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		LiveWindow.setEnabled(false);
 		LiveWindow.disableAllTelemetry();
+		DS = DriverStation.getInstance();
 		initDebugger(); //Init Debugger
 		SpectrumLogger.getInstance().intialize();  //setup files for logging
 		printInfo("Start robotInit()");
@@ -154,6 +160,7 @@ public class Robot extends TimedRobot {
     }
 
     public void teleopInit() {
+		initDebugger();//Used to set debug level lower when FMS attached.
 		LiveWindow.setEnabled(false);
 		LiveWindow.disableAllTelemetry();
     	setState(RobotState.TELEOP);
@@ -173,15 +180,21 @@ public class Robot extends TimedRobot {
 		//Disable LiveWindow
 		LiveWindow.setEnabled(false);
 		LiveWindow.disableAllTelemetry();
+        Scheduler.getInstance().removeAll();
 
 		//Check Systems
 		//** ADD SOMETHING TO CHECK THAT PDP doesn't have faults */
 		//Check each subsytem including pneumatics
 		setState(RobotState.TEST);
 		 Timer.delay(0.5);
+		 System.out.println("!!!!!!!!!!!!!SYSTEM CHECK STARTING!!!!!!!!!!");
 		 
 		 boolean results = true;
-		// results &= drive.checkSystem();
+		results &= drive.checkSystem();
+		//results &= cargoMech.checkSystem();
+		//results &= hatch.checkSystem();
+		results &= elevator.checkSystem();
+		
 		 /** Examples of testing subsystems based on 254-2017 Code
 	        results &= Feeder.getInstance().checkSystem();
 	        results &= Drive.getInstance().checkSystem();
@@ -206,7 +219,11 @@ public class Robot extends TimedRobot {
 	}
 	
     private static void initDebugger(){
-    	Debugger.setLevel(Debugger.info3); //Set the initial Debugger Level
+		if(DS.isFMSAttached()){
+			Debugger.setLevel(Debugger.info3);
+		}else{
+			Debugger.setLevel(Debugger.info3); //Set the initial Debugger Level for when not in a match
+		}
     	Debugger.flagOn(_general); //Set all the flags on, comment out ones you want off
     	Debugger.flagOn(_controls);
     	Debugger.flagOn(_auton);

@@ -203,39 +203,61 @@ public class Elevator extends Subsystem {
   public boolean checkSystem() {
     print("Testing ELEVATOR.--------------------------------------------------");
     final double kCurrentThres = 0.5;
-
+    if(getPosition() < 0){
+      zeroPosition();
+    }
+    spx.set(ControlMode.PercentOutput, -0.1);
+    srx.set(ControlMode.PercentOutput, -0.1);
+    Timer.delay(0.2);
+    srx.set(ControlMode.PercentOutput, 0.0);
     spx.set(ControlMode.PercentOutput, 0.0);
-    srx.set(ControlMode.PercentOutput, 0.0);
+    Timer.delay(0.1);
+;   srx.setNeutralMode(NeutralMode.Coast);
+    spx.setNeutralMode(NeutralMode.Coast);
 
+    double testSpeed = .75;
+    double testDownSpeed = -0.05;
+    double testUpTime = 1;
+
+
+    if(getPosition() < 0){
+      zeroPosition();
+    }
     // test climber srx
-    final double SRXintialEncoderPos = srx.getSensorCollection().getQuadraturePosition();
-    srx.set(ControlMode.PercentOutput, 0.3);
-    Timer.delay(0.5);
-    final double currentSRX = HW.PDP.getCurrent(HW.CLIMBER_SRX_PDP);
-    final double positionSRX = srx.getSensorCollection().getQuadraturePosition();
-    srx.set(ControlMode.PercentOutput, -0.2);
-    Timer.delay(0.4);
+    final double SRXintialEncoderPos = Math.abs(getPosition());
+    srx.set(ControlMode.PercentOutput, testSpeed);
+    Timer.delay(testUpTime);
     srx.set(ControlMode.PercentOutput, 0.0);
-    final double SRXendEncoderPos = srx.getSensorCollection().getQuadraturePosition();
+    final double currentSRX = HW.PDP.getCurrent(HW.ELEVATOR_SRX_PDP);
+    final double positionSRX = getPosition();
+    //srx.set(ControlMode.PercentOutput, testDownSpeed);
+    //Timer.delay(0.1);
+    
+    Timer.delay(2.0);
 
-    Timer.delay(1.0);
+    if(getPosition() < 0){
+      zeroPosition();
+    }
 
     // Test climber spx
-    final double SPXintialEncoderPos = srx.getSensorCollection().getQuadraturePosition();
-    spx.set(ControlMode.PercentOutput, 0.3);
-    Timer.delay(0.5);
-    final double currentSPX = HW.PDP.getCurrent(HW.CLIMBER_SRX_PDP);
-    final double positionSPX = srx.getSensorCollection().getQuadraturePosition();
-    spx.set(ControlMode.PercentOutput, -0.2);
-    Timer.delay(0.4);
-    srx.set(ControlMode.PercentOutput, 0.0);
-    // reset spx to follow srx
-    spx.follow(srx);
-    final double SPXendEncoderPos = srx.getSensorCollection().getQuadraturePosition();
+    final double SPXintialEncoderPos = Math.abs(getPosition());
+    spx.set(ControlMode.PercentOutput, testSpeed);
+    Timer.delay(testUpTime);
+    final double currentSPX = HW.PDP.getCurrent(HW.ELEVATOR_SPX_PDP);
+    final double positionSPX = getPosition();
+    spx.set(ControlMode.PercentOutput, testDownSpeed);
+    Timer.delay(0.1);
+    spx.set(ControlMode.PercentOutput, 0.0);
+
+    Timer.delay(1.0);
+    //Reset Motors
+    spx.follow(srx);    
+    srx.setNeutralMode(NeutralMode.Brake);
+    spx.setNeutralMode(NeutralMode.Brake);
 
     print("ELEVATOR SRX CURRENT: " + currentSRX + " SPX CURRENT: " + currentSPX);
-    print("ELEVATOR SRX ENCODER INIT POS: " + SRXintialEncoderPos + " END POS: " + SRXendEncoderPos);
-    print("ELEVATOR SPX ENCODER INIT POS: " + SRXintialEncoderPos + " END POS: " + SRXendEncoderPos);
+    print("ELEVATOR SRX ENCODER INIT POS: " + SRXintialEncoderPos + " END POS: " + positionSRX);
+    print("ELEVATOR SPX ENCODER INIT POS: " + SRXintialEncoderPos + " END POS: " + positionSPX);
 
     boolean failure = false;
 
@@ -256,12 +278,12 @@ public class Elevator extends Subsystem {
       print("!!!!!!!!!!!!!!!! ELEVATOR Currents Different !!!!!!!!!!!!!!!!!");
     }
 
-    if (Math.abs(SRXendEncoderPos - SRXintialEncoderPos) > 0){
+    if (Math.abs(positionSRX - SRXintialEncoderPos) <= 0){
       failure = true;
       print("!!!!!!!!!!!! ELEVATOR Encoder didn't change position SRX !!!!!!!!!!!!!");
     }
 
-    if (Math.abs(SPXendEncoderPos - SPXintialEncoderPos) > 0){
+    if (Math.abs(positionSPX - SPXintialEncoderPos) <= 0){
       failure = true;
       print("!!!!!!!!!!!! ELEVATOR Encoder didn't change position SPX !!!!!!!!!!!!!");
     }
