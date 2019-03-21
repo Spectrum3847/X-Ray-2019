@@ -28,6 +28,7 @@ public class Dashboard {
     	if(ENABLE_DASHBOARD){
             SmartDashboard.putBoolean("Compressor ENABLE", true);
             SmartDashboard.putBoolean("Limelight-LED Toggle", false);
+            SmartDashboard.putBoolean("Drive/BRAKEMODE", true);
         }
         dashThread.startPeriodic(0.02);
     }

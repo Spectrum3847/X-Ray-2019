@@ -12,6 +12,7 @@ import java.io.IOException;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.lib.util.Debugger;
 import frc.robot.Robot;
+import frc.robot.subsystems.PathFollower;
 import jaci.pathfinder.PathfinderFRC;
 import jaci.pathfinder.Trajectory;
 
@@ -40,6 +41,7 @@ public class FollowPath extends Command {
     Robot.drive.resetEncoders();
     Robot.pathFollower.updatePIDVAprefs();
     Robot.pathFollower.setTrajectories(leftTraj, rightTraj, reverse);
+    PathFollower.printDebug("Follow Path Started");
     Robot.pathFollower.startPathFollowing();
   }
 
@@ -58,6 +60,7 @@ public class FollowPath extends Command {
   @Override
   protected void end() {
     Robot.pathFollower.stopPathFollowing();
+    Robot.pathFollower.printDebug("Follow Path Ended");
   }
 
   // Called when another command which requires one or more of the same

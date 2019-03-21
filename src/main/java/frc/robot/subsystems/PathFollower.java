@@ -9,9 +9,10 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.lib.util.Debugger;
+import frc.lib.util.SpectrumLogger;
 import frc.robot.Robot;
 import jaci.pathfinder.Pathfinder;
-import jaci.pathfinder.PathfinderFRC;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.followers.EncoderFollower;
 
@@ -22,8 +23,8 @@ public class PathFollower extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   
-  private static final int k_ticks_per_rev = 314;
-  private static final double k_wheel_diameter = 4.0 / 12.0;
+  private static final int k_ticks_per_rev = 1;
+  private static final double k_wheel_diameter = 0.333333333333;
   private static final double k_max_velocity = 15;
 
   private EncoderFollower m_left_follower;
@@ -92,7 +93,7 @@ public class PathFollower extends Subsystem {
   public void updatePIDVAprefs(){
     double kp = Robot.prefs.getNumber("PathW: P", 0.7);
     double ki = Robot.prefs.getNumber("PathW: I", 0.0);
-    double kd = Robot.prefs.getNumber("PathW: P", 0.0);
+    double kd = Robot.prefs.getNumber("PathW: D", 0.0);
     double kv = 1 / Robot.prefs.getNumber("PathW: Velocity", 15);
     double ka = Robot.prefs.getNumber("PathW: Accel", 0.0);
     configurePIDVA(kp, ki, kd, kv, ka);
@@ -114,12 +115,16 @@ public class PathFollower extends Subsystem {
     if (isFinished()) {
       m_follower_notifier.stop();
     } else {
-      double left_speed = m_left_follower.calculate(getLeftEncoder());
-      double right_speed = m_right_follower.calculate(getRightEncoder());
-      double heading = getHeading();
-      double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
-      double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
-      double turn =  0.8 * (-1.0/80.0) * heading_difference;
+      int leftPos = getLeftEncoder();
+      int rightPos = getRightEncoder();
+      print("Right P: " + rightPos + " Left P: " + leftPos);
+      double left_speed = m_left_follower.calculate(leftPos);
+      double right_speed = m_right_follower.calculate(rightPos);
+      //double heading = getHeading();
+      //double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
+      //double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
+      //double turn =  0.8 * (-1.0/80.0) * heading_difference;
+      double turn = 0;
       if(reverse){
         //Flip left and right and multiply by negative one.
         setSpeeds(-1 * (right_speed - turn) , -1 * (left_speed + turn));
@@ -133,6 +138,27 @@ public class PathFollower extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+  }
+
+  public static void printDebug(String msg){
+    Debugger.println(msg, Robot._controls, Debugger.debug2);
+  }
+
+  public static void printInfo(String msg){
+    Debugger.println(msg, Robot._controls, Debugger.info3);
+  }
+  
+  public static void printWarning(String msg) {
+    Debugger.println(msg, Robot._controls, Debugger.warning4);
+  }
+
+  public static void print(String msg){
+    System.out.println(msg);
+  }
+
+  public void logEvent(String event){
+      printDebug(event);
+      SpectrumLogger.getInstance().addEvent(Robot._controls, event);
   }
 
 

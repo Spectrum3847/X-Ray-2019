@@ -8,6 +8,8 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import org.opencv.core.Mat;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -45,6 +47,7 @@ public class Drivetrain extends Subsystem {
   private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAccel, allowedErr;
   private int slotID = 0;
   private Command coastCmd;
+  public final double wheelCircumference = 0.3333333;
 
   //set this up after we setup the cargo mechanism with the pigeon on it
   //public PigeonIMU imu = new PigeonIMU(1);
@@ -129,19 +132,20 @@ public class Drivetrain extends Subsystem {
 
     //Setup Motion Magic
     // PID coefficients
-    kP = 5e-5; 
-    kI = 1e-6;
-    kD = 0; 
+    kP = 7e-5; 
+    kI = 0;
+    kD = 1e-3; 
     kIz = 0; 
-    kFF = 0.000156; 
-    kMaxOutput = .9; 
-    kMinOutput = -.9;
+    kFF = 0.000176; 
+    kMaxOutput = .8; 
+    kMinOutput = -.8;
     maxRPM = 5700;
 
     // Smart Motion Coefficients
     maxVel = 5000; // rpm
-    maxAccel = 4000;
-    minVel = 100;
+    maxAccel = 10000;
+    minVel = 12;
+    allowedErr = 1.0/12.0;
 
     //Put values into the controllers
     setPIDF(kP, kI, kD, kFF);
@@ -225,13 +229,16 @@ public class Drivetrain extends Subsystem {
     rightPID.setReference(value, ControlType.kVelocity);
   }
 
+
+
   public void brakeMode(){
     isBrake = true;
     leftFrontMotor.setIdleMode(IdleMode.kBrake);
-    leftMiddleMotor.setIdleMode(IdleMode.kBrake);
+    leftMiddleMotor.setIdleMode(IdleMode.kCoast
+    );
     leftRearMotor.setIdleMode(IdleMode.kBrake);
     rightFrontMotor.setIdleMode(IdleMode.kBrake);
-    rightMiddleMotor.setIdleMode(IdleMode.kBrake);
+    rightMiddleMotor.setIdleMode(IdleMode.kCoast);
     rightRearMotor.setIdleMode(IdleMode.kBrake);
   }
 
@@ -262,6 +269,18 @@ public class Drivetrain extends Subsystem {
   public void resetEncoders(){
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
+  }
+
+  public double getLeftDistanceFt(){
+    return ticksToFt(this.leftEncoder.getPosition());
+  }
+
+  public double getRightDistanceFt(){
+    return ticksToFt(this.rightEncoder.getPosition());
+  }
+
+  public double ticksToFt(double in){
+    return in * wheelCircumference * Math.PI / 6;
   }
 
     /**
@@ -384,6 +403,8 @@ public class Drivetrain extends Subsystem {
     SmartDashboard.putNumber("Drive/SteerStick", OI.driverController.leftStick.getX());
     SmartDashboard.putNumber("Drive/left-Current", leftFrontMotor.getOutputCurrent());
     SmartDashboard.putNumber("Drive/right-Current", rightFrontMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Drive/leftFt", this.ticksToFt(Robot.drive.leftEncoder.getPosition()));
+    SmartDashboard.putNumber("Drive/rightFt", getRightDistanceFt());
     //Put values here that we don't need during matches
 
     if(!Robot.DS.isFMSAttached()){

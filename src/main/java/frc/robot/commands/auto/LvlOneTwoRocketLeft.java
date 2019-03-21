@@ -1,24 +1,15 @@
 package frc.robot.commands.auto;
 
-import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.TimedCommand;
-import frc.lib.drivers.Photon.Animation;
-import frc.lib.drivers.Photon.Color;
-import frc.robot.OI;
-import frc.robot.Robot;
 import frc.robot.commands.cargo.TiltDown;
 import frc.robot.commands.cargo.TiltUp;
 import frc.robot.commands.drive.AutoTurn;
 import frc.robot.commands.drive.DriveSpeed;
 import frc.robot.commands.drive.LLDrive;
-import frc.robot.commands.elevator.ElevatorCargoIntakeControl;
-import frc.robot.commands.elevator.MMElevator;
 import frc.robot.commands.hatch.HatchFire;
 import frc.robot.commands.hatch.HatchHold;
 import frc.robot.commands.hatch.HatchReady;
-import frc.robot.commands.hatch.HatchRelease;
-import frc.robot.subsystems.Elevator;
 
 public class LvlOneTwoRocketLeft extends CommandGroup {
   /**
@@ -45,9 +36,7 @@ public class LvlOneTwoRocketLeft extends CommandGroup {
     addParallel(new TiltDown());
     addSequential(new LLDrive());
     addParallel(new HatchFire(),1);
-    //addSequential(new DriveSpeed(-.3),.3);
-    //addSequential(new TimedCommand(.5));
-    addSequential(new FollowPath("BackToFeederLeftpath.left", "BackToFeederLeftpath.right`", true));
+    addSequential(new SmartMotionDrive(-2,-2));
     addSequential(new AutoTurn(108));
     addParallel(new HatchReady());
     addSequential(new DriveSpeed(.4), 1.6);

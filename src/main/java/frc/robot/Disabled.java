@@ -3,25 +3,27 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.Photon;
 import frc.lib.drivers.Photon.Animation;
 import frc.lib.drivers.Photon.Color;
 import frc.robot.commands.RumbleOff;
 import frc.robot.commands.drive.CoastMode;
+import frc.robot.commands.drive.DriveSpeed;
 
 public class Disabled {
     
     public static void init() {
         Command a = new RumbleOff();
+        new DriveSpeed(0.0).start();
         a.start();
         Scheduler.getInstance().removeAll();
         a.close();
          //Do things if connected to FMS only, so when telop starts during a match but not during testing
-         if (DriverStation.getInstance().isFMSAttached()){
+        if (DriverStation.getInstance().isFMSAttached() || SmartDashboard.getBoolean("Drive/BRAKEMODE", true)){
         } else{
             new CoastMode().start();
-        }
-
+        }    
     }
 
     //Periodic method called roughly once every 20ms
