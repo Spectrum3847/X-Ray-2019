@@ -20,12 +20,12 @@ public class AutoHatchIntake extends CommandGroup {
         this.addParallel(new MMElevator(Elevator.posDownLimit));
         this.addParallel(new HatchReady());
         this.addSequential(new LLDrive());
-        this.addParallel(new RumbleController(OI.driverController, .75));
-        this.addSequential(new TimedCommand(.2));
+        this.addParallel(new RumbleController(OI.driverController, 1));
+        this.addSequential(new TimedCommand(.25));
         this.addParallel(new HatchHold());
         this.addSequential(new TimedCommand(.15));
         this.addParallel(new TiltUp());
-        this.addSequential(new TimedCommand(.15));
+        this.addSequential(new TimedCommand(.02));
         this.addSequential(new DriveSpeed(-.5),.5);
         this.setInterruptible(false);
     }

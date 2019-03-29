@@ -33,17 +33,17 @@ public class Elevator extends Subsystem {
   public final static int posDownLimit = 0;
   public final static int posCargoL1 = 4500;
   public final static int posCargoShip = 10500;
-  public final static int posHatchL2 = 14000;
+  public final static int posHatchL2 = 15000;
   public final static int posCargoL2 = 18000;
-  public final static int posHatchL3 = 29000;
-  public final static int posCargoL3 = 32800;
-  public final static int posUpLimit = 32800;
+  public final static int posHatchL3 = 29400;
+  public final static int posCargoL3 = 32500;
+  public final static int posUpLimit = 32500;
 
   private int targetPosition = 0;
   private int epsilon = 1000;
 
   private int kMaxSensorVelocity = 3500;
-  private int kCruiseVelocity = 3500;
+  private int kCruiseVelocity = 3400;
   private int kAcceleration = kCruiseVelocity * 3; //Set accerlaeration to happen in half a second
   private double kF = 0.292;
   private double kP = 0.7;

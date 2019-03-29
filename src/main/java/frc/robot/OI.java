@@ -25,6 +25,7 @@ import frc.robot.commands.auto.SmartMotionDrive;
 import frc.robot.commands.cargo.*;
 import frc.robot.commands.drive.AutoHatchIntake;
 import frc.robot.commands.drive.AutoTurn;
+import frc.robot.commands.drive.AutoTurnSM;
 import frc.robot.commands.drive.BrakeMode;
 import frc.robot.commands.drive.LLDrive;
 import frc.robot.commands.elevator.CheckIfZero;
@@ -63,7 +64,7 @@ public class OI {
     driverController.xButton.whileHeld(new LLDrive());
     new SpectrumAxisButton(OI.driverController, XboxAxis.RIGHT_X, .3, ThresholdType.DEADBAND).whileHeld(new BrakeMode());//Go to brake mode when doing one side turn thing
 
-    driverController.startButton.whenPressed(new SmartMotionDrive(-7.85, 7.85));
+    //driverController.startButton.whenPressed(new SmartMotionDrive(-7.85, 7.85));
 
     
     DriverLeftDpad = new SpectrumOrButton(driverController.Dpad.Left, new SpectrumOrButton(driverController.Dpad.UpLeft, driverController.Dpad.DownLeft));

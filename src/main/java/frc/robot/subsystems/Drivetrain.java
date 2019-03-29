@@ -234,11 +234,10 @@ public class Drivetrain extends Subsystem {
   public void brakeMode(){
     isBrake = true;
     leftFrontMotor.setIdleMode(IdleMode.kBrake);
-    leftMiddleMotor.setIdleMode(IdleMode.kCoast
-    );
+    leftMiddleMotor.setIdleMode(IdleMode.kBrake);
     leftRearMotor.setIdleMode(IdleMode.kBrake);
     rightFrontMotor.setIdleMode(IdleMode.kBrake);
-    rightMiddleMotor.setIdleMode(IdleMode.kCoast);
+    rightMiddleMotor.setIdleMode(IdleMode.kBrake);
     rightRearMotor.setIdleMode(IdleMode.kBrake);
   }
 
