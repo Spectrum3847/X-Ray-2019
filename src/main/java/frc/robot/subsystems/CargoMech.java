@@ -141,18 +141,18 @@ public class CargoMech extends Subsystem {
 	
 	//Add the dashboard values for this subsystem
 	public void dashboard() {
-		SmartDashboard.putNumber("Cargo/Bottom Output", cargoBottomSRX.getMotorOutputPercent());
+		/*SmartDashboard.putNumber("Cargo/Bottom Output", cargoBottomSRX.getMotorOutputPercent());
 		SmartDashboard.putNumber("Cargo/Top Output", cargoTopMAX.getAppliedOutput());//cargoTopSRX.getMotorOutputPercent());
 		SmartDashboard.putNumber("Cargo/Bottom Current", cargoBottomSRX.getOutputCurrent());
 		SmartDashboard.putNumber("Cargo/Top Current", cargoTopMAX.getOutputCurrent());//cargoTopSRX.getOutputCurrent());
 		SmartDashboard.putNumber("Cargo/Top In Voltage", cargoTopMAX.getBusVoltage());
 		SmartDashboard.putNumber("Cargo/Top Temp", cargoTopMAX.getMotorTemperature());
 		SmartDashboard.putNumber("Cargo/Top PDP Current", HW.PDP.getCurrent(10));
-		SmartDashboard.putNumber("Cargo/Top RPM", cargoTopMAX.getEncoder().getVelocity());
+		SmartDashboard.putNumber("Cargo/Top RPM", cargoTopMAX.getEncoder().getVelocity());*/
 		//SmartDashboard.putBoolean("Cargo/Mech On?", cargoTopSRX.getMotorOutputPercent() != 0 && 
 													//cargoBottomSRX.getMotorOutputPercent() != 0);
-		SmartDashboard.putBoolean("Cargo/TiltUp", tiltUp);
-		SmartDashboard.putBoolean("Cargo/IntakeDown", intakeDown);
+		//SmartDashboard.putBoolean("Cargo/TiltUp", tiltUp);
+		//SmartDashboard.putBoolean("Cargo/IntakeDown", intakeDown);
 		SmartDashboard.putBoolean("Cargo/Sensor SW", getIntakeSW());
 	}
 	

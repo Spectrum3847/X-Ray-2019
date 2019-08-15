@@ -6,16 +6,15 @@ import frc.robot.Robot;
 /**
  * An example command.  You can replace me with your own command.
  */
-public class ClimberKicker extends Command {
-  public ClimberKicker() {
+public class VacuumOn extends Command {
+  public VacuumOn() {
     // Use requires() here to declare subsystem dependencies
     //requires(Robot.m_subsystem);
   }
 
   // Called just before this Command runs the first time
   protected void initialize() {
-    Robot.climber.setRatchet(true);
-    Robot.climber.logEvent("CLIMBER KICKER");
+    Robot.climber.vacuumOn();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -29,7 +28,7 @@ public class ClimberKicker extends Command {
 
   // Called once after isFinished returns true
   protected void end() {
-    Robot.climber.setRatchet(false);
+    Robot.climber.vaccumOff();
   }
 
   // Called when another command which requires one or more of the same

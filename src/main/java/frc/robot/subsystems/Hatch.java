@@ -28,6 +28,8 @@ public class Hatch extends Subsystem {
         hatchHoldSol = new SpectrumSolenoid(HW.HATCH_HOLD_SOL);
         if (Robot.cargoMech != null){
             hatchSW = new CANDigitalInput(Robot.cargoMech.cargoTopMAX, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
+        } else {
+            printWarning("HATCH SW NOT CREATED!!!!!!!");
         }
     }
 

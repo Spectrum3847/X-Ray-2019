@@ -45,8 +45,11 @@ public class Dashboard {
         SmartDashboard.putBoolean("OperatorButtonPushed", HW.oi.isOperatorButtonPushed());
         SmartDashboard.putBoolean("DriverButtonPushed", HW.oi.isDriverButtonPushed());
 
-        SmartDashboard.putNumber("Pigeon Heading", Robot.drive.pigeon.getFusedHeading());
-        SmartDashboard.putNumber("Piegeon Yaw Rate", Robot.drive.xyz_dps[2]);
+        if (!Robot.DS.isFMSAttached())
+        { 
+            SmartDashboard.putNumber("Pigeon Heading", Robot.drive.pigeon.getFusedHeading());
+            SmartDashboard.putNumber("Piegeon Yaw Rate", Robot.drive.xyz_dps[2]);
+        }
 
     }
 

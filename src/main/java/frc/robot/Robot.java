@@ -55,6 +55,7 @@ public class Robot extends TimedRobot {
 	public static SpectrumLogger logger;
 	public static SpectrumPreferences prefs;
 	
+	//Subsystems
 	public static Pneumatics pneumatics;
 	public static CargoMech cargoMech;
 	public static Drivetrain drive;
@@ -64,12 +65,16 @@ public class Robot extends TimedRobot {
 	public static VisionLL visionLL;
 	public static VisionJevois visionJevois;
 	public static PhotonLEDs photon;
+
 	public static int brownOutCtn = 0;
 	public static DriverStation DS;
 	public static PathFollower pathFollower;
 	
 	public static void setupSubsystems(){
+		//Make prefs here, so that is is created before any subsystem
 		prefs = SpectrumPreferences.getInstance();
+
+		//Create Subsystems
 		pneumatics = new Pneumatics();
 		cargoMech = new CargoMech(); //CargoMech has to be before Drivetrain for pigeon and before hatch for limitswitch
 		drive = new Drivetrain();
@@ -103,8 +108,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+		//Disable LiveWindow
 		LiveWindow.setEnabled(false);
 		LiveWindow.disableAllTelemetry();
+
 		DS = DriverStation.getInstance();
 		initDebugger(); //Init Debugger
 		SpectrumLogger.getInstance().intialize();  //setup files for logging
@@ -118,6 +125,8 @@ public class Robot extends TimedRobot {
 
 	//Add any code that needs to run in all states
 	public void robotPeriodic() {
+		//Need to write a check to make sure last time through the loop we weren't
+		//also browned out.
 		if (RobotController.isBrownedOut()){
 			brownOutCtn++;
 		}
@@ -134,7 +143,9 @@ public class Robot extends TimedRobot {
         printInfo("Start disabledInit()");
         Disabled.init();
         printInfo("End disableInit()");
-    }
+	}
+	
+
     /**
      * This function is called while in disabled mode.
      */    
@@ -191,8 +202,8 @@ public class Robot extends TimedRobot {
 		 
 		 boolean results = true;
 		results &= drive.checkSystem();
-		//results &= cargoMech.checkSystem();
-		//results &= hatch.checkSystem();
+		results &= cargoMech.checkSystem();
+		results &= hatch.checkSystem();
 		results &= elevator.checkSystem();
 		
 		 /** Examples of testing subsystems based on 254-2017 Code

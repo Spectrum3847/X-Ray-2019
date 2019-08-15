@@ -38,7 +38,7 @@ public class Drive extends Command {
     else {//Single side steering and put us in brake mode for it.
       double l = Math.max(OI.driverController.rightStick.getX(), 0);
       double r = Math.max((-1 * OI.driverController.rightStick.getX()), 0);
-      Robot.drive.tankDrive(l * .9 , r * .9);
+      //Robot.drive.tankDrive(l * .9 , r * .9);
     }
     //If we aren't arcing one side, drive with throttle and turn values
     

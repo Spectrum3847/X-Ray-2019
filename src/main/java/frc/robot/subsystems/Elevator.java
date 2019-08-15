@@ -32,9 +32,9 @@ public class Elevator extends Subsystem {
   // needs to be determined manually
   public final static int posDownLimit = 0;
   public final static int posCargoL1 = 4500;
-  public final static int posCargoShip = 10500;
+  public final static int posCargoShip = 11500;
   public final static int posHatchL2 = 15000;
-  public final static int posCargoL2 = 18000;
+  public final static int posCargoL2 = 18500;
   public final static int posHatchL3 = 29400;
   public final static int posCargoL3 = 32500;
   public final static int posUpLimit = 32500;
@@ -292,12 +292,15 @@ public class Elevator extends Subsystem {
   }
 
   public void dashboard() {
-    SmartDashboard.putNumber("Elevator/Pos", getPosition());
     SmartDashboard.putBoolean("Elevator/BottomLimitSW", getBottomLimitSW());
     SmartDashboard.putBoolean("Elevator/TopLimitSW", getTopLimitSW());
-    SmartDashboard.putNumber("Elevator/SRXout", srx.getMotorOutputPercent());
-    //SmartDashboard.putNumber("Elevator/SPXout", spx.getMotorOutputPercent());
     SmartDashboard.putNumber("Elevator/SRXcurrent", srx.getOutputCurrent());
     SmartDashboard.putNumber("Elevator/Veloctiy", srx.getSelectedSensorVelocity());
+    if (!Robot.DS.isFMSAttached())
+    {  
+      SmartDashboard.putNumber("Elevator/Pos", getPosition());
+      SmartDashboard.putNumber("Elevator/SRXout", srx.getMotorOutputPercent());
+      SmartDashboard.putNumber("Elevator/SPXout", spx.getMotorOutputPercent());
+    }
   }
 }
