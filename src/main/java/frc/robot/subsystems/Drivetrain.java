@@ -96,7 +96,7 @@ public class Drivetrain extends Subsystem {
     rightMiddleMotor.enableVoltageCompensation(voltageCompensation);
     rightRearMotor.enableVoltageCompensation(voltageCompensation);*/
 
-    int currentLimit = 65;
+    int currentLimit = 40;
     leftFrontMotor.setSmartCurrentLimit(currentLimit);
     leftMiddleMotor.setSmartCurrentLimit(currentLimit);
     leftRearMotor.setSmartCurrentLimit(currentLimit);
@@ -234,11 +234,11 @@ public class Drivetrain extends Subsystem {
   public void brakeMode(){
     isBrake = true;
     leftFrontMotor.setIdleMode(IdleMode.kBrake);
-    leftMiddleMotor.setIdleMode(IdleMode.kBrake);
-    leftRearMotor.setIdleMode(IdleMode.kBrake);
+    leftMiddleMotor.setIdleMode(IdleMode.kCoast);
+    leftRearMotor.setIdleMode(IdleMode.kCoast);
     rightFrontMotor.setIdleMode(IdleMode.kBrake);
-    rightMiddleMotor.setIdleMode(IdleMode.kBrake);
-    rightRearMotor.setIdleMode(IdleMode.kBrake);
+    rightMiddleMotor.setIdleMode(IdleMode.kCoast);
+    rightRearMotor.setIdleMode(IdleMode.kCoast);
   }
 
   public void coastMode(){
