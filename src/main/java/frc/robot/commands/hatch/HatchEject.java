@@ -15,7 +15,7 @@ public class HatchEject extends Command {
   // Called just before this Command runs the first time
   protected void initialize() {
     Robot.hatch.hatchEject();
-    Robot.hatch.logEvent("HATCH FIRE");
+    Robot.hatch.logEvent("HATCH EJECT");
   }
 
   // Called repeatedly when this Command is scheduled to run

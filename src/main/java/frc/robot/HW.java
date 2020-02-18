@@ -57,7 +57,8 @@ public class HW {
     public static final int ELEVATOR_SRX  = 30;
     public static final int ELEVATOR_SPX = 31;
     public static final int CLIMBER_SRX   = 40;
-    public static final int CLIMBER_SPX  = 41;
+    public static final int VACUUM_SPX  = 41;
+    public static final int CLIMBER_SLAVE = 42;
     
     public static final int CARGO_TOP = 50;
     public static final int CARGO_BOTTOM = 51;

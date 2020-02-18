@@ -1,16 +1,17 @@
 package frc.lib.util;
 
-import badlog.lib.BadLog;
+//import badlog.lib.BadLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.team2363.logger.HelixEvents;
 
 import java.io.File;
 import java.util.function.Supplier;
 
+
 public class SpectrumLogger {
 	private static SpectrumLogger instance;
     
-    private BadLog log;
+    //private BadLog log;
     
 	private static String loggingLocation = "/home/lvuser/logs/";
 
@@ -34,7 +35,7 @@ public class SpectrumLogger {
 			} else {
 				loggingLocation = loggingLocation + "Log.txt";
 			}
-        log = BadLog.init(loggingLocation);
+        //log = BadLog.init(loggingLocation);
     }
 
     /**
@@ -54,15 +55,15 @@ public class SpectrumLogger {
     }
 
     public void finalize(){
-        log.finishInitialization();
+        //log.finishInitialization();
     }
 
     public void updateTopics(){
-        log.updateTopics();
+        //log.updateTopics();
     }
 
     public void log(){
-        log.log();
+        //log.log();
     }
 
     //Call this whenever you want to just see how events occur, not for use with graphs, etc.
@@ -74,7 +75,7 @@ public class SpectrumLogger {
     /** Example = createTopic("Match_Time","s",() -> DriverStation.getInstance().getMatchTime());
     */
     public void createTopic(String name, String unit, Supplier<Double> supplier, String... attrs){
-        BadLog.createTopic(name, unit, supplier, attrs);
+        //BadLog.createTopic(name, unit, supplier, attrs);
     }
 
 }

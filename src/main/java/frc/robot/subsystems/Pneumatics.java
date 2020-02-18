@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
+//import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.PressureTransducer;
@@ -62,7 +62,10 @@ public class Pneumatics extends Subsystem {
 	
 	//Add the dashboard values for this subsystem
 	public void dashboard() {
-		SmartDashboard.putNumber("Pressure", pressure.getPressure());
+        if (!Robot.DS.isFMSAttached())
+        { 
+            SmartDashboard.putNumber("Pressure", pressure.getPressure());
+        }
 	}
 	
 	/*Modify this method to return false if there is a problem with the subsystem

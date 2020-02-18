@@ -1,14 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.OI;
 import frc.robot.Robot;
 
 /**
  * An example command.  You can replace me with your own command.
  */
-public class Climb extends Command {
-  public Climb() {
+public class ClimbSlow extends Command {
+  double speed = 0.5;
+  public ClimbSlow() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.climber);
     requires(Robot.drive);
@@ -16,13 +16,14 @@ public class Climb extends Command {
 
   // Called just before this Command runs the first time
   protected void initialize() {
-    Robot.climber.logEvent("CLIMB");
+    Robot.climber.logEvent("CLIMB-SLOW");
     Robot.climber.setRatchet(true);
     Robot.pneumatics.compressor.stop();
     //If vacuum isn't on, turn it on
     if (!Robot.climber.getVaccumOn()){
       Robot.climber.vacuumOn();
     }
+    speed = Robot.prefs.getNumber("C: Slow Speed", 0.5);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -30,7 +31,7 @@ public class Climb extends Command {
       //Control the climber with the right stick, set a deadband value of 30%
       //Robot.drive.arcadeDrive(-.12, 0);
       //if (Robot.climber.getCurrent() < 35){
-        Robot.climber.setClimbMotor(1.0);
+        Robot.climber.setClimbMotor(speed);
       //} else {
         //Robot.climber.setClimbMotor(0.0);
       //}

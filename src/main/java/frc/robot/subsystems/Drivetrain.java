@@ -234,11 +234,10 @@ public class Drivetrain extends Subsystem {
   public void brakeMode(){
     isBrake = true;
     leftFrontMotor.setIdleMode(IdleMode.kBrake);
-    leftMiddleMotor.setIdleMode(IdleMode.kCoast
-    );
+    leftMiddleMotor.setIdleMode(IdleMode.kBrake);
     leftRearMotor.setIdleMode(IdleMode.kBrake);
     rightFrontMotor.setIdleMode(IdleMode.kBrake);
-    rightMiddleMotor.setIdleMode(IdleMode.kCoast);
+    rightMiddleMotor.setIdleMode(IdleMode.kBrake);
     rightRearMotor.setIdleMode(IdleMode.kBrake);
   }
 
@@ -396,18 +395,18 @@ public class Drivetrain extends Subsystem {
     //Add values that need to be updated on the dashboard.
     SmartDashboard.putNumber("Drive/left-output", leftFrontMotor.getAppliedOutput());
     SmartDashboard.putNumber("Drive/left-pos", leftEncoder.getPosition());
-    SmartDashboard.putNumber("Drive/left-velocity", leftEncoder.getVelocity());
     SmartDashboard.putNumber("Drive/right-output", rightFrontMotor.getAppliedOutput());
     SmartDashboard.putNumber("Drive/right-pos", rightEncoder.getPosition());
-    SmartDashboard.putNumber("Drive/right-velocity", rightEncoder.getVelocity());
-    SmartDashboard.putNumber("Drive/SteerStick", OI.driverController.leftStick.getX());
-    SmartDashboard.putNumber("Drive/left-Current", leftFrontMotor.getOutputCurrent());
-    SmartDashboard.putNumber("Drive/right-Current", rightFrontMotor.getOutputCurrent());
     SmartDashboard.putNumber("Drive/leftFt", this.ticksToFt(Robot.drive.leftEncoder.getPosition()));
     SmartDashboard.putNumber("Drive/rightFt", getRightDistanceFt());
     //Put values here that we don't need during matches
 
     if(!Robot.DS.isFMSAttached()){
+      SmartDashboard.putNumber("Drive/left-velocity", leftEncoder.getVelocity());
+      SmartDashboard.putNumber("Drive/right-velocity", rightEncoder.getVelocity());
+      SmartDashboard.putNumber("Drive/SteerStick", OI.driverController.leftStick.getX());
+      SmartDashboard.putNumber("Drive/left-Current", leftFrontMotor.getOutputCurrent());
+      SmartDashboard.putNumber("Drive/right-Current", rightFrontMotor.getOutputCurrent());
       SmartDashboard.putNumber("Drive/leftM-output", leftMiddleMotor.getAppliedOutput());
       SmartDashboard.putNumber("Drive/leftR-output", leftRearMotor.getAppliedOutput());
       SmartDashboard.putNumber("Drive/rightM-output", rightMiddleMotor.getAppliedOutput());
@@ -434,7 +433,6 @@ public class Drivetrain extends Subsystem {
   public void logEvent(String event){
 		SpectrumLogger.getInstance().addEvent(Robot._drive, event);
   }
-  
   //Check if velocities and currents are working on each motor
 	public boolean checkSystem() {
     print("Testing DRIVETRAIN.--------------------------------------------------");

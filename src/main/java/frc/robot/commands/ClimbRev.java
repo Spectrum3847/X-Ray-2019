@@ -1,53 +1,44 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.OI;
 import frc.robot.Robot;
 
 /**
  * An example command.  You can replace me with your own command.
  */
-public class Climb extends Command {
-  public Climb() {
+public class ClimbRev extends Command {
+  public ClimbRev() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.climber);
-    requires(Robot.drive);
   }
 
   // Called just before this Command runs the first time
   protected void initialize() {
-    Robot.climber.logEvent("CLIMB");
+    //Disable Ratchet
     Robot.climber.setRatchet(true);
     Robot.pneumatics.compressor.stop();
-    //If vacuum isn't on, turn it on
-    if (!Robot.climber.getVaccumOn()){
-      Robot.climber.vacuumOn();
-    }
   }
 
   // Called repeatedly when this Command is scheduled to run
   protected void execute() {
-      //Control the climber with the right stick, set a deadband value of 30%
-      //Robot.drive.arcadeDrive(-.12, 0);
-      //if (Robot.climber.getCurrent() < 35){
-        Robot.climber.setClimbMotor(1.0);
-      //} else {
-        //Robot.climber.setClimbMotor(0.0);
-      //}
+    //Raise the climber
+    Robot.climber.setClimbMotor(-1.0);
   }
 
   // Make this return true when this Command no longer needs to run execute()
-  //finish when we hit the limit switch of the climber current is too high.
   protected boolean isFinished() {
     return false;
   }
 
   // Called once after isFinished returns true
   protected void end() {
-    Robot.climber.setClimbMotor(0.0);
-    Robot.climber.setRatchet(false);
+    //Turn climber motor off
+    Robot.climber.setClimbMotor(0);
+    
     Robot.pneumatics.compressor.start();
-    Robot.drive.stop();
+
+    //Rengauge the ratchet
+    Robot.climber.setRatchet(false);
   }
 
   // Called when another command which requires one or more of the same

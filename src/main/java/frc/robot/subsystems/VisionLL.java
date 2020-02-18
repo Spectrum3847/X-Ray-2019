@@ -1,10 +1,10 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
+//import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PIDController;
+//import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
-import edu.wpi.first.wpilibj.command.Subsystem;
+//import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.LimeLight;
 //import frc.lib.drivers.SpectrumJeVois;
@@ -16,8 +16,8 @@ public class VisionLL extends PIDSubsystem{
     //Use this for limelight code and Jevois code
     
     public final LimeLight limelight;
-    private boolean m_LimelightHasValidTarget = false;
-    private double m_LimelightDriveCommand = 0.0;
+    //private boolean m_LimelightHasValidTarget = false;
+    //private double m_LimelightDriveCommand = 0.0;
     private double m_LimelightSteerCommand = 0.0;
     private boolean LEDstate = true;
     

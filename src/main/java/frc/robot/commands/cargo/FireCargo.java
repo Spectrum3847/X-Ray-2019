@@ -37,6 +37,6 @@ public class FireCargo extends CommandGroup {
 
   void intialize(){
     Robot.hatch.logEvent("CARGO FIRE");
-    Robot.photon.addAnimation("FireHatch", Animation.SOLID, Color.YELLOW, Color.WHITE, 100, 10);
+    Robot.photon.addAnimation("FireHatch", Animation.SOLID, Color.YELLOW, Color.WHITE, 100, 10.0);
   }
 }

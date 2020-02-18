@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.drivers.LeaderTalonSRX;
 import frc.lib.drivers.SpectrumDigitalInput;
 import frc.lib.drivers.SpectrumSolenoid;
+import frc.lib.drivers.SpectrumTalonSRX;
 import frc.lib.drivers.SpectrumVictorSPX;
 import frc.lib.util.Debugger;
 import frc.lib.util.SpectrumLogger;
@@ -27,12 +28,13 @@ public class Climber extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private final static boolean invert = true; //Invert the motor here FWD should be climbing, negative retract
+  private final static boolean invert = false; //Invert the motor here FWD should be climbing, negative retract
 	public final static int downPositionLimit = 25000; //Needs to be determined manually
 
   final SpectrumVictorSPX spx;
-  final LeaderTalonSRX srx;
-  final SpectrumSolenoid kicker;
+  final SpectrumTalonSRX srx;
+  final SpectrumTalonSRX srx_slave;
+  final SpectrumSolenoid ratchet;
   final SpectrumDigitalInput sensor;
 
   // private int targetPosition = 0;
@@ -41,15 +43,20 @@ public class Climber extends Subsystem {
 
   public Climber() {
     super("Climber");
-    spx = new SpectrumVictorSPX(HW.CLIMBER_SPX);
-    srx = new LeaderTalonSRX(HW.CLIMBER_SRX, spx);
-    kicker = new SpectrumSolenoid(HW.CLIMBER_SOL);
+    spx = new SpectrumVictorSPX(HW.VACUUM_SPX);
+    srx_slave = new SpectrumTalonSRX(HW.CLIMBER_SLAVE);
+    srx = new LeaderTalonSRX(HW.CLIMBER_SRX, srx_slave);
+    ratchet = new SpectrumSolenoid(HW.CLIMBER_SOL);
     sensor = new SpectrumDigitalInput(HW.CLIMBER_SENSOR);
 		// boolean climberInvert = true;
     // boolean climberPhase = true;
-    kicker.set(false);
+    ratchet.set(false);
     srx.setNeutralMode(NeutralMode.Brake);
     srx.setInverted(invert);
+    srx.configContinuousCurrentLimit(45);
+    srx.configPeakCurrentLimit(0);
+    srx.configPeakCurrentDuration(0);
+    srx.enableCurrentLimit(true);
     srx.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
   }
 
@@ -62,7 +69,7 @@ public class Climber extends Subsystem {
   }
 
   public double getCurrent(){
-    return srx.getOutputCurrent() + HW.PDP.getCurrent(HW.CLIMBER_SPX); 
+    return srx.getOutputCurrent(); 
   }
 
   public double getEncoderPosition(){
@@ -73,7 +80,7 @@ public class Climber extends Subsystem {
     srx.setSelectedSensorPosition(0);
   }
 
-  public void set(double speed){
+  public void setClimbMotor(double speed){
     if (getLimit() && speed >= 0){
       srx.set(ControlMode.PercentOutput, 0);
       printInfo("CLIMBER LIMIT HIT");
@@ -82,15 +89,33 @@ public class Climber extends Subsystem {
     }
   }
 
-  public void setKicker(boolean b){
-    kicker.set(b);
+  public void vacuumOn(){
+    spx.set(1);
   }
+
+  public void vaccumOff(){
+    spx.set(0);
+  }
+
+  public boolean getVaccumOn(){
+    if (spx.get() > 0){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public void setRatchet(boolean b){
+    ratchet.set(b);
+  }
+
 
   public void dashboard() {
     SmartDashboard.putNumber("Climber/SRXoutput", srx.getMotorOutputPercent());
     SmartDashboard.putNumber("Climber/SRXcurrent", srx.getOutputCurrent());
     SmartDashboard.putNumber("Climber/SPXoutput", spx.getMotorOutputPercent());
     SmartDashboard.putBoolean("Climber/Sensor", getLimit());
+    SmartDashboard.putBoolean("Climber/VacuumOn", getVaccumOn());
   }
 
   public static void printDebug(String msg){

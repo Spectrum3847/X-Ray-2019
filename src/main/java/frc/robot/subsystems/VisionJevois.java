@@ -8,10 +8,10 @@ import frc.robot.Robot;
 public class VisionJevois extends PIDSubsystem{
     
     public final SpectrumJeVois jevois;
-    private boolean m_JevoisHasValidTarget = false;
-    private double m_JeVoisDriveCommand = 0.0;
+    //private boolean m_JevoisHasValidTarget = false;
+    //private double m_JeVoisDriveCommand = 0.0;
     private double m_JevoisSteerCommand = 0.0;
-    private boolean LEDstate = true;
+    //private boolean LEDstate = true;
     
 	//public final SpectrumJeVois jevoisCam;
 

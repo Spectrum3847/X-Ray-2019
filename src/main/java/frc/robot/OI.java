@@ -17,7 +17,10 @@ import frc.lib.controllers.SpectrumXboxController;
 import frc.lib.controllers.SpectrumAxisButton.ThresholdType;
 import frc.lib.controllers.SpectrumXboxController.XboxAxis;
 import frc.robot.commands.Climb;
+import frc.robot.commands.ClimbRev;
+import frc.robot.commands.ClimbSlow;
 import frc.robot.commands.ClimberKicker;
+import frc.robot.commands.VacuumOn;
 import frc.robot.commands.auto.FollowPath;
 import frc.robot.commands.auto.LvlOneTwoRocketLeft;
 import frc.robot.commands.auto.LvlOneTwoRocketRight;
@@ -25,7 +28,9 @@ import frc.robot.commands.auto.SmartMotionDrive;
 import frc.robot.commands.cargo.*;
 import frc.robot.commands.drive.AutoHatchIntake;
 import frc.robot.commands.drive.AutoTurn;
+import frc.robot.commands.drive.AutoTurnSM;
 import frc.robot.commands.drive.BrakeMode;
+import frc.robot.commands.drive.CoastMode;
 import frc.robot.commands.drive.LLDrive;
 import frc.robot.commands.elevator.CheckIfZero;
 import frc.robot.commands.elevator.ElevatorZero;
@@ -61,15 +66,20 @@ public class OI {
     //driverController.selectButton.whenPressed(new ClimberKicker());
     driverController.bButton.whileHeld(new AutoHatchIntake());
     driverController.xButton.whileHeld(new LLDrive());
-    new SpectrumAxisButton(OI.driverController, XboxAxis.RIGHT_X, .3, ThresholdType.DEADBAND).whileHeld(new BrakeMode());//Go to brake mode when doing one side turn thing
-
-    driverController.startButton.whenPressed(new SmartMotionDrive(-7.85, 7.85));
+    new SpectrumAxisButton(OI.driverController, XboxAxis.RIGHT_Y, .3, ThresholdType.DEADBAND).whileHeld(new ClimbSlow());//Go to brake mode when doing one side turn thing
+    driverController.yButton.toggleWhenPressed(new VacuumOn());
+    driverController.startButton.whileHeld(new ClimbRev());
+    driverController.selectButton.whileHeld(new Climb());
+    //driverController.rightBumper.whenPressed(new SmartMotionDrive(-7.85, 7.85));
+    driverController.rightBumper.whileHeld(new CoastMode());
+    driverController.leftBumper.whileHeld(new HatchReady());
 
     
     DriverLeftDpad = new SpectrumOrButton(driverController.Dpad.Left, new SpectrumOrButton(driverController.Dpad.UpLeft, driverController.Dpad.DownLeft));
     DriverRightDpad = new SpectrumOrButton(driverController.Dpad.Right, new SpectrumOrButton(driverController.Dpad.UpRight, driverController.Dpad.DownRight));
     DriverLeftDpad.whenPressed(new AutoTurn(70, DriverLeftDpad));
     DriverRightDpad.whenPressed(new AutoTurn(-70, DriverRightDpad));
+    driverController.Dpad.Down.whileHeld(new ClimbSlow());
 
     //Operator Buttons
 

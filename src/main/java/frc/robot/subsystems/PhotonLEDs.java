@@ -7,6 +7,7 @@ import java.util.Comparator;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.lib.drivers.Photon;
+//import frc.lib.drivers.Photon.Color;
 import frc.lib.util.Debugger;
 import frc.lib.util.SpectrumLogger;
 import frc.robot.Robot;
@@ -36,21 +37,33 @@ public class PhotonLEDs extends Subsystem {
   }
 
   public void defaultAnimations(){
-		photon.setAnimation(1,Photon.Animation.CYLON_MIDDLE_DUAL);
-    photon.setAnimation(2,Photon.Animation.CYLON_MIDDLE_DUAL);
+		photon.setAnimation(1,Photon.Animation.PULSE_TO_WHITE);
+    photon.setAnimation(2,Photon.Animation.PULSE_TO_WHITE);
     //Add a default pattern to the arrayList
-    top = new Animation("Default", Photon.Animation.CYLON_MIDDLE_DUAL, Photon.Color.PURPLE,Photon.Color.WHITE,0,-100);
+    top = new Animation("Default", Photon.Animation.PULSE_TO_WHITE, Photon.Color.PURPLE,Photon.Color.WHITE,0,-100);
     ar.add(top); 
   }
 
-  public void addAnimation(String name, Photon.Animation photonanimation, Photon.Color color1, Photon.Color color2, int priority, double timeout){
-    Animation a = new Animation(name, photonanimation, color1, color2, priority, timeout);
+  public void addAnimation(String name, Photon.Animation photonanimation, frc.lib.drivers.Photon.Color yellow, frc.lib.drivers.Photon.Color white, int priority, double timeout){
+    Animation a = new Animation(name, photonanimation, yellow, white, priority, timeout);
     //Check if this animation is already added (same name), if it is delete the old one and add the new one
     if (ar.indexOf(a) >= 0){
       ar.remove(ar.indexOf(a));
     }
     ar.add(a);
   }
+  public void setAnimation(Photon.Animation pAnimation){
+    photon.setAnimation(1,pAnimation);
+    photon.setAnimation(2,pAnimation);
+  }
+  
+  public void setAnimation(Photon.Animation pAnimation, Photon.Color c1, Photon.Color c2){
+    photon.setAnimation(1, pAnimation, c1, c2);
+    photon.setAnimation(2, pAnimation, c1, c2);
+  }
+
+  
+
 
   public void photonController(){
     //Increment through all the Animations

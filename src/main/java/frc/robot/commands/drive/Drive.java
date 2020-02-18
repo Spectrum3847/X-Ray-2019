@@ -25,7 +25,7 @@ public class Drive extends Command {
 
     //Robot.drive.print("aBut: " + OI.driverController.aButton.get() + " valid: " + Robot.vision.getLimelightHasValidTarget());
     //If we are in single side steering, drive normally or by vision
-    if (Math.abs(OI.driverController.rightStick.getX()) < .2){
+    if (Math.abs(OI.driverController.rightStick.getX()) < .3){
       //If we are in vision mode use it to steer, if not drive normally, also check that elevator isn't blocking vision
       if (OI.driverController.aButton.get() && Robot.visionLL.getLimelightHasValidTarget() && !Robot.elevator.blockingVision()){
         Robot.drive.visionDrive(throttle);
@@ -38,7 +38,7 @@ public class Drive extends Command {
     else {//Single side steering and put us in brake mode for it.
       double l = Math.max(OI.driverController.rightStick.getX(), 0);
       double r = Math.max((-1 * OI.driverController.rightStick.getX()), 0);
-      Robot.drive.tankDrive(l * .9 , r * .9);
+      //Robot.drive.tankDrive(l * .9 , r * .9);
     }
     //If we aren't arcing one side, drive with throttle and turn values
     

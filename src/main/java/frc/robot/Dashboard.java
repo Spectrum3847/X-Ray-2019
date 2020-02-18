@@ -29,6 +29,9 @@ public class Dashboard {
             SmartDashboard.putBoolean("Compressor ENABLE", true);
             SmartDashboard.putBoolean("Limelight-LED Toggle", false);
             SmartDashboard.putBoolean("Drive/BRAKEMODE", true);
+            SmartDashboard.putBoolean("Tipped",false);
+            SmartDashboard.putBoolean("Custom Colors",false);
+            
         }
         dashThread.startPeriodic(0.02);
     }
@@ -44,9 +47,13 @@ public class Dashboard {
         Robot.visionLL.dashboard();
         SmartDashboard.putBoolean("OperatorButtonPushed", HW.oi.isOperatorButtonPushed());
         SmartDashboard.putBoolean("DriverButtonPushed", HW.oi.isDriverButtonPushed());
+        
 
-        SmartDashboard.putNumber("Pigeon Heading", Robot.drive.pigeon.getFusedHeading());
-        SmartDashboard.putNumber("Piegeon Yaw Rate", Robot.drive.xyz_dps[2]);
+        if (!Robot.DS.isFMSAttached())
+        { 
+            SmartDashboard.putNumber("Pigeon Heading", Robot.drive.pigeon.getFusedHeading());
+            SmartDashboard.putNumber("Piegeon Yaw Rate", Robot.drive.xyz_dps[2]);
+        }
 
     }
 

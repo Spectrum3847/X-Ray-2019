@@ -2,6 +2,7 @@ package frc.lib.drivers;
 
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Port;
+import frc.robot.OI;
 import frc.robot.Robot;
 
 
@@ -30,7 +31,7 @@ public class Photon {
     private SerialPort usb;
 
     //Set your default values here. You can set default colors that match your team colors, refer to the Color chart Above
-    private int kDefaultAnimation = 4;
+    private int kDefaultAnimation = 11;
     private int kDefaultColor1 = 192;
     private int kDeafultColor2 = 255;
     private int kDefaultRate = 2;
@@ -45,7 +46,7 @@ public class Photon {
 
     public static enum Color
 	{
-        RED,ORANGE,YELLOW,GREEN,AQUA,BLUE,PURPLE,PINK,WHITE;
+        RED,ORANGE,YELLOW,GREEN,AQUA,BLUE,PURPLE,PINK,WHITE, THROTTLE, ELEVATORPOS;
     }
 
     public static enum Animation
@@ -101,6 +102,7 @@ public class Photon {
         Integer Fade = vals.length > 4 ? vals[4] : this.kFade;
         writeString("2," + StripNum +","+ Animation +","+ Color1 +","+ Color2 +","+ Rate +","+ Fade + ";");
     }
+
 
     public void setAnimation(int StripNum, Animation a, Color c1, Color c2, int rate, int fade){
         setAnimation(StripNum, getAnimation(a), getColor(c1), getColor(c2), rate, fade);
@@ -159,8 +161,12 @@ public class Photon {
                 return 224;
             case WHITE:
                 return 255;
+            case THROTTLE:
+                return (int)(Math.abs(OI.driverController.triggers.getTwist()) * 255);
+            case ELEVATORPOS:
+                return ((int)Robot.elevator.getPosition()/Robot.elevator.getPosUpLimit() * 255);
             default:
-                return 0; //Default to RED
+                return 0; //Default to RED 
         }
     }
 

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.lib.util.Debugger;
 import frc.lib.util.SpectrumLogger;
 import frc.robot.Robot;
-import jaci.pathfinder.Pathfinder;
+//import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.followers.EncoderFollower;
 
@@ -50,7 +50,21 @@ public class PathFollower extends Subsystem {
     m_follower_notifier = new Notifier(this::followPath);
   }
 
-  //Enter How you reset your left and right drive encoders here.
+  /**
+   * @return the rightTraj
+   */
+  public Trajectory getRightTraj() {
+    return rightTraj;
+  }
+
+  /**
+   * @param rightTraj the rightTraj to set
+   */
+  public void setRightTraj(Trajectory rightTraj) {
+    this.rightTraj = rightTraj;
+  }
+
+  // Enter How you reset your left and right drive encoders here.
   public void resetEncoders(){
     Robot.drive.resetEncoders();
   }
@@ -78,7 +92,7 @@ public class PathFollower extends Subsystem {
   //Call in each command to set your trajectories
   public void setTrajectories(Trajectory leftTraj, Trajectory rightTraj, boolean reverse){
     this.leftTraj = leftTraj;
-    this.rightTraj = rightTraj;
+    this.setRightTraj(rightTraj);
     m_left_follower.setTrajectory(leftTraj);
     m_right_follower.setTrajectory(rightTraj);
     this.reverse = reverse;
